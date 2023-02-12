@@ -4,31 +4,6 @@
     color: #F1DBBF;
 }
 
-h1 {
-    font-family: 'Montserrat';
-    size: 3rem;
-    font-weight: bold;
-    line-height: 1.5;
-}
-
-h2 {
-    font-family: "Montserrat";
-    font-weight: bold;
-    font-size: 3rem;
-    line-height: 1.5;
-}
-
-h3 {
-    font-family: "Montserrat";
-    font-weight: bold;
-    font-size: 21px;
-    color: #AA5656;
-}
-
-p {
-    color: #B99B6B;
-}
-
 /* Title Image */
 .title-image {
     width: 270px;
@@ -82,12 +57,31 @@ p {
 }
 
 /* Body */
-body {
-    font-family: "Montserrat";
-}
 
 .container-fluid {
     padding: 3% 15% 7%;
+}
+
+h1,h2,h3,h4,body {
+    font-family: 'Montserrat';
+}
+.big-heading {
+    size: 3rem;
+    font-weight: bold;
+    line-height: 1.5; 
+}
+.med-heading {
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 1.5;
+}
+.sm-heading {
+    font-weight: bold;
+    font-size: 21px;
+    color: #AA5656;
+}
+p {
+    color: #B99B6B;
 }
 
 /* Features */
@@ -128,7 +122,7 @@ body {
     padding: 7% 15%;
 }
 
-/* PRESS */
+/* Press */
 #press {
     background-color: #AA5656;
     text-align: center;
@@ -140,7 +134,7 @@ body {
     margin: 20px 20px 50px;
 }
 
-/* SIGN UP */
+/* Pricing Cards */
 .reg-button {
     width: 80%;
 }
@@ -154,32 +148,43 @@ body {
 }
 
 @media (max-width: 1028px) {
-    .title-image{
+    .title-image {
         position: static;
         transform: rotate(0);
     }
+
     #title {
         text-align: center;
     }
 }
 
-/* FOOTER */
+/* Footer */
 #cta {
     background-color: #AA5656;
     text-align: center;
     padding: 50px 25%;
 }
-.cta-text{
-    color:#F1DBBF;
+
+.cta-text {
+    color: #F1DBBF;
 }
+
 #footer {
     text-align: center;
     padding-top: 50px;
     padding-bottom: 50px;
 }
+
 .footer-logo {
     padding: 10px;
 }
+
 .copy {
     padding-top: 30px;
+}
+.footer-icon {
+    color:#698269;
+}
+.footer-icon:hover {
+    color:#AA5656;
 }
