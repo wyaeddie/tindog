@@ -12,13 +12,17 @@ targets:
   SuspensionTuner:
     type: application
     supportedDestinations: [iOS, macOS]
-    sources: [Sources/SuspensionTunerApp]
+    sources:
+      - Sources/SuspensionTunerApp
+      - AppResources          # Assets.xcassets: AppIcon + optional logo-<brand> images
     dependencies:
       - package: SuspensionTuner
         product: SuspensionKit
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleDisplayName: Suspension Tuner
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES

@@ -21,6 +21,7 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 | `apple/Sources/SuspensionKit/Resources/catalog.json` | **Single source of truth**: 65 forks and shocks from 13 brands (both apps read it) |
 | `apple/Sources/SuspensionKit/` | Swift catalog and calculation engine |
 | `apple/Sources/SuspensionTunerApp/` | SwiftUI app (macOS + iOS, adaptive layout) |
+| `apple/AppResources/Assets.xcassets` | App icon (iOS + macOS) and the place to drop `logo-<brand>` images |
 | `apple/project.yml` | XcodeGen spec for the iOS/macOS Xcode project |
 | `python/suspension_engine.py` | Python port of the engine (kept 1:1 with `Engine.swift`) |
 | `python/app.py` | PySide6 desktop GUI (runs on macOS, Windows, Linux) |

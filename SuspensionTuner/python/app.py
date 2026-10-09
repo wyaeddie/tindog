@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QDoubleValidator, QGuiApplication, QIntValidator, QKeySequence, QPainter, QShortcut
+from PySide6.QtGui import QDoubleValidator, QGuiApplication, QIcon, QIntValidator, QKeySequence, QPainter, QShortcut
 from PySide6.QtPrintSupport import QPrintDialog, QPrinter
 from PySide6.QtWidgets import (
     QApplication, QButtonGroup, QComboBox, QFileDialog, QFrame, QGridLayout, QHBoxLayout,
@@ -554,6 +555,7 @@ class MainWindow(QMainWindow):
 def main(argv=None):
     app = QApplication(argv or sys.argv)
     app.setStyleSheet(STYLE)
+    app.setWindowIcon(QIcon(str(Path(__file__).resolve().parent / "icon.png")))
     win = MainWindow()
     win.resize(1280, 860)
     win.show()
