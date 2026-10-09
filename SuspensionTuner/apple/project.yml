@@ -16,6 +16,7 @@ targets:
   SuspensionTuner:
     type: application
     supportedDestinations: [iOS, macOS]   # one app record → iPhone, iPad and Mac (universal purchase)
+    scheme: {}                            # shared scheme so build-mac.sh / xcodebuild can find it
     sources:
       - Sources/SuspensionTunerApp
       - path: AppResources          # Assets.xcassets: AppIcon + optional logo-<brand> images

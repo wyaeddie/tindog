@@ -2,3 +2,4 @@
 .swiftpm/
 *.xcodeproj/
 __pycache__/
+apple/build/

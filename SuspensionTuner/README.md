@@ -30,6 +30,13 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 
 ## Run
 
+**Install on your Mac (Applications + Dock)**
+```sh
+cd apple
+./build-mac.sh        # builds, copies "Suspension Tuner.app" to /Applications and opens it
+```
+Then right-click the Dock icon → Options → Keep in Dock. Re-run the script after pulling updates.
+
 **macOS / iOS (Xcode)**
 ```sh
 cd apple
