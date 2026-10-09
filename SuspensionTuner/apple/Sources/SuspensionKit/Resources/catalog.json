@@ -1,0 +1,2015 @@
+{
+ "version": 1,
+ "disclaimer": "Starting-point estimates. Always confirm against the manufacturer's setup chart and the max-pressure label on your fork or shock.",
+ "models": [
+  {
+   "id": "fox-32-sc-factory",
+   "brand": "Fox",
+   "name": "32 SC Factory",
+   "kind": "fork",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 100,
+    "max": 110,
+    "default": 100
+   },
+   "stroke": null,
+   "damper": "GRIP SL",
+   "psiRatio": 0.55,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Remote lockout (Open / Firm)",
+   "note": "Race fork — favour efficiency over plushness."
+  },
+  {
+   "id": "fox-34-sl-factory",
+   "brand": "Fox",
+   "name": "34 SL Factory",
+   "kind": "fork",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 110,
+    "max": 120,
+    "default": 120
+   },
+   "stroke": null,
+   "damper": "GRIP SL",
+   "psiRatio": 0.54,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Remote lockout (Open / Firm)",
+   "note": "New for 2026, replaces the 34 Step-Cast."
+  },
+  {
+   "id": "fox-36-sl-factory",
+   "brand": "Fox",
+   "name": "36 SL Factory",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 120,
+    "max": 130,
+    "default": 130
+   },
+   "stroke": null,
+   "damper": "GRIP X",
+   "psiRatio": 0.5,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 18,
+    "lsc": 12,
+    "hsc": 8,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "New for 2026, replaces the 34."
+  },
+  {
+   "id": "fox-36-factory",
+   "brand": "Fox",
+   "name": "36 Factory",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 140,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "GRIP X2",
+   "psiRatio": 0.46,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": null,
+   "note": "2026 redesign with NA3 air spring."
+  },
+  {
+   "id": "fox-38-factory",
+   "brand": "Fox",
+   "name": "38 Factory",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "GRIP X2",
+   "psiRatio": 0.41,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 2,
+    "max": 6
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "fox-40-factory",
+   "brand": "Fox",
+   "name": "40 Factory",
+   "kind": "fork",
+   "spring": "air",
+   "category": "dh",
+   "travel": {
+    "min": 203,
+    "max": 203,
+    "default": 203
+   },
+   "stroke": null,
+   "damper": "GRIP X2",
+   "psiRatio": 0.45,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": null,
+   "note": "Dual crown — set crown height evenly."
+  },
+  {
+   "id": "fox-podium",
+   "brand": "Fox",
+   "name": "Podium",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "GRIP X2",
+   "psiRatio": 0.4,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "rockshox-sid-sl-ultimate",
+   "brand": "RockShox",
+   "name": "SID SL Ultimate",
+   "kind": "fork",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 100,
+    "max": 110,
+    "default": 100
+   },
+   "stroke": null,
+   "damper": "Charger Race Day 2",
+   "psiRatio": 0.6,
+   "maxPsi": 160,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 20,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "TwistLoc remote lockout",
+   "note": ""
+  },
+  {
+   "id": "rockshox-sid-ultimate",
+   "brand": "RockShox",
+   "name": "SID Ultimate",
+   "kind": "fork",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 110,
+    "max": 120,
+    "default": 120
+   },
+   "stroke": null,
+   "damper": "Charger Race Day 2",
+   "psiRatio": 0.58,
+   "maxPsi": 160,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 20,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "TwistLoc remote lockout",
+   "note": ""
+  },
+  {
+   "id": "rockshox-pike-ultimate",
+   "brand": "RockShox",
+   "name": "Pike Ultimate",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 120,
+    "max": 140,
+    "default": 140
+   },
+   "stroke": null,
+   "damper": "Charger 3.1",
+   "psiRatio": 0.52,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 18,
+    "lsc": 5,
+    "hsc": 5,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "rockshox-lyrik-ultimate",
+   "brand": "RockShox",
+   "name": "Lyrik Ultimate",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 140,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "Charger 3.1",
+   "psiRatio": 0.48,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 18,
+    "lsc": 5,
+    "hsc": 5,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "BikeRadar's top overall fork pick."
+  },
+  {
+   "id": "rockshox-zeb-ultimate",
+   "brand": "RockShox",
+   "name": "ZEB Ultimate",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 190,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "Charger 3.1",
+   "psiRatio": 0.44,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 18,
+    "lsc": 5,
+    "hsc": 5,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "rockshox-boxxer-ultimate",
+   "brand": "RockShox",
+   "name": "Boxxer Ultimate",
+   "kind": "fork",
+   "spring": "air",
+   "category": "dh",
+   "travel": {
+    "min": 200,
+    "max": 200,
+    "default": 200
+   },
+   "stroke": null,
+   "damper": "Charger 3.1",
+   "psiRatio": 0.48,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 18,
+    "lsc": 5,
+    "hsc": 5,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Dual crown downhill fork."
+  },
+  {
+   "id": "rockshox-35-gold-rl",
+   "brand": "RockShox",
+   "name": "35 Gold RL",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 120,
+    "max": 160,
+    "default": 140
+   },
+   "stroke": null,
+   "damper": "Motion Control RL",
+   "psiRatio": 0.5,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Lockout lever",
+   "note": ""
+  },
+  {
+   "id": "rockshox-recon-gold-rl",
+   "brand": "RockShox",
+   "name": "Recon Gold RL",
+   "kind": "fork",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 100,
+    "max": 130,
+    "default": 120
+   },
+   "stroke": null,
+   "damper": "Motion Control RL",
+   "psiRatio": 0.52,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Lockout lever",
+   "note": ""
+  },
+  {
+   "id": "ohlins-rxc34-m1",
+   "brand": "Öhlins",
+   "name": "RXC34 m.1",
+   "kind": "fork",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 100,
+    "max": 120,
+    "default": 110
+   },
+   "stroke": null,
+   "damper": "OTX18",
+   "psiRatio": 0.56,
+   "maxPsi": 170,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Lockout lever",
+   "note": "Uses a ramp-up chamber instead of tokens — follow the Öhlins chart."
+  },
+  {
+   "id": "ohlins-rxf36-m2",
+   "brand": "Öhlins",
+   "name": "RXF36 m.2",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 130,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "TTX18",
+   "psiRatio": 0.55,
+   "maxPsi": 170,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 15,
+    "lsc": 15,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Three-chamber air spring: set main, then ramp-up chamber."
+  },
+  {
+   "id": "ohlins-rxf38-m2",
+   "brand": "Öhlins",
+   "name": "RXF38 m.2",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "TTX18",
+   "psiRatio": 0.5,
+   "maxPsi": 170,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 15,
+    "lsc": 15,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Three-chamber air spring: set main, then ramp-up chamber."
+  },
+  {
+   "id": "ohlins-dh38-m1",
+   "brand": "Öhlins",
+   "name": "DH38 m.1",
+   "kind": "fork",
+   "spring": "air",
+   "category": "dh",
+   "travel": {
+    "min": 200,
+    "max": 200,
+    "default": 200
+   },
+   "stroke": null,
+   "damper": "TTX18",
+   "psiRatio": 0.52,
+   "maxPsi": 170,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 15,
+    "lsc": 15,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "marzocchi-bomber-z2",
+   "brand": "Marzocchi",
+   "name": "Bomber Z2",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 130,
+    "max": 150,
+    "default": 140
+   },
+   "stroke": null,
+   "damper": "Rail",
+   "psiRatio": 0.48,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "marzocchi-bomber-z1",
+   "brand": "Marzocchi",
+   "name": "Bomber Z1",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 150,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "GRIP",
+   "psiRatio": 0.44,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 22,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "marzocchi-bomber-58",
+   "brand": "Marzocchi",
+   "name": "Bomber 58",
+   "kind": "fork",
+   "spring": "air",
+   "category": "dh",
+   "travel": {
+    "min": 203,
+    "max": 203,
+    "default": 203
+   },
+   "stroke": null,
+   "damper": "GRIP2",
+   "psiRatio": 0.44,
+   "maxPsi": 120,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "cane-creek-helm-mkii-air",
+   "brand": "Cane Creek",
+   "name": "Helm MKII Air",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 130,
+    "max": 170,
+    "default": 160
+   },
+   "stroke": null,
+   "damper": "Twin Tube",
+   "psiRatio": 0.46,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 20,
+    "lsc": 20,
+    "hsc": 4,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "dvo-sapphire-d1",
+   "brand": "DVO",
+   "name": "Sapphire D1",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 120,
+    "max": 140,
+    "default": 130
+   },
+   "stroke": null,
+   "damper": "D1 Diamond damper",
+   "psiRatio": 0.52,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 12,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel."
+  },
+  {
+   "id": "dvo-diamond-d1",
+   "brand": "DVO",
+   "name": "Diamond D1",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 140,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "D1 Diamond damper",
+   "psiRatio": 0.48,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 12,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel."
+  },
+  {
+   "id": "dvo-onyx-sc-d1",
+   "brand": "DVO",
+   "name": "Onyx SC D1",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "D1 Onyx damper",
+   "psiRatio": 0.45,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 12,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel."
+  },
+  {
+   "id": "formula-belva",
+   "brand": "Formula",
+   "name": "Belva",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 130,
+    "max": 150,
+    "default": 140
+   },
+   "stroke": null,
+   "damper": "CTS",
+   "psiRatio": 0.5,
+   "maxPsi": 140,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 14,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Progression via Neopos inserts and swappable CTS valves."
+  },
+  {
+   "id": "formula-selva-s",
+   "brand": "Formula",
+   "name": "Selva S",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "CTS",
+   "psiRatio": 0.46,
+   "maxPsi": 140,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 14,
+    "lsc": 12,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Progression via Neopos inserts and swappable CTS valves."
+  },
+  {
+   "id": "manitou-mattoc-pro",
+   "brand": "Manitou",
+   "name": "Mattoc Pro",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 140,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "MC2",
+   "psiRatio": 0.48,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "manitou-mezzer-pro",
+   "brand": "Manitou",
+   "name": "Mezzer Pro",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "Dorado Air / MC2",
+   "psiRatio": 0.46,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "manitou-dorado-pro",
+   "brand": "Manitou",
+   "name": "Dorado Pro",
+   "kind": "fork",
+   "spring": "air",
+   "category": "dh",
+   "travel": {
+    "min": 203,
+    "max": 203,
+    "default": 203
+   },
+   "stroke": null,
+   "damper": "MC2",
+   "psiRatio": 0.45,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "Inverted dual crown."
+  },
+  {
+   "id": "ext-era-v2",
+   "brand": "EXT",
+   "name": "Era v2",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 150,
+    "max": 170,
+    "default": 160
+   },
+   "stroke": null,
+   "damper": "HSC/LSC cartridge",
+   "psiRatio": 0.46,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 16,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "sr-suntour-auron-35",
+   "brand": "SR Suntour",
+   "name": "Auron 35",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 130,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "R2C2",
+   "psiRatio": 0.48,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 10,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "sr-suntour-zeron-35",
+   "brand": "SR Suntour",
+   "name": "Zeron 35",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 130,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "R2C2",
+   "psiRatio": 0.48,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 10,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "sr-suntour-durolux-38",
+   "brand": "SR Suntour",
+   "name": "Durolux 38",
+   "kind": "fork",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 160,
+    "max": 180,
+    "default": 170
+   },
+   "stroke": null,
+   "damper": "R2C2",
+   "psiRatio": 0.45,
+   "maxPsi": 150,
+   "tokens": {
+    "default": 2,
+    "max": 5
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 10,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "x-fusion-trace-36",
+   "brand": "X-Fusion",
+   "name": "Trace 36",
+   "kind": "fork",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 140,
+    "max": 160,
+    "default": 150
+   },
+   "stroke": null,
+   "damper": "RL2",
+   "psiRatio": 0.48,
+   "maxPsi": 140,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Lockout lever",
+   "note": ""
+  },
+  {
+   "id": "fox-float-sl-factory",
+   "brand": "Fox",
+   "name": "Float SL Factory",
+   "kind": "shock",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 90,
+    "max": 160,
+    "default": 120
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 45
+   },
+   "damper": "EVOL SL",
+   "psiRatio": 1.1,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "3-position lever (Open / Medium / Firm)",
+   "note": ""
+  },
+  {
+   "id": "fox-float-factory",
+   "brand": "Fox",
+   "name": "Float Factory",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 100,
+    "max": 180,
+    "default": 140
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 55
+   },
+   "damper": "EVOL",
+   "psiRatio": 1.05,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 3,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "3-position lever (Open / Medium / Firm)",
+   "note": "LSC adjusts the Open mode only."
+  },
+  {
+   "id": "fox-float-x-factory",
+   "brand": "Fox",
+   "name": "Float X Factory",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 110,
+    "max": 190,
+    "default": 150
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 60
+   },
+   "damper": "EVOL / 2-pos",
+   "psiRatio": 1.0,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 14,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "2-position lever (Open / Firm)",
+   "note": ""
+  },
+  {
+   "id": "fox-float-x2-factory",
+   "brand": "Fox",
+   "name": "Float X2 Factory",
+   "kind": "shock",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "X2",
+   "psiRatio": 0.95,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": "Climb switch (Open / Firm)",
+   "note": ""
+  },
+  {
+   "id": "fox-dhx-factory",
+   "brand": "Fox",
+   "name": "DHX Factory",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "DHX",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 13,
+    "lsc": 11,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "2-position lever (Open / Firm)",
+   "note": ""
+  },
+  {
+   "id": "fox-dhx2-factory",
+   "brand": "Fox",
+   "name": "DHX2 Factory",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "dh",
+   "travel": {
+    "min": 140,
+    "max": 220,
+    "default": 180
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 65
+   },
+   "damper": "X2",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 16,
+    "hsr": 8
+   },
+   "climb": "Climb switch (Open / Firm)",
+   "note": ""
+  },
+  {
+   "id": "rockshox-sidluxe-ultimate",
+   "brand": "RockShox",
+   "name": "SIDLuxe Ultimate",
+   "kind": "shock",
+   "spring": "air",
+   "category": "xc",
+   "travel": {
+    "min": 90,
+    "max": 160,
+    "default": 120
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 45
+   },
+   "damper": "Race Day",
+   "psiRatio": 1.1,
+   "maxPsi": 325,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Remote lockout (Open / Lock)",
+   "note": ""
+  },
+  {
+   "id": "rockshox-deluxe-ultimate",
+   "brand": "RockShox",
+   "name": "Deluxe Ultimate",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 100,
+    "max": 180,
+    "default": 140
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 55
+   },
+   "damper": "RCT",
+   "psiRatio": 1.05,
+   "maxPsi": 325,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Threshold lever (Open / Pedal)",
+   "note": ""
+  },
+  {
+   "id": "rockshox-super-deluxe-ultimate-air",
+   "brand": "RockShox",
+   "name": "Super Deluxe Ultimate Air",
+   "kind": "shock",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 110,
+    "max": 190,
+    "default": 150
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 60
+   },
+   "damper": "RC2T",
+   "psiRatio": 1.0,
+   "maxPsi": 325,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 5,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Threshold lever (Open / Pedal)",
+   "note": "MBR: the most coil-like air shock."
+  },
+  {
+   "id": "rockshox-super-deluxe-ultimate-coil",
+   "brand": "RockShox",
+   "name": "Super Deluxe Ultimate Coil",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "RC2T",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 5,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Threshold lever (Open / Pedal)",
+   "note": ""
+  },
+  {
+   "id": "rockshox-vivid-ultimate-air",
+   "brand": "RockShox",
+   "name": "Vivid Ultimate Air",
+   "kind": "shock",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 130,
+    "max": 210,
+    "default": 170
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 65
+   },
+   "damper": "RC2T",
+   "psiRatio": 0.95,
+   "maxPsi": 325,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 15,
+    "lsc": 5,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Threshold lever (Open / Pedal)",
+   "note": ""
+  },
+  {
+   "id": "rockshox-vivid-ultimate-coil",
+   "brand": "RockShox",
+   "name": "Vivid Ultimate Coil",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "dh",
+   "travel": {
+    "min": 160,
+    "max": 240,
+    "default": 200
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 75
+   },
+   "damper": "RC2",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 15,
+    "lsc": 5,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "ohlins-ttx-air",
+   "brand": "Öhlins",
+   "name": "TTX Air",
+   "kind": "shock",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "TTX",
+   "psiRatio": 0.95,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 16,
+    "lsc": 15,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Climb lever (Open / Climb)",
+   "note": ""
+  },
+  {
+   "id": "ohlins-ttx-flow",
+   "brand": "Öhlins",
+   "name": "TTX Flow",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "trail",
+   "travel": {
+    "min": 110,
+    "max": 190,
+    "default": 150
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 57.5
+   },
+   "damper": "TTX Flow",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 16,
+    "lsc": 15,
+    "hsc": 3,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Climb lever (Open / Climb)",
+   "note": ""
+  },
+  {
+   "id": "ohlins-ttx22m",
+   "brand": "Öhlins",
+   "name": "TTX22m",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "dh",
+   "travel": {
+    "min": 140,
+    "max": 220,
+    "default": 180
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 65
+   },
+   "damper": "TTX22",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 20,
+    "lsc": 20,
+    "hsc": 5,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Climb lever (Open / Climb)",
+   "note": ""
+  },
+  {
+   "id": "marzocchi-bomber-air",
+   "brand": "Marzocchi",
+   "name": "Bomber Air",
+   "kind": "shock",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 110,
+    "max": 190,
+    "default": 150
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 60
+   },
+   "damper": "Bomber",
+   "psiRatio": 1.0,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Climb lever (Open / Firm)",
+   "note": ""
+  },
+  {
+   "id": "marzocchi-bomber-cr",
+   "brand": "Marzocchi",
+   "name": "Bomber CR",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "Bomber",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 13,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": "MBR's value coil pick."
+  },
+  {
+   "id": "cane-creek-kitsuma-air",
+   "brand": "Cane Creek",
+   "name": "Kitsuma Air",
+   "kind": "shock",
+   "spring": "air",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "Twin Tube",
+   "psiRatio": 0.98,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 20,
+    "hsc": 8,
+    "lsr": 20,
+    "hsr": 8
+   },
+   "climb": "Climb Switch",
+   "note": ""
+  },
+  {
+   "id": "cane-creek-kitsuma-coil",
+   "brand": "Cane Creek",
+   "name": "Kitsuma Coil",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 130,
+    "max": 210,
+    "default": 170
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 65
+   },
+   "damper": "Twin Tube",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 20,
+    "hsc": 8,
+    "lsr": 20,
+    "hsr": 8
+   },
+   "climb": "Climb Switch",
+   "note": "MBR's top coil pick (9/10)."
+  },
+  {
+   "id": "cane-creek-db-air-il",
+   "brand": "Cane Creek",
+   "name": "DB Air IL",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 100,
+    "max": 180,
+    "default": 140
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 55
+   },
+   "damper": "Twin Tube",
+   "psiRatio": 1.0,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 0,
+    "lsc": 20,
+    "hsc": 0,
+    "lsr": 20,
+    "hsr": 0
+   },
+   "climb": "Climb Switch",
+   "note": ""
+  },
+  {
+   "id": "dvo-topaz-t3-air",
+   "brand": "DVO",
+   "name": "Topaz T3 Air",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 100,
+    "max": 180,
+    "default": 140
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 55
+   },
+   "damper": "T3",
+   "psiRatio": 0.95,
+   "maxPsi": 300,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "3-mode LSC lever",
+   "note": "Also set the bladder pressure (DVO chart)."
+  },
+  {
+   "id": "dvo-jade-x",
+   "brand": "DVO",
+   "name": "Jade X",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 130,
+    "max": 210,
+    "default": 170
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 65
+   },
+   "damper": "Jade X",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "formula-mod",
+   "brand": "Formula",
+   "name": "Mod",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 110,
+    "max": 190,
+    "default": 150
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 57.5
+   },
+   "damper": "CTS",
+   "psiRatio": 1.0,
+   "maxPsi": 300,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 14,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Lockout lever",
+   "note": "Progression via Neopos inserts."
+  },
+  {
+   "id": "manitou-mara-pro",
+   "brand": "Manitou",
+   "name": "Mara Pro",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "Mara Pro",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 12,
+    "hsc": 6,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": null,
+   "note": ""
+  },
+  {
+   "id": "ext-aria",
+   "brand": "EXT",
+   "name": "Aria",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 110,
+    "max": 190,
+    "default": 150
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 57.5
+   },
+   "damper": "Aria",
+   "psiRatio": 1.0,
+   "maxPsi": 300,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
+   "adjusters": {
+    "rebound": 16,
+    "lsc": 16,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Climb lever",
+   "note": ""
+  },
+  {
+   "id": "ext-storia-v3",
+   "brand": "EXT",
+   "name": "Storia V3",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 130,
+    "max": 210,
+    "default": 170
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 65
+   },
+   "damper": "Storia",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 16,
+    "lsc": 16,
+    "hsc": 8,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Climb lever",
+   "note": ""
+  },
+  {
+   "id": "push-industries-elevensix",
+   "brand": "PUSH Industries",
+   "name": "ElevenSix",
+   "kind": "shock",
+   "spring": "coil",
+   "category": "enduro",
+   "travel": {
+    "min": 120,
+    "max": 200,
+    "default": 160
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 62.5
+   },
+   "damper": "Dual Overtravel",
+   "psiRatio": null,
+   "maxPsi": null,
+   "tokens": null,
+   "adjusters": {
+    "rebound": 10,
+    "lsc": 12,
+    "hsc": 8,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Mode lever (Climb / Descend)",
+   "note": "Custom-valved for your weight — PUSH tunes it to your order."
+  },
+  {
+   "id": "sr-suntour-triair",
+   "brand": "SR Suntour",
+   "name": "TriAir",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 100,
+    "max": 180,
+    "default": 140
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 55
+   },
+   "damper": "TriAir",
+   "psiRatio": 1.05,
+   "maxPsi": 300,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "3-position lever (Open / Medium / Firm)",
+   "note": ""
+  },
+  {
+   "id": "x-fusion-o2-pro-rcx",
+   "brand": "X-Fusion",
+   "name": "O2 Pro RCX",
+   "kind": "shock",
+   "spring": "air",
+   "category": "trail",
+   "travel": {
+    "min": 100,
+    "max": 180,
+    "default": 140
+   },
+   "stroke": {
+    "min": 40,
+    "max": 75,
+    "default": 55
+   },
+   "damper": "RCX",
+   "psiRatio": 1.05,
+   "maxPsi": 300,
+   "tokens": {
+    "default": 1,
+    "max": 3
+   },
+   "adjusters": {
+    "rebound": 12,
+    "lsc": 0,
+    "hsc": 0,
+    "lsr": 0,
+    "hsr": 0
+   },
+   "climb": "Lockout lever",
+   "note": ""
+  }
+ ]
+}
