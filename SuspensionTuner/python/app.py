@@ -4,10 +4,11 @@ from __future__ import annotations
 import sys
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QDoubleValidator
+from PySide6.QtGui import QDoubleValidator, QGuiApplication, QIntValidator, QKeySequence, QPainter, QShortcut
+from PySide6.QtPrintSupport import QPrintDialog, QPrinter
 from PySide6.QtWidgets import (
-    QApplication, QButtonGroup, QComboBox, QFrame, QGridLayout, QHBoxLayout,
-    QLabel, QLineEdit, QMainWindow, QPushButton, QScrollArea, QSlider,
+    QApplication, QButtonGroup, QComboBox, QFileDialog, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QMenu, QMessageBox, QPushButton, QScrollArea, QSlider,
     QVBoxLayout, QWidget,
 )
 
@@ -15,28 +16,69 @@ from suspension_engine import (
     FRAME_SIZES, STYLE_LABELS, STYLES, RiderInput, calculate, load_catalog,
 )
 
+# Inputs keep the orange accent; the output side is green.
 ACCENT = "#FF7A1A"
+PINK = "#F472B6"
+VIOLET = "#A78BFA"
+SKY = "#38BDF8"
+AMBER = "#FBBF24"
+GREEN = "#22C55E"
+GREEN_BRIGHT = "#16A34A"
+GREEN_DEEP = "#065F46"
+
+# Brand colour + monogram (stand-in for logos, which are trademarked artwork).
+BRANDS = {
+    "Fox": ("FOX", "#E8541E", "#FFFFFF"),
+    "RockShox": ("RS", "#D71920", "#FFFFFF"),
+    "Öhlins": ("Ö", "#FFD100", "#111111"),
+    "Marzocchi": ("MZ", "#C8102E", "#FFFFFF"),
+    "Cane Creek": ("CC", "#0072CE", "#FFFFFF"),
+    "DVO": ("DVO", "#78BE20", "#111111"),
+    "Formula": ("F", "#F2F2F2", "#111111"),
+    "Manitou": ("M", "#1D4ED8", "#FFFFFF"),
+    "EXT": ("EXT", "#4B5563", "#FFFFFF"),
+    "PUSH Industries": ("PUSH", "#9333EA", "#FFFFFF"),
+    "SR Suntour": ("SR", "#0EA5E9", "#FFFFFF"),
+    "X-Fusion": ("XF", "#14B8A6", "#FFFFFF"),
+}
+
+
+def card_color(label: str) -> str:
+    l = label.lower()
+    if "rebound" in l:
+        return SKY
+    if "compression" in l:
+        return VIOLET
+    if "spacer" in l or "progression" in l:
+        return AMBER
+    if "lockout" in l:
+        return PINK
+    return GREEN
+
+
 STYLE = f"""
 QWidget {{ background: #0D0F13; color: #E8EAED; font-family: 'Inter', 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 13px; }}
 QLabel {{ background: transparent; }}
 QFrame#panel {{ background: #15181E; border: 1px solid #22262E; border-radius: 18px; }}
 QFrame#card {{ background: #1A1E25; border: 1px solid #262B34; border-radius: 14px; }}
-QFrame#hero {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1, stop:0 #FF7A1A, stop:1 #E0431B); border-radius: 18px; }}
+QFrame#hero {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1, stop:0 {GREEN_BRIGHT}, stop:1 {GREEN_DEEP}); border-radius: 18px; }}
 QFrame#warn {{ background: #2A2112; border: 1px solid #5A4318; border-radius: 14px; }}
-QLabel#section {{ color: #8A919C; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; }}
 QLabel#muted {{ color: #8A919C; font-size: 12px; }}
-QLabel#cardLabel {{ color: #8A919C; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; }}
 QLabel#cardValue {{ color: #FFFFFF; font-size: 19px; font-weight: 700; }}
-QPushButton {{ background: #1E222A; border: 1px solid #2A2F38; border-radius: 10px; padding: 8px 12px; color: #C9CDD3; }}
+QPushButton {{ background: #1E222A; border: 1px solid #2A2F38; border-radius: 10px; padding: 8px 12px; color: #D5D9DF; }}
 QPushButton:hover {{ border-color: #3A404B; color: #FFFFFF; }}
 QPushButton:checked {{ background: {ACCENT}; border-color: {ACCENT}; color: #111; font-weight: 700; }}
 QPushButton:disabled {{ color: #4A505A; border-color: #1F232A; }}
-QPushButton#chip {{ border-radius: 15px; padding: 6px 12px; font-size: 12px; }}
+QPushButton#chip {{ padding: 6px 10px; font-size: 12px; text-align: left; }}
+QPushButton#reset {{ background: rgba(255,122,26,0.12); border: 1px solid rgba(255,122,26,0.5); border-radius: 14px; color: {ACCENT}; font-weight: 700; padding: 6px 14px; }}
+QPushButton#action {{ background: rgba(34,197,94,0.14); border: 1px solid rgba(34,197,94,0.55); color: {GREEN}; font-weight: 700; padding: 8px 14px; }}
+QPushButton#action::menu-indicator {{ image: none; width: 0; }}
 QComboBox, QLineEdit {{ background: #1E222A; border: 1px solid #2A2F38; border-radius: 10px; padding: 9px 12px; color: #FFFFFF; }}
 QComboBox:focus, QLineEdit:focus {{ border-color: {ACCENT}; }}
 QComboBox:disabled, QLineEdit:disabled {{ color: #4A505A; }}
 QComboBox::drop-down {{ border: none; width: 24px; }}
-QComboBox QAbstractItemView {{ background: #1E222A; border: 1px solid #2A2F38; selection-background-color: {ACCENT}; selection-color: #111; }}
+QComboBox QAbstractItemView, QMenu {{ background: #1E222A; border: 1px solid #2A2F38; selection-background-color: {GREEN}; selection-color: #111; }}
+QMenu::item {{ padding: 6px 18px; }}
 QSlider::groove:horizontal {{ height: 6px; background: #262B34; border-radius: 3px; }}
 QSlider::sub-page:horizontal {{ background: {ACCENT}; border-radius: 3px; }}
 QSlider::handle:horizontal {{ background: #FFFFFF; width: 18px; height: 18px; margin: -6px 0; border-radius: 9px; }}
@@ -45,22 +87,41 @@ QScrollArea {{ border: none; }}
 
 
 def discard(w: QWidget):
-    """Detach and delete immediately-invisible (deleteLater alone leaves it painted until the loop runs)."""
+    """Detach and delete immediately (deleteLater alone leaves it painted until the loop runs)."""
     w.hide()
     w.setParent(None)
     w.deleteLater()
 
 
-def section(text: str) -> QLabel:
+def section(text: str, color: str = "#8A919C") -> QLabel:
     lbl = QLabel(text.upper())
-    lbl.setObjectName("section")
+    lbl.setStyleSheet(f"color: {color}; font-size: 11px; font-weight: 700; letter-spacing: 1.2px;")
     return lbl
+
+
+def brand_badge(brand: str, size: int = 52) -> QLabel:
+    mono, bg, fg = BRANDS.get(brand, (brand[:2].upper(), "#8A919C", "#FFFFFF"))
+    b = QLabel(mono)
+    b.setAlignment(Qt.AlignCenter)
+    b.setFixedSize(size, size)
+    font_px = int(size * (0.26 if len(mono) > 2 else 0.38))
+    b.setStyleSheet(f"background: {bg}; color: {fg}; border-radius: {int(size * 0.26)}px; "
+                    f"font-size: {font_px}px; font-weight: 900;")
+    return b
+
+
+def chip(text: str, color: str) -> QLabel:
+    c = QLabel(text)
+    c.setStyleSheet(f"color: {color}; background: rgba({int(color[1:3], 16)},{int(color[3:5], 16)},"
+                    f"{int(color[5:7], 16)},0.14); border-radius: 9px; padding: 2px 8px; "
+                    "font-size: 11px; font-weight: 600;")
+    return c
 
 
 class Segmented(QWidget):
     """Row of mutually exclusive toggle buttons."""
 
-    def __init__(self, options: list[tuple[str, str]], on_change, chip=False, columns=0):
+    def __init__(self, options: list[tuple[str, str]], on_change, chip=False, columns=0, dots=None):
         super().__init__()
         layout = QGridLayout(self) if columns else QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -74,6 +135,9 @@ class Segmented(QWidget):
             b.setCursor(Qt.PointingHandCursor)
             if chip:
                 b.setObjectName("chip")
+            if dots:
+                # brand colour as a stripe on the chip's left edge
+                b.setStyleSheet(f"QPushButton:!checked {{ border-left: 4px solid {dots[key]}; }}")
             self.group.addButton(b)
             self.buttons[key] = b
             if columns:
@@ -95,11 +159,16 @@ class Segmented(QWidget):
 class SettingCard(QFrame):
     def __init__(self, label: str, value: str, detail: str):
         super().__init__()
-        self.setObjectName("card")
+        color = card_color(label)
+        r, g, b_ = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+        self.setStyleSheet(
+            f"SettingCard {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1, stop:0 rgba({r},{g},{b_},0.13), "
+            f"stop:0.6 #1A1E25); border: 1px solid rgba({r},{g},{b_},0.4); border-radius: 14px; }}")
         v = QVBoxLayout(self)
         v.setContentsMargins(16, 14, 16, 14)
         v.setSpacing(4)
-        a = QLabel(label.upper()); a.setObjectName("cardLabel")
+        a = QLabel(f"●  {label.upper()}")
+        a.setStyleSheet(f"color: {color}; font-size: 11px; font-weight: 700; letter-spacing: 0.8px;")
         b = QLabel(value); b.setObjectName("cardValue")
         c = QLabel(detail); c.setObjectName("muted"); c.setWordWrap(True)
         for w in (a, b, c):
@@ -115,6 +184,7 @@ class MainWindow(QMainWindow):
         self.kind = "fork"
         self.brand: str | None = None
         self.model: dict | None = None
+        self.last: tuple | None = None  # (model, rider, recommendation) for share/print
 
         root = QWidget()
         self.setCentralWidget(root)
@@ -128,56 +198,74 @@ class MainWindow(QMainWindow):
         lv.setContentsMargins(22, 22, 22, 22)
         lv.setSpacing(10)
 
-        title = QLabel("Suspension Tuner")
+        header = QHBoxLayout()
+        titles = QVBoxLayout(); titles.setSpacing(2)
+        title = QLabel(f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{PINK}'>Tuner</span>")
         title.setStyleSheet("font-size: 24px; font-weight: 800;")
         sub = QLabel("Dial in your fork and shock in seconds."); sub.setObjectName("muted")
-        lv.addWidget(title); lv.addWidget(sub); lv.addSpacing(8)
+        titles.addWidget(title); titles.addWidget(sub)
+        header.addLayout(titles, 1)
+        reset = QPushButton("↺  Reset"); reset.setObjectName("reset"); reset.setCursor(Qt.PointingHandCursor)
+        reset.setToolTip("Clear all selections and inputs (Ctrl+R)")
+        reset.clicked.connect(self.reset)
+        QShortcut(QKeySequence("Ctrl+R"), self, activated=self.reset)
+        header.addWidget(reset, 0, Qt.AlignTop)
+        lv.addLayout(header); lv.addSpacing(8)
 
-        lv.addWidget(section("1 · Component"))
+        lv.addWidget(section("1 · Component", ACCENT))
         self.kind_seg = Segmented([("fork", "Fork  ·  Front"), ("shock", "Shock  ·  Rear")], self.set_kind)
-        self.kind_seg.select("fork")
         lv.addWidget(self.kind_seg)
 
-        lv.addWidget(section("2 · Brand"))
+        lv.addWidget(section("2 · Brand", PINK))
         self.brand_holder = QVBoxLayout(); self.brand_holder.setContentsMargins(0, 0, 0, 0)
         lv.addLayout(self.brand_holder)
 
-        lv.addWidget(section("3 · Model"))
+        lv.addWidget(section("3 · Model", VIOLET))
         self.model_box = QComboBox()
         self.model_box.currentIndexChanged.connect(self.set_model)
         lv.addWidget(self.model_box)
 
         lv.addSpacing(6)
-        lv.addWidget(section("4 · Rider"))
+        lv.addWidget(section("4 · Rider", SKY))
+
+        def caption(text):
+            c = QLabel(text); c.setFixedWidth(52)
+            c.setStyleSheet(f"color: {SKY}; font-size: 12px; font-weight: 600;")
+            return c
+
+        def unit(text):
+            u = QLabel(text); u.setStyleSheet(f"color: {SKY}; font-weight: 700;")
+            return u
+
         self.weight = QLineEdit(); self.weight.setPlaceholderText("Weight")
         self.weight.setValidator(QDoubleValidator(20, 400, 1))
         self.weight_unit = Segmented([("lb", "lb"), ("kg", "kg")], lambda _: self.recalc())
-        self.weight_unit.select("lb")
-        self.height = QLineEdit(); self.height.setPlaceholderText("Height")
-        self.height.setValidator(QDoubleValidator(40, 250, 1))
-        self.height_unit = Segmented([("in", "in"), ("cm", "cm")], lambda _: self.recalc())
-        self.height_unit.select("in")
-        for caption, edit, unit in (("Weight", self.weight, self.weight_unit),
-                                    ("Height", self.height, self.height_unit)):
-            cap = QLabel(caption); cap.setObjectName("muted"); cap.setFixedWidth(52)
-            row = QHBoxLayout(); row.addWidget(cap); row.addWidget(edit, 1); row.addWidget(unit)
-            unit.setFixedWidth(110)
-            edit.textChanged.connect(self.recalc)
-            lv.addLayout(row)
+        self.weight_unit.setFixedWidth(110)
+        row = QHBoxLayout(); row.addWidget(caption("Weight")); row.addWidget(self.weight, 1); row.addWidget(self.weight_unit)
+        lv.addLayout(row)
 
-        lv.addWidget(section("Frame size"))
+        self.height_ft = QLineEdit(); self.height_ft.setPlaceholderText("5")
+        self.height_ft.setValidator(QIntValidator(3, 7))
+        self.height_in = QLineEdit(); self.height_in.setPlaceholderText("10")
+        self.height_in.setValidator(QDoubleValidator(0, 11.9, 1))
+        row = QHBoxLayout(); row.addWidget(caption("Height"))
+        row.addWidget(self.height_ft, 1); row.addWidget(unit("ft"))
+        row.addWidget(self.height_in, 1); row.addWidget(unit("in"))
+        lv.addLayout(row)
+        for edit in (self.weight, self.height_ft, self.height_in):
+            edit.textChanged.connect(self.recalc)
+
+        lv.addWidget(section("Frame size", AMBER))
         self.frame_seg = Segmented([(s, s) for s in FRAME_SIZES], lambda _: self.recalc())
-        self.frame_seg.select("M")
         lv.addWidget(self.frame_seg)
 
-        lv.addWidget(section("Riding style"))
+        lv.addWidget(section("Riding style", GREEN))
         self.style_seg = Segmented([(s, STYLE_LABELS[s]) for s in STYLES], lambda _: self.recalc())
-        self.style_seg.select("trail")
         lv.addWidget(self.style_seg)
 
-        self.travel_label = QLabel(); self.travel_label.setObjectName("section")
+        self.travel_label = QLabel()
         self.travel = QSlider(Qt.Horizontal); self.travel.valueChanged.connect(self.recalc)
-        self.stroke_label = QLabel(); self.stroke_label.setObjectName("section")
+        self.stroke_label = QLabel()
         self.stroke = QSlider(Qt.Horizontal); self.stroke.valueChanged.connect(self.recalc)
         for w in (self.travel_label, self.travel, self.stroke_label, self.stroke):
             lv.addWidget(w)
@@ -193,21 +281,32 @@ class MainWindow(QMainWindow):
         scroll.setWidget(self.results)
         outer.addWidget(scroll, 1)
 
-        self.rider_widgets = [self.weight, self.weight_unit, self.height, self.height_unit,
+        self.rider_widgets = [self.weight, self.weight_unit, self.height_ft, self.height_in,
                               self.frame_seg, self.style_seg, self.travel, self.stroke]
-        self.set_kind("fork")
+        QShortcut(QKeySequence.Print, self, activated=self.print_report)
+        self.reset()
 
     # ---------------- state ----------------
     def models_for(self, kind, brand=None):
         return [m for m in self.catalog["models"]
                 if m["kind"] == kind and (brand is None or m["brand"] == brand)]
 
+    def reset(self):
+        for edit in (self.weight, self.height_ft, self.height_in):
+            edit.blockSignals(True); edit.clear(); edit.blockSignals(False)
+        self.weight_unit.select("lb")
+        self.frame_seg.select("M")
+        self.style_seg.select("trail")
+        self.kind_seg.select("fork")
+        self.set_kind("fork")
+
     def set_kind(self, kind: str):
         self.kind = kind
         brands = list(dict.fromkeys(m["brand"] for m in self.models_for(kind)))
         while self.brand_holder.count():
             discard(self.brand_holder.takeAt(0).widget())
-        self.brand_seg = Segmented([(b, b) for b in brands], self.set_brand, chip=True, columns=3)
+        self.brand_seg = Segmented([(b, b) for b in brands], self.set_brand, chip=True, columns=3,
+                                   dots={b: BRANDS.get(b, ("", "#8A919C", ""))[1] for b in brands})
         self.brand_holder.addWidget(self.brand_seg)
         self.brand = None
         self.model_box.blockSignals(True)
@@ -249,20 +348,80 @@ class MainWindow(QMainWindow):
                     slider.blockSignals(False)
         self.recalc()
 
+    def height_inches(self) -> float | None:
+        try:
+            ft = float(self.height_ft.text())
+            inches = float(self.height_in.text()) if self.height_in.text() else 0.0
+        except ValueError:
+            return None
+        return ft * 12 + inches if 0 <= inches < 12 else None
+
     def rider_input(self) -> RiderInput | None:
         try:
             weight = float(self.weight.text())
-            height = float(self.height.text())
         except ValueError:
+            return None
+        total_in = self.height_inches()
+        if total_in is None:
             return None
         if self.weight_unit.value() == "lb":
             weight /= 2.20462
-        if self.height_unit.value() == "in":
-            height *= 2.54
+        height = total_in * 2.54
         if not (30 <= weight <= 180 and 120 <= height <= 230):
             return None
         return RiderInput(weight, height, self.frame_seg.value(), self.style_seg.value(),
                           self.travel.value() / 2, self.stroke.value() / 2)
+
+    def rider_summary(self) -> str:
+        inches = self.height_in.text() or "0"
+        return (f"{self.weight.text()} {self.weight_unit.value()} · {self.height_ft.text()}′{inches}″ · "
+                f"Frame {self.frame_seg.value()} · {STYLE_LABELS[self.style_seg.value()]}")
+
+    def summary_text(self) -> str:
+        m, _, rec = self.last
+        lines = [f"Suspension Tuner — {m['brand']} {m['name']} ({m['kind']})", f"Rider: {self.rider_summary()}", ""]
+        lines += [f"{s.label}: {s.value}" for s in rec.settings]
+        if rec.warnings:
+            lines += [""] + [f"⚠️ {w}" for w in rec.warnings]
+        lines += [""] + [f"• {t}" for t in rec.tips] + ["", self.catalog["disclaimer"]]
+        return "\n".join(lines)
+
+    # ---------------- share / print ----------------
+    def copy_summary(self):
+        QGuiApplication.clipboard().setText(self.summary_text())
+        QMessageBox.information(self, "Copied", "Setup copied to the clipboard — paste it into Messages, Mail or Notes.")
+
+    def save_image(self):
+        m = self.last[0]
+        default = f"{m['brand']} {m['name']} setup.png".replace("/", "-")
+        path, _ = QFileDialog.getSaveFileName(self, "Save setup as image", default, "PNG image (*.png)")
+        if path:
+            self.results.grab().save(path)
+
+    def save_pdf(self):
+        m = self.last[0]
+        default = f"{m['brand']} {m['name']} setup.pdf".replace("/", "-")
+        path, _ = QFileDialog.getSaveFileName(self, "Save setup as PDF", default, "PDF (*.pdf)")
+        if path:
+            printer = QPrinter(QPrinter.HighResolution)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(path)
+            self.paint_to(printer)
+
+    def print_report(self):
+        if not self.last:
+            return
+        printer = QPrinter(QPrinter.HighResolution)
+        if QPrintDialog(printer, self).exec():
+            self.paint_to(printer)
+
+    def paint_to(self, printer: QPrinter):
+        pix = self.results.grab()
+        painter = QPainter(printer)
+        page = printer.pageLayout().paintRectPixels(printer.resolution())
+        scaled = pix.scaled(page.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        painter.drawPixmap(0, 0, scaled)
+        painter.end()
 
     # ---------------- rendering ----------------
     def clear_results(self):
@@ -275,24 +434,29 @@ class MainWindow(QMainWindow):
                     clear(item.layout())
         clear(self.rv)
 
-    def empty_state(self, headline: str, body: str):
+    def empty_state(self, headline: str, body: str, brand: str | None = None):
         box = QFrame(); box.setObjectName("panel")
-        v = QVBoxLayout(box); v.setContentsMargins(40, 60, 40, 60)
-        icon = QLabel("⚙"); icon.setAlignment(Qt.AlignCenter)
-        icon.setStyleSheet(f"font-size: 46px; color: {ACCENT};")
+        v = QVBoxLayout(box); v.setContentsMargins(40, 60, 40, 60); v.setSpacing(10)
+        if brand:
+            icon = brand_badge(brand, 64)
+        else:
+            icon = QLabel("⚙"); icon.setStyleSheet(f"font-size: 46px; color: {GREEN};")
         h = QLabel(headline); h.setAlignment(Qt.AlignCenter); h.setStyleSheet("font-size: 20px; font-weight: 700;")
         b = QLabel(body); b.setAlignment(Qt.AlignCenter); b.setObjectName("muted"); b.setWordWrap(True)
-        for w in (icon, h, b):
-            v.addWidget(w)
+        v.addWidget(icon, 0, Qt.AlignHCenter)
+        v.addWidget(h); v.addWidget(b)
         self.rv.addWidget(box)
         self.rv.addStretch()
 
     def recalc(self, *_):
         is_shock = self.kind == "shock"
-        self.travel_label.setText(f"{'Rear wheel travel' if is_shock else 'Fork travel'}  ·  "
-                                  f"{self.travel.value() / 2:g} mm".upper())
-        self.stroke_label.setText(f"Shock stroke  ·  {self.stroke.value() / 2:g} mm".upper())
+        mm = f"<span style='color:{ACCENT}'>{self.travel.value() / 2:g} MM</span>"
+        self.travel_label.setText(f"{'REAR WHEEL TRAVEL' if is_shock else 'FORK TRAVEL'}  ·  {mm}")
+        self.stroke_label.setText(f"SHOCK STROKE  ·  <span style='color:{ACCENT}'>{self.stroke.value() / 2:g} MM</span>")
+        for lbl in (self.travel_label, self.stroke_label):
+            lbl.setStyleSheet("color: #8A919C; font-size: 11px; font-weight: 700; letter-spacing: 1.2px;")
         self.clear_results()
+        self.last = None
         if not self.model:
             self.empty_state("Pick your suspension",
                              "Choose fork or shock, a brand, then a model to unlock rider inputs.")
@@ -300,41 +464,60 @@ class MainWindow(QMainWindow):
         rider = self.rider_input()
         if not rider:
             self.empty_state(f"{self.model['brand']} {self.model['name']}",
-                             "Enter your weight and height to calculate a setup.")
+                             "Enter your weight and height (ft + in) to calculate a setup.",
+                             brand=self.model["brand"])
             return
         rec = calculate(self.model, rider)
         m = self.model
+        self.last = (m, rider, rec)
 
-        # header
-        head = QHBoxLayout()
-        hv = QVBoxLayout()
-        name = QLabel(f"{m['brand']} {m['name']}"); name.setStyleSheet("font-size: 24px; font-weight: 800;")
-        meta = QLabel(f"{m['kind'].title()}  ·  {m['spring'].title()} spring  ·  {m['damper']} damper  ·  "
-                      f"{STYLE_LABELS[rider.style]}")
-        meta.setObjectName("muted")
-        hv.addWidget(name); hv.addWidget(meta)
+        # header: badge · name · chips · share/print
+        head = QHBoxLayout(); head.setSpacing(14)
+        head.addWidget(brand_badge(m["brand"]))
+        hv = QVBoxLayout(); hv.setSpacing(6)
+        brand_color = BRANDS.get(m["brand"], ("", GREEN, ""))[1]
+        name = QLabel(f"<span style='color:{brand_color}'>{m['brand']}</span> {m['name']}")
+        name.setStyleSheet("font-size: 24px; font-weight: 800;")
+        chips = QHBoxLayout(); chips.setSpacing(6)
+        for text, color in ((m["kind"].title(), SKY), (f"{m['spring'].title()} spring", AMBER),
+                            (m["damper"], VIOLET), (STYLE_LABELS[rider.style], GREEN)):
+            chips.addWidget(chip(text, color))
+        chips.addStretch()
+        hv.addWidget(name); hv.addLayout(chips)
         head.addLayout(hv, 1)
+
+        share = QPushButton("⇪  Share"); share.setObjectName("action"); share.setCursor(Qt.PointingHandCursor)
+        menu = QMenu(share)
+        menu.addAction("Copy setup as text", self.copy_summary)
+        menu.addAction("Save as image (PNG)…", self.save_image)
+        menu.addAction("Save as PDF…", self.save_pdf)
+        share.setMenu(menu)
+        prt = QPushButton("⎙  Print"); prt.setObjectName("action"); prt.setCursor(Qt.PointingHandCursor)
+        prt.setToolTip("Print this setup (Ctrl+P)")
+        prt.clicked.connect(self.print_report)
+        head.addWidget(share, 0, Qt.AlignVCenter); head.addWidget(prt, 0, Qt.AlignVCenter)
         self.rv.addLayout(head)
 
         # hero
         hero = QFrame(); hero.setObjectName("hero")
         hl = QHBoxLayout(hero); hl.setContentsMargins(26, 22, 26, 22)
+        cap_css = "color: rgba(255,255,255,0.75); font-weight: 700; letter-spacing: 1.2px; font-size: 12px;"
+        det_css = "color: rgba(255,255,255,0.85); font-size: 12px;"
         left = QVBoxLayout()
-        cap = QLabel(rec.headline_label.upper()); cap.setStyleSheet("color: rgba(0,0,0,0.6); font-weight: 700; letter-spacing: 1.2px; font-size: 12px;")
+        cap = QLabel(rec.headline_label.upper()); cap.setStyleSheet(cap_css)
         big = QLabel(f"{rec.headline_value}<span style='font-size:22px'> {rec.headline_unit}</span>")
-        big.setStyleSheet("color: #111; font-size: 56px; font-weight: 800;")
-        spring_detail = QLabel(rec.settings[0].detail)
-        spring_detail.setStyleSheet("color: rgba(0,0,0,0.65); font-size: 12px;")
+        big.setStyleSheet("color: #FFFFFF; font-size: 56px; font-weight: 800;")
+        spring_detail = QLabel(rec.settings[0].detail); spring_detail.setStyleSheet(det_css)
         left.addWidget(cap); left.addWidget(big); left.addWidget(spring_detail)
         hl.addLayout(left, 1)
         sag = next(s for s in rec.settings if s.label == "Sag")
         right = QVBoxLayout(); right.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        sc = QLabel("TARGET SAG"); sc.setStyleSheet("color: rgba(0,0,0,0.6); font-weight: 700; letter-spacing: 1.2px; font-size: 12px;")
-        sv = QLabel(sag.value.replace("  ·  ", "  /  ")); sv.setStyleSheet("color: #111; font-size: 26px; font-weight: 800;")
-        sc.setAlignment(Qt.AlignRight); sv.setAlignment(Qt.AlignRight)
-        sd = QLabel(sag.detail); sd.setStyleSheet("color: rgba(0,0,0,0.65); font-size: 12px;")
-        sc.setAlignment(Qt.AlignRight); sd.setAlignment(Qt.AlignRight)
-        right.addWidget(sc); right.addWidget(sv); right.addWidget(sd)
+        sc = QLabel("TARGET SAG"); sc.setStyleSheet(cap_css)
+        sv = QLabel(sag.value.replace("  ·  ", "  /  ")); sv.setStyleSheet("color: #FFFFFF; font-size: 26px; font-weight: 800;")
+        sd = QLabel(sag.detail); sd.setStyleSheet(det_css)
+        for w in (sc, sv, sd):
+            w.setAlignment(Qt.AlignRight)
+            right.addWidget(w)
         hl.addLayout(right)
         self.rv.addWidget(hero)
 
@@ -356,9 +539,10 @@ class MainWindow(QMainWindow):
 
         tips = QFrame(); tips.setObjectName("card")
         tv = QVBoxLayout(tips); tv.setContentsMargins(18, 16, 18, 16); tv.setSpacing(6)
-        tv.addWidget(section("Setup notes"))
+        tv.addWidget(section("Setup notes", GREEN))
         for tip in rec.tips:
-            t = QLabel(f"•  {tip}"); t.setWordWrap(True); t.setStyleSheet("color: #C9CDD3;")
+            t = QLabel(f"<span style='color:{GREEN}'>✔</span>&nbsp;&nbsp;{tip}")
+            t.setWordWrap(True); t.setStyleSheet("color: #D5D9DF;")
             tv.addWidget(t)
         disc = QLabel(self.catalog["disclaimer"]); disc.setObjectName("muted"); disc.setWordWrap(True)
         tv.addSpacing(4); tv.addWidget(disc)

@@ -12,22 +12,22 @@ import app as gui
 OUT = Path(__file__).resolve().parent.parent / "docs"
 
 SCENARIOS = [
-    ("screenshot-fork.png", "fork", "Fox", "fox-36-factory", "185", "lb", "71", "in", "L", "enduro"),
-    ("screenshot-shock.png", "shock", "Cane Creek", "cane-creek-kitsuma-coil", "185", "lb", "71", "in", "M", "park"),
+    ("screenshot-fork.png", "fork", "Fox", "fox-36-factory", "185", "lb", "5", "11", "L", "enduro"),
+    ("screenshot-shock.png", "shock", "Cane Creek", "cane-creek-kitsuma-coil", "185", "lb", "5", "11", "M", "park"),
 ]
 
 
 def main():
     qapp = QApplication(sys.argv)
     qapp.setStyleSheet(gui.STYLE)
-    for fname, kind, brand, mid, w, wu, h, hu, frame, style in SCENARIOS:
+    for fname, kind, brand, mid, w, wu, ft, inches, frame, style in SCENARIOS:
         win = gui.MainWindow()
         win.resize(1280, 900)
         win.kind_seg.buttons[kind].click()
         win.brand_seg.buttons[brand].click()
         win.model_box.setCurrentIndex(win.model_box.findData(mid))
         win.weight_unit.buttons[wu].click(); win.weight.setText(w)
-        win.height_unit.buttons[hu].click(); win.height.setText(h)
+        win.height_ft.setText(ft); win.height_in.setText(inches)
         win.frame_seg.buttons[frame].click()
         win.style_seg.buttons[style].click()
         win.show(); qapp.processEvents()

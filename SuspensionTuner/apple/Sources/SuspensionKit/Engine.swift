@@ -164,7 +164,8 @@ public enum SuspensionEngine {
         }
 
         if fitDelta != 0 {
-            warnings.append("At \(Int(rider.heightCm.rounded())) cm a size \(recSize.rawValue) frame is typical; you chose \(rider.frameSize.rawValue). Weight balance was adjusted for this.")
+            let totalIn = roundHalfUp(rider.heightCm / 2.54)
+            warnings.append("At \(totalIn / 12)′\(totalIn % 12)″ (\(Int(rider.heightCm.rounded())) cm) a size \(recSize.rawValue) frame is typical; you chose \(rider.frameSize.rawValue). Weight balance was adjusted for this.")
         }
         if categoryRank[m.category] == 0 && style != .trail {
             warnings.append("The \(m.name) is an XC product — not intended for \(style.title.lowercased()) riding.")

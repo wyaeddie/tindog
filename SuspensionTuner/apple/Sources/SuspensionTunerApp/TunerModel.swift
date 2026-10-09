@@ -3,7 +3,6 @@ import Observation
 import SuspensionKit
 
 enum WeightUnit: String, CaseIterable, Identifiable { case lb, kg; var id: String { rawValue } }
-enum HeightUnit: String, CaseIterable, Identifiable { case `in`, cm; var id: String { rawValue } }
 
 @Observable
 final class TunerModel {
@@ -15,8 +14,8 @@ final class TunerModel {
 
     var weightText = ""
     var weightUnit: WeightUnit = .lb
-    var heightText = ""
-    var heightUnit: HeightUnit = .in
+    var heightFeet = ""
+    var heightInches = ""
     var frameSize: FrameSize = .M
     var style: RidingStyle = .trail
     var travel: Double = 150
@@ -45,10 +44,30 @@ final class TunerModel {
         }
     }
 
+    func reset() {
+        select(kind: .fork)
+        weightText = ""
+        weightUnit = .lb
+        heightFeet = ""
+        heightInches = ""
+        frameSize = .M
+        style = .trail
+        travel = 150
+        stroke = 60
+    }
+
+    /// Total height in inches from the ft + in fields (inches may be blank).
+    var heightTotalInches: Double? {
+        guard let ft = Double(heightFeet) else { return nil }
+        let inches = heightInches.isEmpty ? 0 : (Double(heightInches) ?? -1)
+        guard inches >= 0, inches < 12 else { return nil }
+        return ft * 12 + inches
+    }
+
     var rider: RiderInput? {
-        guard var w = Double(weightText), var h = Double(heightText) else { return nil }
+        guard var w = Double(weightText), let totalIn = heightTotalInches else { return nil }
         if weightUnit == .lb { w /= 2.20462 }
-        if heightUnit == .in { h *= 2.54 }
+        let h = totalIn * 2.54
         guard (30...180).contains(w), (120...230).contains(h) else { return nil }
         return RiderInput(weightKg: w, heightCm: h, frameSize: frameSize, style: style,
                           travelMm: travel, strokeMm: stroke)
@@ -57,5 +76,22 @@ final class TunerModel {
     var recommendation: Recommendation? {
         guard let model, let rider else { return nil }
         return SuspensionEngine.calculate(model: model, rider: rider)
+    }
+
+    var riderSummary: String {
+        let inches = heightInches.isEmpty ? "0" : heightInches
+        return "\(weightText) \(weightUnit.rawValue) · \(heightFeet)′\(inches)″ · Frame \(frameSize.rawValue) · \(style.title)"
+    }
+
+    /// Plain-text version of the setup, for sharing to Messages, Mail, Notes…
+    func summaryText(_ rec: Recommendation) -> String {
+        guard let model else { return "" }
+        var lines = ["Suspension Tuner — \(model.brand) \(model.name) (\(model.kind.rawValue))",
+                     "Rider: \(riderSummary)", ""]
+        lines += rec.settings.map { "\($0.label): \($0.value)" }
+        if !rec.warnings.isEmpty { lines += [""] + rec.warnings.map { "⚠️ \($0)" } }
+        lines += [""] + rec.tips.map { "• \($0)" }
+        lines += ["", catalog.disclaimer]
+        return lines.joined(separator: "\n")
     }
 }

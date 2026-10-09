@@ -41,28 +41,47 @@ struct InputPanel: View {
     var body: some View {
         Panel {
             VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Suspension Tuner").font(.system(size: 26, weight: .heavy))
-                    Text("Dial in your fork and shock in seconds.")
-                        .font(.footnote).foregroundStyle(Theme.muted)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Suspension Tuner")
+                            .font(.system(size: 26, weight: .heavy))
+                            .foregroundStyle(Theme.titleGradient)
+                        Text("Dial in your fork and shock in seconds.")
+                            .font(.footnote).foregroundStyle(Theme.muted)
+                    }
+                    Spacer()
+                    Button {
+                        withAnimation(.snappy) { tuner.reset() }
+                    } label: {
+                        Label("Reset", systemImage: "arrow.counterclockwise")
+                            .font(.system(size: 12, weight: .bold))
+                            .padding(.horizontal, 12).padding(.vertical, 7)
+                            .foregroundStyle(Theme.accent)
+                            .background(Theme.accent.opacity(0.12), in: Capsule())
+                            .overlay(Capsule().stroke(Theme.accent.opacity(0.5)))
+                    }
+                    .buttonStyle(.plain)
+                    .keyboardShortcut("r", modifiers: .command)
+                    .help("Clear all selections and inputs (⌘R)")
                 }
                 .padding(.bottom, 6)
 
-                SectionLabel(text: "1 · Component")
+                SectionLabel(text: "1 · Component", color: Theme.accent)
                 SegmentedRow(options: ComponentKind.allCases,
                              selection: Binding(get: { tuner.kind }, set: { tuner.select(kind: $0) }),
                              title: \.title)
 
-                SectionLabel(text: "2 · Brand")
+                SectionLabel(text: "2 · Brand", color: Theme.pink)
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
                     ForEach(tuner.brands, id: \.self) { brand in
-                        ChipButton(title: brand, selected: tuner.brand == brand, compact: true) {
+                        ChipButton(title: brand, selected: tuner.brand == brand, compact: true,
+                                   dot: BrandStyle.of(brand).color) {
                             tuner.select(brand: brand)
                         }
                     }
                 }
 
-                SectionLabel(text: "3 · Model")
+                SectionLabel(text: "3 · Model", color: Theme.violet)
                 Picker("Model", selection: Binding(get: { tuner.model?.id }, set: { tuner.select(modelID: $0) })) {
                     Text(tuner.brand == nil ? "Select a brand first" : "Choose a model…").tag(String?.none)
                     ForEach(tuner.models) { m in
@@ -76,17 +95,26 @@ struct InputPanel: View {
                 .background(Theme.control, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 .disabled(tuner.brand == nil)
 
-                SectionLabel(text: "4 · Rider").padding(.top, 6)
+                SectionLabel(text: "4 · Rider", color: Theme.sky).padding(.top, 6)
                 Group {
-                    MeasureField(caption: "Weight", text: $tuner.weightText,
-                                 unit: $tuner.weightUnit, units: WeightUnit.allCases)
-                    MeasureField(caption: "Height", text: $tuner.heightText,
-                                 unit: $tuner.heightUnit, units: HeightUnit.allCases)
+                    HStack(spacing: 8) {
+                        FieldCaption(text: "Weight")
+                        InputBox(placeholder: "Weight", text: $tuner.weightText)
+                        SegmentedRow(options: WeightUnit.allCases, selection: $tuner.weightUnit, title: \.rawValue)
+                            .frame(width: 110)
+                    }
+                    HStack(spacing: 8) {
+                        FieldCaption(text: "Height")
+                        InputBox(placeholder: "5", text: $tuner.heightFeet)
+                        Text("ft").font(.callout.bold()).foregroundStyle(Theme.sky)
+                        InputBox(placeholder: "10", text: $tuner.heightInches)
+                        Text("in").font(.callout.bold()).foregroundStyle(Theme.sky)
+                    }
 
-                    SectionLabel(text: "Frame size")
+                    SectionLabel(text: "Frame size", color: Theme.amber)
                     SegmentedRow(options: FrameSize.allCases, selection: $tuner.frameSize, title: \.rawValue)
 
-                    SectionLabel(text: "Riding style")
+                    SectionLabel(text: "Riding style", color: Theme.go)
                     SegmentedRow(options: RidingStyle.allCases, selection: $tuner.style, title: \.title)
 
                     if let m = tuner.model {
@@ -104,25 +132,10 @@ struct InputPanel: View {
     }
 }
 
-struct MeasureField<U: Hashable & RawRepresentable>: View where U.RawValue == String {
-    let caption: String
-    @Binding var text: String
-    @Binding var unit: U
-    let units: [U]
-
+struct FieldCaption: View {
+    let text: String
     var body: some View {
-        HStack(spacing: 8) {
-            Text(caption).font(.footnote).foregroundStyle(Theme.muted).frame(width: 52, alignment: .leading)
-            TextField(caption, text: $text)
-                .textFieldStyle(.plain)
-                #if os(iOS)
-                .keyboardType(.decimalPad)
-                #endif
-                .padding(.horizontal, 12).padding(.vertical, 10)
-                .background(Theme.control, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(Theme.stroke))
-            SegmentedRow(options: units, selection: $unit, title: \.rawValue).frame(width: 110)
-        }
+        Text(text).font(.footnote.weight(.semibold)).foregroundStyle(Theme.sky).frame(width: 52, alignment: .leading)
     }
 }
 
@@ -134,7 +147,12 @@ struct SliderRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            SectionLabel(text: "\(title) · \(value.formatted(.number.precision(.fractionLength(0...1)))) mm")
+            HStack(spacing: 6) {
+                SectionLabel(text: title, color: Theme.muted)
+                Text("\(value.formatted(.number.precision(.fractionLength(0...1)))) mm")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(Theme.accent)
+            }
             if range.lowerBound < range.upperBound {
                 Slider(value: $value, in: range, step: step)
             }
@@ -149,11 +167,27 @@ struct ResultsView: View {
 
     var body: some View {
         if let model = tuner.model, let rec = tuner.recommendation, let rider = tuner.rider {
+            let report = ReportView(model: model, rec: rec, riderSummary: tuner.riderSummary,
+                                    disclaimer: tuner.catalog.disclaimer)
+            let title = "\(model.brand) \(model.name) setup"
             VStack(alignment: .leading, spacing: 14) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("\(model.brand) \(model.name)").font(.system(size: 26, weight: .heavy))
-                    Text("\(model.kind.rawValue.capitalized) · \(model.spring.rawValue.capitalized) spring · \(model.damper) damper · \(rider.style.title)")
-                        .font(.footnote).foregroundStyle(Theme.muted)
+                HStack(alignment: .center, spacing: 14) {
+                    BrandBadge(brand: model.brand)
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 6) {
+                            Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
+                            Text(model.name)
+                        }
+                        .font(.system(size: 26, weight: .heavy))
+                        HStack(spacing: 6) {
+                            MetaChip(text: model.kind.rawValue.capitalized, color: Theme.sky)
+                            MetaChip(text: "\(model.spring.rawValue.capitalized) spring", color: Theme.amber)
+                            MetaChip(text: model.damper, color: Theme.violet)
+                            MetaChip(text: rider.style.title, color: Theme.go)
+                        }
+                    }
+                    Spacer(minLength: 8)
+                    ExportButtons(report: report, title: title, text: tuner.summaryText(rec))
                 }
                 HeroCard(rec: rec)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 12)], spacing: 12) {
@@ -173,7 +207,11 @@ struct ResultsView: View {
         } else {
             Panel {
                 VStack(spacing: 10) {
-                    Image(systemName: "gearshape.2.fill").font(.system(size: 44)).foregroundStyle(Theme.accent)
+                    if let model = tuner.model {
+                        BrandBadge(brand: model.brand, size: 64)
+                    } else {
+                        Image(systemName: "gearshape.2.fill").font(.system(size: 44)).foregroundStyle(Theme.go)
+                    }
                     Text(tuner.model.map { "\($0.brand) \($0.name)" } ?? "Pick your suspension")
                         .font(.title2.bold())
                     Text(tuner.model == nil
@@ -188,6 +226,56 @@ struct ResultsView: View {
     }
 }
 
+struct MetaChip: View {
+    let text: String
+    let color: Color
+    var body: some View {
+        Text(text)
+            .font(.system(size: 11, weight: .semibold))
+            .lineLimit(1)
+            .padding(.horizontal, 8).padding(.vertical, 3)
+            .foregroundStyle(color)
+            .background(color.opacity(0.14), in: Capsule())
+    }
+}
+
+struct ExportButtons: View {
+    let report: ReportView
+    let title: String
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Menu {
+                if let image = Exporter.image(of: report) {
+                    ShareLink(item: image, subject: Text(title), message: Text(text),
+                              preview: SharePreview(title, image: image)) {
+                        Label("Share as image", systemImage: "photo")
+                    }
+                }
+                ShareLink(item: text, subject: Text(title)) {
+                    Label("Share as text", systemImage: "text.alignleft")
+                }
+            } label: {
+                Label("Share", systemImage: "square.and.arrow.up")
+            }
+            .menuStyle(.button)
+            .fixedSize()
+            .tint(Theme.go)
+
+            Button {
+                Exporter.printReport(report, title: title)
+            } label: {
+                Label("Print", systemImage: "printer.fill")
+            }
+            .buttonStyle(.bordered)
+            .tint(Theme.go)
+            .keyboardShortcut("p", modifiers: .command)
+        }
+        .font(.system(size: 13, weight: .semibold))
+    }
+}
+
 struct HeroCard: View {
     let rec: Recommendation
 
@@ -196,46 +284,51 @@ struct HeroCard: View {
         let sag = rec.settings.first { $0.label == "Sag" }
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(rec.headlineLabel.uppercased()).font(.caption.bold()).tracking(1.2).opacity(0.6)
+                Text(rec.headlineLabel.uppercased()).font(.caption.bold()).tracking(1.2).opacity(0.75)
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(rec.headlineValue).font(.system(size: 60, weight: .heavy, design: .rounded))
                         .contentTransition(.numericText())
                     Text(rec.headlineUnit).font(.title2.bold())
                 }
-                Text(spring.detail).font(.caption).opacity(0.7)
+                Text(spring.detail).font(.caption).opacity(0.85)
             }
             Spacer()
             if let sag {
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text("TARGET SAG").font(.caption.bold()).tracking(1.2).opacity(0.6)
+                    Text("TARGET SAG").font(.caption.bold()).tracking(1.2).opacity(0.75)
                     Text(sag.value.replacingOccurrences(of: "  ·  ", with: "  /  "))
                         .font(.system(size: 26, weight: .heavy, design: .rounded))
-                    Text(sag.detail).font(.caption).opacity(0.7).multilineTextAlignment(.trailing)
+                    Text(sag.detail).font(.caption).opacity(0.85).multilineTextAlignment(.trailing)
                 }
             }
         }
-        .foregroundStyle(.black)
+        .foregroundStyle(.white)
         .padding(24)
-        .background(LinearGradient(colors: [Theme.accent, Theme.accentDeep],
+        .background(LinearGradient(colors: [Theme.goBright, Theme.goDeep],
                                    startPoint: .topLeading, endPoint: .bottomTrailing),
                     in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: Theme.go.opacity(0.25), radius: 16, y: 6)
     }
 }
 
 struct SettingCard: View {
     let setting: Setting
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(setting.label.uppercased()).font(.system(size: 11, weight: .semibold)).tracking(0.8)
-                .foregroundStyle(Theme.muted)
+        let style = Theme.style(for: setting.label)
+        VStack(alignment: .leading, spacing: 5) {
+            Label(setting.label.uppercased(), systemImage: style.icon)
+                .font(.system(size: 11, weight: .bold)).tracking(0.8)
+                .foregroundStyle(style.color)
             Text(setting.value).font(.system(size: 19, weight: .bold))
             Text(setting.detail).font(.caption).foregroundStyle(Theme.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, minHeight: 92, alignment: .topLeading)
         .padding(16)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(Theme.stroke))
+        .background(
+            LinearGradient(colors: [style.color.opacity(0.10), Theme.card], startPoint: .topLeading, endPoint: .center),
+            in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(style.color.opacity(0.35)))
     }
 }
 
@@ -244,8 +337,13 @@ struct NotesCard: View {
     let disclaimer: String
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            SectionLabel(text: "Setup notes")
-            ForEach(tips, id: \.self) { Text("•  \($0)").font(.callout).foregroundStyle(.white.opacity(0.8)) }
+            SectionLabel(text: "Setup notes", color: Theme.go)
+            ForEach(tips, id: \.self) { tip in
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(Theme.go).font(.caption)
+                    Text(tip).font(.callout).foregroundStyle(.white.opacity(0.85))
+                }
+            }
             Text(disclaimer).font(.caption).foregroundStyle(Theme.muted).padding(.top, 4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

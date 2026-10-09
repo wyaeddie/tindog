@@ -5,6 +5,15 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 ![Fork](docs/screenshot-fork.png)
 ![Shock](docs/screenshot-shock.png)
 
+## Features
+- Fork or shock → brand → model, then weight (lb/kg), height (ft + in), frame size and riding style
+- **Reset** button (⌘R / Ctrl+R) clears everything
+- Results card in green with colour-coded settings (rebound = blue, compression = purple, tokens = amber, lockout = pink)
+- Brand badge next to the model name. To use real logos in the SwiftUI app, add images named
+  `logo-<brand>` to the app's Assets catalog (`logo-fox`, `logo-rockshox`, `logo-ohlins`, `logo-cane-creek`, …).
+  They replace the coloured monogram automatically.
+- **Share** (image or text on macOS/iOS; copy text / PNG / PDF in the Python app) and **Print** (⌘P / Ctrl+P)
+
 ## Layout
 
 | Path | What |

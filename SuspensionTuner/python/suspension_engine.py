@@ -200,7 +200,8 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
 
     # ---- fit & warnings -----------------------------------------------------
     if fit_delta != 0:
-        warnings.append(f"At {rider.height_cm:.0f} cm a size {rec_size} frame is typical; "
+        total_in = _round_half_up(rider.height_cm / 2.54)
+        warnings.append(f"At {total_in // 12}′{total_in % 12}″ ({rider.height_cm:.0f} cm) a size {rec_size} frame is typical; "
                         f"you chose {rider.frame_size}. Weight balance was adjusted for this.")
     if CATEGORY_RANK[model["category"]] == 0 and style != "trail":
         warnings.append(f"The {model['name']} is an XC product — not intended for "
