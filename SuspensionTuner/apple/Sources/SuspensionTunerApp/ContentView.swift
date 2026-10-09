@@ -71,7 +71,7 @@ struct InputPanel: View {
                              selection: Binding(get: { tuner.kind }, set: { tuner.select(kind: $0) }),
                              title: \.title)
 
-                SectionLabel(text: "2 · Brand", color: Theme.pink)
+                SectionLabel(text: "2 · Brand", color: Theme.gold)
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
                     ForEach(tuner.brands, id: \.self) { brand in
                         ChipButton(title: brand, selected: tuner.brand == brand, compact: true,

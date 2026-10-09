@@ -8,7 +8,8 @@ import UIKit
 enum Theme {
     // Inputs
     static let accent = Color(hex: 0xFF7A1A)
-    static let pink = Color(hex: 0xF472B6)
+    static let gold = Color(hex: 0xFACC15)
+    static let teal = Color(hex: 0x2DD4BF)
     static let violet = Color(hex: 0xA78BFA)
     static let sky = Color(hex: 0x38BDF8)
     static let amber = Color(hex: 0xFBBF24)
@@ -26,7 +27,7 @@ enum Theme {
     static let warnBG = Color(hex: 0x2A2112)
     static let warnText = Color(hex: 0xF5C26B)
 
-    static let titleGradient = LinearGradient(colors: [accent, pink], startPoint: .leading, endPoint: .trailing)
+    static let titleGradient = LinearGradient(colors: [accent, gold], startPoint: .leading, endPoint: .trailing)
 
     /// Colour + icon for a result card, grouped by what the setting controls.
     static func style(for label: String) -> (color: Color, icon: String) {
@@ -34,7 +35,7 @@ enum Theme {
         if l.contains("rebound") { return (sky, "arrow.uturn.up") }
         if l.contains("compression") { return (violet, "arrow.down.to.line") }
         if l.contains("spacer") || l.contains("progression") { return (amber, "cube.fill") }
-        if l.contains("lockout") { return (pink, "lock.fill") }
+        if l.contains("lockout") { return (teal, "lock.fill") }
         return (go, "gauge.with.dots.needle.67percent")
     }
 }

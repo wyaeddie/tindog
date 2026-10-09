@@ -18,7 +18,8 @@ from suspension_engine import (
 
 # Inputs keep the orange accent; the output side is green.
 ACCENT = "#FF7A1A"
-PINK = "#F472B6"
+GOLD = "#FACC15"
+TEAL = "#2DD4BF"
 VIOLET = "#A78BFA"
 SKY = "#38BDF8"
 AMBER = "#FBBF24"
@@ -52,7 +53,7 @@ def card_color(label: str) -> str:
     if "spacer" in l or "progression" in l:
         return AMBER
     if "lockout" in l:
-        return PINK
+        return TEAL
     return GREEN
 
 
@@ -200,7 +201,7 @@ class MainWindow(QMainWindow):
 
         header = QHBoxLayout()
         titles = QVBoxLayout(); titles.setSpacing(2)
-        title = QLabel(f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{PINK}'>Tuner</span>")
+        title = QLabel(f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{GOLD}'>Tuner</span>")
         title.setStyleSheet("font-size: 24px; font-weight: 800;")
         sub = QLabel("Dial in your fork and shock in seconds."); sub.setObjectName("muted")
         titles.addWidget(title); titles.addWidget(sub)
@@ -216,7 +217,7 @@ class MainWindow(QMainWindow):
         self.kind_seg = Segmented([("fork", "Fork  ·  Front"), ("shock", "Shock  ·  Rear")], self.set_kind)
         lv.addWidget(self.kind_seg)
 
-        lv.addWidget(section("2 · Brand", PINK))
+        lv.addWidget(section("2 · Brand", GOLD))
         self.brand_holder = QVBoxLayout(); self.brand_holder.setContentsMargins(0, 0, 0, 0)
         lv.addLayout(self.brand_holder)
 
