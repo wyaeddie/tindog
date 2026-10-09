@@ -165,6 +165,12 @@ struct SliderRow: View {
 struct ResultsView: View {
     let tuner: TunerModel
     @Environment(\.openURL) private var openURL
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    private var isCompact: Bool { sizeClass == .compact }
+    #else
+    private let isCompact = false
+    #endif
 
     var body: some View {
         if let model = tuner.model, let rec = tuner.recommendation, let rider = tuner.rider {
@@ -174,7 +180,9 @@ struct ResultsView: View {
             let specs = tuner.catalog.specsURL(for: model)
             let specsHelp = "Open the \(model.brand) \(model.name) specs on \(model.brand)'s website"
             VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .center, spacing: 14) {
+                // On iPhone (compact width) the Share/Print buttons move under the title, so the
+                // brand + model get the full row and wrap on word boundaries instead of mid-word.
+                let header = HStack(alignment: .center, spacing: 14) {
                     Button { if let specs { openURL(specs) } } label: {
                         BrandBadge(brand: model.brand)
                     }
@@ -182,28 +190,43 @@ struct ResultsView: View {
                     .help(specsHelp)
                     VStack(alignment: .leading, spacing: 6) {
                         Button { if let specs { openURL(specs) } } label: {
-                            HStack(spacing: 6) {
-                                Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
-                                Text(model.name).foregroundStyle(.white)
-                                Image(systemName: "arrow.up.right.square")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundStyle(Theme.muted)
-                            }
-                            .font(.system(size: 26, weight: .heavy))
-                            .contentShape(Rectangle())
+                            let brand = Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
+                            let name = Text(model.name).foregroundStyle(.white)
+                            let link = Text(Image(systemName: "arrow.up.right.square"))
+                                .font(.system(size: isCompact ? 15 : 16, weight: .semibold))
+                                .foregroundStyle(Theme.muted)
+                            Text("\(brand) \(name) \(link)")
+                                .font(.system(size: isCompact ? 22 : 26, weight: .heavy))
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.8)
+                                .multilineTextAlignment(.leading)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                         .help(specsHelp)
                         .accessibilityHint("Opens the manufacturer's spec page in your browser")
-                        HStack(spacing: 6) {
-                            MetaChip(text: model.kind.rawValue.capitalized, color: Theme.sky)
-                            MetaChip(text: "\(model.spring.rawValue.capitalized) spring", color: Theme.amber)
-                            MetaChip(text: model.damper, color: Theme.violet)
-                            MetaChip(text: rider.style.title, color: Theme.go)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                MetaChip(text: model.kind.rawValue.capitalized, color: Theme.sky)
+                                MetaChip(text: "\(model.spring.rawValue.capitalized) spring", color: Theme.amber)
+                                MetaChip(text: model.damper, color: Theme.violet)
+                                MetaChip(text: rider.style.title, color: Theme.go)
+                            }
                         }
+                        .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
                     }
-                    Spacer(minLength: 8)
-                    ExportButtons(report: report, title: title, text: tuner.summaryText(rec))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                let buttons = ExportButtons(report: report, title: title, text: tuner.summaryText(rec))
+                if isCompact {
+                    header
+                    buttons
+                } else {
+                    HStack(alignment: .center, spacing: 8) {
+                        header
+                        buttons
+                    }
                 }
                 HeroCard(rec: rec)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 12)], spacing: 12) {
@@ -289,6 +312,8 @@ struct ExportButtons: View {
             .keyboardShortcut("p", modifiers: .command)
         }
         .font(.system(size: 13, weight: .semibold))
+        .lineLimit(1)
+        .fixedSize()
     }
 }
 
