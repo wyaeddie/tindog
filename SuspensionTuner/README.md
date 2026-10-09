@@ -41,9 +41,10 @@ Then right-click the Dock icon → Options → Keep in Dock. Re-run the script a
 ```sh
 cd apple
 brew install xcodegen && xcodegen generate
-open SuspensionTuner.xcodeproj      # pick an iPhone simulator or "My Mac" and hit Run
+open SuspensionTuner.xcodeproj      # pick the SuspensionTuner scheme, then an iPhone simulator or "My Mac", and hit Run
 ```
-Quick Mac-only run without Xcode project: `cd apple && swift run SuspensionTunerApp`
+Open `SuspensionTuner.xcodeproj`, not `Package.swift`: the package only holds the calculation library.
+Mac install without opening Xcode: `cd apple && ./build-mac.sh`
 
 **Python desktop**
 ```sh

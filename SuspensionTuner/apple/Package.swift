@@ -1,18 +1,15 @@
 // swift-tools-version:5.9
 import PackageDescription
 
-var targets: [Target] = [
+// Library + tests only. The app itself is built from project.yml (xcodegen), which gives it
+// a bundle ID and Info.plist. An SPM executable target has neither, so if one were listed here
+// Xcode would offer it as a runnable scheme and it would crash on iPhone/iPad at launch
+// ("BUNDLE_IDENTIFIER_FOR_CURRENT_PROCESS_IS_NIL").
+let targets: [Target] = [
     .target(name: "SuspensionKit", resources: [.process("Resources")]),
     .testTarget(name: "SuspensionKitTests", dependencies: ["SuspensionKit"]),
 ]
-var products: [Product] = [.library(name: "SuspensionKit", targets: ["SuspensionKit"])]
-
-#if os(macOS)
-// `swift run SuspensionTunerApp` launches the macOS app straight from Terminal.
-// For iOS + macOS bundles, generate the Xcode project from project.yml (see README).
-targets.append(.executableTarget(name: "SuspensionTunerApp", dependencies: ["SuspensionKit"]))
-products.append(.executable(name: "SuspensionTunerApp", targets: ["SuspensionTunerApp"]))
-#endif
+let products: [Product] = [.library(name: "SuspensionKit", targets: ["SuspensionKit"])]
 
 let package = Package(
     name: "SuspensionTuner",
