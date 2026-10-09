@@ -30,7 +30,8 @@
     "hsr": 0
    },
    "climb": "Remote lockout (Open / Firm)",
-   "note": "Race fork — favour efficiency over plushness."
+   "note": "Race fork — favour efficiency over plushness.",
+   "url": null
   },
   {
    "id": "fox-34-sl-factory",
@@ -60,7 +61,8 @@
     "hsr": 0
    },
    "climb": "Remote lockout (Open / Firm)",
-   "note": "New for 2026, replaces the 34 Step-Cast."
+   "note": "New for 2026, replaces the 34 Step-Cast.",
+   "url": "https://ridefox.com/pages/fox-34-sl"
   },
   {
    "id": "fox-36-sl-factory",
@@ -90,7 +92,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "New for 2026, replaces the 34."
+   "note": "New for 2026, replaces the 34.",
+   "url": "https://ridefox.com/pages/fox-36-sl"
   },
   {
    "id": "fox-36-factory",
@@ -120,7 +123,8 @@
     "hsr": 8
    },
    "climb": null,
-   "note": "2026 redesign with NA3 air spring."
+   "note": "2026 redesign with NA3 air spring.",
+   "url": "https://ridefox.com/pages/fox-36"
   },
   {
    "id": "fox-38-factory",
@@ -150,7 +154,8 @@
     "hsr": 8
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/pages/fox-38"
   },
   {
    "id": "fox-40-factory",
@@ -180,7 +185,8 @@
     "hsr": 8
    },
    "climb": null,
-   "note": "Dual crown — set crown height evenly."
+   "note": "Dual crown — set crown height evenly.",
+   "url": "https://ridefox.com/pages/fox-40"
   },
   {
    "id": "fox-podium",
@@ -210,7 +216,8 @@
     "hsr": 8
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/pages/podium"
   },
   {
    "id": "rockshox-sid-sl-ultimate",
@@ -240,7 +247,8 @@
     "hsr": 0
    },
    "climb": "TwistLoc remote lockout",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/sid-sl"
   },
   {
    "id": "rockshox-sid-ultimate",
@@ -270,7 +278,8 @@
     "hsr": 0
    },
    "climb": "TwistLoc remote lockout",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/sid"
   },
   {
    "id": "rockshox-pike-ultimate",
@@ -300,7 +309,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/pike"
   },
   {
    "id": "rockshox-lyrik-ultimate",
@@ -330,7 +340,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "BikeRadar's top overall fork pick."
+   "note": "BikeRadar's top overall fork pick.",
+   "url": "https://www.sram.com/en/rockshox/series/lyrik"
   },
   {
    "id": "rockshox-zeb-ultimate",
@@ -360,7 +371,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/zeb"
   },
   {
    "id": "rockshox-boxxer-ultimate",
@@ -390,7 +402,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Dual crown downhill fork."
+   "note": "Dual crown downhill fork.",
+   "url": "https://www.sram.com/en/rockshox/series/boxxer"
   },
   {
    "id": "rockshox-35-gold-rl",
@@ -420,7 +433,8 @@
     "hsr": 0
    },
    "climb": "Lockout lever",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/35"
   },
   {
    "id": "rockshox-recon-gold-rl",
@@ -450,7 +464,8 @@
     "hsr": 0
    },
    "climb": "Lockout lever",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/recon"
   },
   {
    "id": "ohlins-rxc34-m1",
@@ -477,7 +492,8 @@
     "hsr": 0
    },
    "climb": "Lockout lever",
-   "note": "Uses a ramp-up chamber instead of tokens — follow the Öhlins chart."
+   "note": "Uses a ramp-up chamber instead of tokens — follow the Öhlins chart.",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
   },
   {
    "id": "ohlins-rxf36-m2",
@@ -504,7 +520,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Three-chamber air spring: set main, then ramp-up chamber."
+   "note": "Three-chamber air spring: set main, then ramp-up chamber.",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
   },
   {
    "id": "ohlins-rxf38-m2",
@@ -531,7 +548,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Three-chamber air spring: set main, then ramp-up chamber."
+   "note": "Three-chamber air spring: set main, then ramp-up chamber.",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
   },
   {
    "id": "ohlins-dh38-m1",
@@ -558,7 +576,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
   },
   {
    "id": "marzocchi-bomber-z2",
@@ -588,7 +607,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://bike.marzocchi.com/products/bomber-z2"
   },
   {
    "id": "marzocchi-bomber-z1",
@@ -618,7 +638,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://bike.marzocchi.com/products/bomber-z1"
   },
   {
    "id": "marzocchi-bomber-58",
@@ -648,7 +669,8 @@
     "hsr": 8
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://bike.marzocchi.com/products/bomber-58"
   },
   {
    "id": "cane-creek-helm-mkii-air",
@@ -678,7 +700,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://www.canecreek.com/products/helm-mkii-air-29-tan"
   },
   {
    "id": "dvo-sapphire-d1",
@@ -708,7 +731,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel."
+   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
+   "url": null
   },
   {
    "id": "dvo-diamond-d1",
@@ -738,7 +762,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel."
+   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
+   "url": null
   },
   {
    "id": "dvo-onyx-sc-d1",
@@ -768,7 +793,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel."
+   "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
+   "url": null
   },
   {
    "id": "formula-belva",
@@ -795,7 +821,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Progression via Neopos inserts and swappable CTS valves."
+   "note": "Progression via Neopos inserts and swappable CTS valves.",
+   "url": null
   },
   {
    "id": "formula-selva-s",
@@ -822,7 +849,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Progression via Neopos inserts and swappable CTS valves."
+   "note": "Progression via Neopos inserts and swappable CTS valves.",
+   "url": null
   },
   {
    "id": "manitou-mattoc-pro",
@@ -852,7 +880,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "manitou-mezzer-pro",
@@ -882,7 +911,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "manitou-dorado-pro",
@@ -912,7 +942,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "Inverted dual crown."
+   "note": "Inverted dual crown.",
+   "url": null
   },
   {
    "id": "ext-era-v2",
@@ -942,7 +973,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "sr-suntour-auron-35",
@@ -972,7 +1004,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "sr-suntour-zeron-35",
@@ -1002,7 +1035,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "sr-suntour-durolux-38",
@@ -1032,7 +1066,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "x-fusion-trace-36",
@@ -1062,7 +1097,8 @@
     "hsr": 0
    },
    "climb": "Lockout lever",
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "fox-float-sl-factory",
@@ -1096,7 +1132,8 @@
     "hsr": 0
    },
    "climb": "3-position lever (Open / Medium / Firm)",
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/products/fox-float-sl-performance"
   },
   {
    "id": "fox-float-factory",
@@ -1130,7 +1167,8 @@
     "hsr": 0
    },
    "climb": "3-position lever (Open / Medium / Firm)",
-   "note": "LSC adjusts the Open mode only."
+   "note": "LSC adjusts the Open mode only.",
+   "url": "https://ridefox.com/products/fox-float-factory"
   },
   {
    "id": "fox-float-x-factory",
@@ -1164,7 +1202,8 @@
     "hsr": 0
    },
    "climb": "2-position lever (Open / Firm)",
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/products/fox-float-x-factory"
   },
   {
    "id": "fox-float-x2-factory",
@@ -1198,7 +1237,8 @@
     "hsr": 8
    },
    "climb": "Climb switch (Open / Firm)",
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/blogs/academy/fox-dhx2-and-float-x2-explained"
   },
   {
    "id": "fox-dhx-factory",
@@ -1229,7 +1269,8 @@
     "hsr": 0
    },
    "climb": "2-position lever (Open / Firm)",
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/products/fox-dhx-factory"
   },
   {
    "id": "fox-dhx2-factory",
@@ -1260,7 +1301,8 @@
     "hsr": 8
    },
    "climb": "Climb switch (Open / Firm)",
-   "note": ""
+   "note": "",
+   "url": "https://ridefox.com/blogs/academy/fox-dhx2-and-float-x2-explained"
   },
   {
    "id": "rockshox-sidluxe-ultimate",
@@ -1294,7 +1336,8 @@
     "hsr": 0
    },
    "climb": "Remote lockout (Open / Lock)",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/sidluxe"
   },
   {
    "id": "rockshox-deluxe-ultimate",
@@ -1328,7 +1371,8 @@
     "hsr": 0
    },
    "climb": "Threshold lever (Open / Pedal)",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/deluxe"
   },
   {
    "id": "rockshox-super-deluxe-ultimate-air",
@@ -1362,7 +1406,8 @@
     "hsr": 0
    },
    "climb": "Threshold lever (Open / Pedal)",
-   "note": "MBR: the most coil-like air shock."
+   "note": "MBR: the most coil-like air shock.",
+   "url": "https://www.sram.com/en/rockshox/series/super-deluxe"
   },
   {
    "id": "rockshox-super-deluxe-ultimate-coil",
@@ -1393,7 +1438,8 @@
     "hsr": 0
    },
    "climb": "Threshold lever (Open / Pedal)",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/super-deluxe"
   },
   {
    "id": "rockshox-vivid-ultimate-air",
@@ -1427,7 +1473,8 @@
     "hsr": 0
    },
    "climb": "Threshold lever (Open / Pedal)",
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/vivid"
   },
   {
    "id": "rockshox-vivid-ultimate-coil",
@@ -1458,7 +1505,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": "https://www.sram.com/en/rockshox/series/vivid"
   },
   {
    "id": "ohlins-ttx-air",
@@ -1492,7 +1540,8 @@
     "hsr": 0
    },
    "climb": "Climb lever (Open / Climb)",
-   "note": ""
+   "note": "",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks"
   },
   {
    "id": "ohlins-ttx-flow",
@@ -1523,7 +1572,8 @@
     "hsr": 0
    },
    "climb": "Climb lever (Open / Climb)",
-   "note": ""
+   "note": "",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks"
   },
   {
    "id": "ohlins-ttx22m",
@@ -1554,7 +1604,8 @@
     "hsr": 0
    },
    "climb": "Climb lever (Open / Climb)",
-   "note": ""
+   "note": "",
+   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks"
   },
   {
    "id": "marzocchi-bomber-air",
@@ -1588,7 +1639,8 @@
     "hsr": 0
    },
    "climb": "Climb lever (Open / Firm)",
-   "note": ""
+   "note": "",
+   "url": "https://bike.marzocchi.com/products/bomber-air"
   },
   {
    "id": "marzocchi-bomber-cr",
@@ -1619,7 +1671,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": "MBR's value coil pick."
+   "note": "MBR's value coil pick.",
+   "url": "https://bike.marzocchi.com/products/bomber-cr-rear-shock"
   },
   {
    "id": "cane-creek-kitsuma-air",
@@ -1653,7 +1706,8 @@
     "hsr": 8
    },
    "climb": "Climb Switch",
-   "note": ""
+   "note": "",
+   "url": "https://www.canecreek.com/products/kitsuma-g2-air"
   },
   {
    "id": "cane-creek-kitsuma-coil",
@@ -1684,7 +1738,8 @@
     "hsr": 8
    },
    "climb": "Climb Switch",
-   "note": "MBR's top coil pick (9/10)."
+   "note": "MBR's top coil pick (9/10).",
+   "url": "https://www.canecreek.com/products/kitsuma-coil"
   },
   {
    "id": "cane-creek-db-air-il",
@@ -1718,7 +1773,8 @@
     "hsr": 0
    },
    "climb": "Climb Switch",
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "dvo-topaz-t3-air",
@@ -1752,7 +1808,8 @@
     "hsr": 0
    },
    "climb": "3-mode LSC lever",
-   "note": "Also set the bladder pressure (DVO chart)."
+   "note": "Also set the bladder pressure (DVO chart).",
+   "url": null
   },
   {
    "id": "dvo-jade-x",
@@ -1783,7 +1840,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "formula-mod",
@@ -1814,7 +1872,8 @@
     "hsr": 0
    },
    "climb": "Lockout lever",
-   "note": "Progression via Neopos inserts."
+   "note": "Progression via Neopos inserts.",
+   "url": null
   },
   {
    "id": "manitou-mara-pro",
@@ -1845,7 +1904,8 @@
     "hsr": 0
    },
    "climb": null,
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "ext-aria",
@@ -1879,7 +1939,8 @@
     "hsr": 0
    },
    "climb": "Climb lever",
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "ext-storia-v3",
@@ -1910,7 +1971,8 @@
     "hsr": 0
    },
    "climb": "Climb lever",
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "push-industries-elevensix",
@@ -1941,7 +2003,8 @@
     "hsr": 0
    },
    "climb": "Mode lever (Climb / Descend)",
-   "note": "Custom-valved for your weight — PUSH tunes it to your order."
+   "note": "Custom-valved for your weight — PUSH tunes it to your order.",
+   "url": "https://pushindustries.com/products/elevensix"
   },
   {
    "id": "sr-suntour-triair",
@@ -1975,7 +2038,8 @@
     "hsr": 0
    },
    "climb": "3-position lever (Open / Medium / Firm)",
-   "note": ""
+   "note": "",
+   "url": null
   },
   {
    "id": "x-fusion-o2-pro-rcx",
@@ -2009,7 +2073,22 @@
     "hsr": 0
    },
    "climb": "Lockout lever",
-   "note": ""
+   "note": "",
+   "url": null
   }
- ]
+ ],
+ "brandSites": {
+  "Fox": "ridefox.com",
+  "RockShox": "sram.com",
+  "Öhlins": "ohlins.com",
+  "Marzocchi": "marzocchi.com",
+  "Cane Creek": "canecreek.com",
+  "DVO": "dvosuspension.com",
+  "Formula": "rideformula.com",
+  "Manitou": "manitoumtb.com",
+  "EXT": "extremeshox.com",
+  "PUSH Industries": "pushindustries.com",
+  "SR Suntour": "srsuntour-cycling.com",
+  "X-Fusion": "xfusionshox.com"
+ }
 }

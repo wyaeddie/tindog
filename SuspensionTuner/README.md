@@ -12,6 +12,8 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 - Brand badge next to the model name. To use real logos in the SwiftUI app, add images named
   `logo-<brand>` to the app's Assets catalog (`logo-fox`, `logo-rockshox`, `logo-ohlins`, `logo-cane-creek`, …).
   They replace the coloured monogram automatically.
+- Click the brand badge or model name in the results header to open that model's spec page on the
+  manufacturer's website (`url` in catalog.json; models without a verified page fall back to a search of the brand's site)
 - **Share** (image or text on macOS/iOS; copy text / PNG / PDF in the Python app) and **Print** (⌘P / Ctrl+P)
 
 ## Layout

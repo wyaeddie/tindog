@@ -52,4 +52,11 @@ final class EngineTests: XCTestCase {
             XCTAssertGreaterThan(Int(r.headlineValue) ?? 0, 0, m.id)
         }
     }
+
+    func testSpecsURLs() {
+        XCTAssertEqual(catalog.specsURL(for: model("fox-36-factory"))?.absoluteString, "https://ridefox.com/pages/fox-36")
+        XCTAssertEqual(catalog.specsURL(for: model("dvo-topaz-t3-air"))?.absoluteString,
+                       "https://www.google.com/search?q=site:dvosuspension.com%20Topaz%20T3%20Air%20specs")
+        for m in catalog.models { XCTAssertNotNil(catalog.specsURL(for: m), m.id) }
+    }
 }

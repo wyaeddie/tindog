@@ -61,12 +61,14 @@ public struct SuspensionModel: Codable, Hashable, Identifiable {
     public let adjusters: Adjusters
     public let climb: String?
     public let note: String
+    public let url: String?
 }
 
 public struct Catalog: Codable {
     public let version: Int
     public let disclaimer: String
     public let models: [SuspensionModel]
+    public let brandSites: [String: String]
 
     /// The bundled catalog (same JSON the Python app reads).
     public static let bundled: Catalog = {
@@ -77,6 +79,15 @@ public struct Catalog: Codable {
     public func brands(for kind: ComponentKind) -> [String] {
         var seen = Set<String>()
         return models.filter { $0.kind == kind }.map(\.brand).filter { seen.insert($0).inserted }
+    }
+
+    /// Official product page when we have a verified one, else a search of the brand's own site.
+    public func specsURL(for model: SuspensionModel) -> URL? {
+        if let url = model.url { return URL(string: url) }
+        guard let domain = brandSites[model.brand] else { return nil }
+        var components = URLComponents(string: "https://www.google.com/search")!
+        components.queryItems = [URLQueryItem(name: "q", value: "site:\(domain) \(model.name) specs")]
+        return components.url
     }
 
     public func models(for kind: ComponentKind, brand: String) -> [SuspensionModel] {

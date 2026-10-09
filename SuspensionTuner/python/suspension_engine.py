@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import math
+import urllib.parse
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -34,6 +35,15 @@ CATEGORY_RANK = {"xc": 0, "trail": 1, "enduro": 2, "dh": 3}
 def load_catalog(path: Path = CATALOG_PATH) -> dict:
     with open(path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def specs_url(catalog: dict, model: dict) -> str:
+    """Official product page when we have a verified one, else a search of the brand's own site."""
+    if model.get("url"):
+        return model["url"]
+    domain = catalog["brandSites"][model["brand"]]
+    query = f"site:{domain} {model['name']} specs"
+    return "https://www.google.com/search?q=" + urllib.parse.quote_plus(query)
 
 
 @dataclass

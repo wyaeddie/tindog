@@ -1,7 +1,7 @@
 """Run: python3 -m unittest test_engine.py   (Swift mirror: apple/Tests/SuspensionKitTests)"""
 import unittest
 
-from suspension_engine import RiderInput, calculate, load_catalog, recommended_frame_size
+from suspension_engine import RiderInput, calculate, load_catalog, recommended_frame_size, specs_url
 
 CATALOG = load_catalog()
 MODELS = {m["id"]: m for m in CATALOG["models"]}
@@ -51,6 +51,14 @@ class EngineTests(unittest.TestCase):
                            stroke_mm=(m["stroke"] or {"default": 0})["default"])
             rec = calculate(m, r)
             self.assertTrue(int(rec.headline_value) > 0, m["id"])
+
+
+    def test_specs_urls(self):
+        self.assertEqual(specs_url(CATALOG, MODELS["fox-36-factory"]), "https://ridefox.com/pages/fox-36")
+        self.assertEqual(specs_url(CATALOG, MODELS["dvo-topaz-t3-air"]),
+                         "https://www.google.com/search?q=site%3Advosuspension.com+Topaz+T3+Air+specs")
+        for m in CATALOG["models"]:
+            self.assertTrue(specs_url(CATALOG, m).startswith("https://"), m["id"])
 
 
 if __name__ == "__main__":

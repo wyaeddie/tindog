@@ -4,8 +4,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QDoubleValidator, QGuiApplication, QIcon, QIntValidator, QKeySequence, QPainter, QShortcut
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QDesktopServices, QDoubleValidator, QGuiApplication, QIcon, QIntValidator, QKeySequence, QPainter, QShortcut
 from PySide6.QtPrintSupport import QPrintDialog, QPrinter
 from PySide6.QtWidgets import (
     QApplication, QButtonGroup, QComboBox, QFileDialog, QFrame, QGridLayout, QHBoxLayout,
@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from suspension_engine import (
-    FRAME_SIZES, STYLE_LABELS, STYLES, RiderInput, calculate, load_catalog,
+    FRAME_SIZES, STYLE_LABELS, STYLES, RiderInput, calculate, load_catalog, specs_url,
 )
 
 # Inputs keep the orange accent; the output side is green.
@@ -475,11 +475,20 @@ class MainWindow(QMainWindow):
 
         # header: badge · name · chips · share/print
         head = QHBoxLayout(); head.setSpacing(14)
-        head.addWidget(brand_badge(m["brand"]))
+        url = specs_url(self.catalog, m)
+        tip = f"Open the {m['brand']} {m['name']} specs on {m['brand']}'s website"
+        badge = brand_badge(m["brand"])
+        badge.setCursor(Qt.PointingHandCursor); badge.setToolTip(tip)
+        badge.mousePressEvent = lambda _e, u=url: QDesktopServices.openUrl(QUrl(u))
+        head.addWidget(badge)
         hv = QVBoxLayout(); hv.setSpacing(6)
         brand_color = BRANDS.get(m["brand"], ("", GREEN, ""))[1]
-        name = QLabel(f"<span style='color:{brand_color}'>{m['brand']}</span> {m['name']}")
+        name = QLabel(f"<a href='{url}' style='text-decoration:none; color:#FFFFFF'>"
+                      f"<span style='color:{brand_color}'>{m['brand']}</span> {m['name']} "
+                      f"<span style='color:#8A919C; font-size:18px'>↗</span></a>")
         name.setStyleSheet("font-size: 24px; font-weight: 800;")
+        name.setOpenExternalLinks(True)
+        name.setCursor(Qt.PointingHandCursor); name.setToolTip(tip)
         chips = QHBoxLayout(); chips.setSpacing(6)
         for text, color in ((m["kind"].title(), SKY), (f"{m['spring'].title()} spring", AMBER),
                             (m["damper"], VIOLET), (STYLE_LABELS[rider.style], GREEN)):

@@ -164,21 +164,37 @@ struct SliderRow: View {
 
 struct ResultsView: View {
     let tuner: TunerModel
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         if let model = tuner.model, let rec = tuner.recommendation, let rider = tuner.rider {
             let report = ReportView(model: model, rec: rec, riderSummary: tuner.riderSummary,
                                     disclaimer: tuner.catalog.disclaimer)
             let title = "\(model.brand) \(model.name) setup"
+            let specs = tuner.catalog.specsURL(for: model)
+            let specsHelp = "Open the \(model.brand) \(model.name) specs on \(model.brand)'s website"
             VStack(alignment: .leading, spacing: 14) {
                 HStack(alignment: .center, spacing: 14) {
-                    BrandBadge(brand: model.brand)
+                    Button { if let specs { openURL(specs) } } label: {
+                        BrandBadge(brand: model.brand)
+                    }
+                    .buttonStyle(.plain)
+                    .help(specsHelp)
                     VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 6) {
-                            Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
-                            Text(model.name)
+                        Button { if let specs { openURL(specs) } } label: {
+                            HStack(spacing: 6) {
+                                Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
+                                Text(model.name).foregroundStyle(.white)
+                                Image(systemName: "arrow.up.right.square")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(Theme.muted)
+                            }
+                            .font(.system(size: 26, weight: .heavy))
+                            .contentShape(Rectangle())
                         }
-                        .font(.system(size: 26, weight: .heavy))
+                        .buttonStyle(.plain)
+                        .help(specsHelp)
+                        .accessibilityHint("Opens the manufacturer's spec page in your browser")
                         HStack(spacing: 6) {
                             MetaChip(text: model.kind.rawValue.capitalized, color: Theme.sky)
                             MetaChip(text: "\(model.spring.rawValue.capitalized) spring", color: Theme.amber)
