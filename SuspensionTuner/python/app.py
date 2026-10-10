@@ -5,10 +5,13 @@ import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QUrl
-from PySide6.QtGui import QDesktopServices, QDoubleValidator, QGuiApplication, QIcon, QIntValidator, QKeySequence, QPainter, QShortcut
+from PySide6.QtGui import (
+    QDesktopServices, QDoubleValidator, QGuiApplication, QIcon, QIntValidator, QKeySequence, QPainter,
+    QPainterPath, QPixmap, QShortcut,
+)
 from PySide6.QtPrintSupport import QPrintDialog, QPrinter
 from PySide6.QtWidgets import (
-    QApplication, QButtonGroup, QComboBox, QFileDialog, QFrame, QGridLayout, QHBoxLayout,
+    QApplication, QButtonGroup, QComboBox, QDialog, QFileDialog, QFrame, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QMainWindow, QMenu, QMessageBox, QPushButton, QScrollArea, QSlider,
     QVBoxLayout, QWidget,
 )
@@ -62,6 +65,7 @@ STYLE = f"""
 QWidget {{ background: #0D0F13; color: #E8EAED; font-family: 'Inter', 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 13px; }}
 QLabel {{ background: transparent; }}
 QFrame#panel {{ background: #15181E; border: 1px solid #22262E; border-radius: 18px; }}
+QDialog#about {{ background: #15181E; }}
 QFrame#card {{ background: #1A1E25; border: 1px solid #262B34; border-radius: 14px; }}
 QFrame#hero {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1, stop:0 {GREEN_BRIGHT}, stop:1 {GREEN_DEEP}); border-radius: 18px; }}
 QFrame#warn {{ background: #2A2112; border: 1px solid #5A4318; border-radius: 14px; }}
@@ -178,6 +182,81 @@ class SettingCard(QFrame):
         v.addStretch()
 
 
+HERE = Path(__file__).resolve().parent
+
+APP_NAME = "Suspension Tuner"
+APP_VERSION = "1.0"
+APP_AUTHOR = "Eddie Sisomsun"
+APP_YEAR = "2026"
+APP_SUMMARY = ("Suspension Tuner helps mountain bikers dial in their fork and rear shock. "
+               "Pick your suspension, enter your weight, height, frame size and riding style, and get a "
+               "starting setup: air pressure or spring rate, sag, volume spacers, rebound, compression and lockout.")
+
+
+class ClickableLabel(QLabel):
+    """QLabel that runs a callback when clicked (used for the logo and app name)."""
+
+    def __init__(self, on_click, text: str = ""):
+        super().__init__(text)
+        self._on_click = on_click
+        self.setCursor(Qt.PointingHandCursor)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._on_click()
+        super().mouseReleaseEvent(event)
+
+
+def rounded_pixmap(path: Path, size: int) -> QPixmap:
+    """The app logo scaled to `size` with iOS-style rounded corners."""
+    ratio = QGuiApplication.primaryScreen().devicePixelRatio() if QGuiApplication.primaryScreen() else 1.0
+    px = round(size * ratio)
+    src = QPixmap(str(path)).scaled(px, px, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+    out = QPixmap(px, px); out.fill(Qt.transparent)
+    p = QPainter(out); p.setRenderHint(QPainter.Antialiasing)
+    clip = QPainterPath(); clip.addRoundedRect(0, 0, px, px, px * 0.225, px * 0.225)
+    p.setClipPath(clip); p.drawPixmap(0, 0, src); p.end()
+    out.setDevicePixelRatio(ratio)
+    return out
+
+
+class AboutDialog(QDialog):
+    def __init__(self, parent, model_count: int):
+        super().__init__(parent)
+        self.setWindowTitle(f"About {APP_NAME}")
+        self.setObjectName("about")
+        self.setFixedWidth(380)
+        v = QVBoxLayout(self); v.setContentsMargins(26, 26, 26, 22); v.setSpacing(12)
+        logo = QLabel(); logo.setPixmap(rounded_pixmap(HERE / "logo.png", 88)); logo.setAlignment(Qt.AlignCenter)
+        v.addWidget(logo)
+        name = QLabel(f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{GOLD}'>Tuner</span>")
+        name.setStyleSheet("font-size: 22px; font-weight: 800;"); name.setAlignment(Qt.AlignCenter)
+        v.addWidget(name)
+        ver = QLabel(f"Version {APP_VERSION}"); ver.setObjectName("muted"); ver.setAlignment(Qt.AlignCenter)
+        v.addWidget(ver)
+        summary = QLabel(APP_SUMMARY); summary.setWordWrap(True); summary.setAlignment(Qt.AlignCenter)
+        v.addWidget(summary)
+        facts = QFrame(); facts.setObjectName("card")
+        g = QGridLayout(facts); g.setContentsMargins(14, 12, 14, 12); g.setVerticalSpacing(6)
+        rows = [("Created by", APP_AUTHOR), ("Year created", APP_YEAR),
+                ("Suspension models", str(model_count)), ("Platforms", "Mac, Windows, Linux")]
+        for i, (k, val) in enumerate(rows):
+            key = QLabel(k); key.setObjectName("muted")
+            value = QLabel(val); value.setStyleSheet("font-weight: 700;"); value.setAlignment(Qt.AlignRight)
+            g.addWidget(key, i, 0); g.addWidget(value, i, 1)
+        v.addWidget(facts)
+        note = QLabel("Settings are starting points. Always check the manufacturer's setup guide. "
+                      "Not affiliated with any suspension brand.")
+        note.setObjectName("muted"); note.setWordWrap(True); note.setAlignment(Qt.AlignCenter)
+        v.addWidget(note)
+        copy = QLabel(f"© {APP_YEAR} {APP_AUTHOR}. All rights reserved.")
+        copy.setObjectName("muted"); copy.setAlignment(Qt.AlignCenter)
+        v.addWidget(copy)
+        ok = QPushButton("Close"); ok.setObjectName("reset"); ok.setCursor(Qt.PointingHandCursor)
+        ok.clicked.connect(self.accept)
+        v.addWidget(ok, 0, Qt.AlignCenter)
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -200,18 +279,28 @@ class MainWindow(QMainWindow):
         lv.setContentsMargins(22, 22, 22, 22)
         lv.setSpacing(10)
 
-        header = QHBoxLayout()
+        # Header: logo + name open About; Reset sits on the tagline row.
+        header = QHBoxLayout(); header.setSpacing(12)
+        logo = ClickableLabel(self.show_about)
+        logo.setPixmap(rounded_pixmap(HERE / "logo.png", 52))
+        logo.setToolTip("About Suspension Tuner")
+        header.addWidget(logo, 0, Qt.AlignVCenter)
         titles = QVBoxLayout(); titles.setSpacing(2)
-        title = QLabel(f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{GOLD}'>Tuner</span>")
+        title = ClickableLabel(self.show_about,
+                               f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{GOLD}'>Tuner</span>")
         title.setStyleSheet("font-size: 24px; font-weight: 800;")
+        title.setToolTip("About Suspension Tuner")
+        titles.addWidget(title)
+        tagline = QHBoxLayout(); tagline.setSpacing(8)
         sub = QLabel("Dial in your fork and shock in seconds."); sub.setObjectName("muted")
-        titles.addWidget(title); titles.addWidget(sub)
-        header.addLayout(titles, 1)
+        tagline.addWidget(sub, 1)
         reset = QPushButton("↺  Reset"); reset.setObjectName("reset"); reset.setCursor(Qt.PointingHandCursor)
         reset.setToolTip("Clear all selections and inputs (Ctrl+R)")
         reset.clicked.connect(self.reset)
         QShortcut(QKeySequence("Ctrl+R"), self, activated=self.reset)
-        header.addWidget(reset, 0, Qt.AlignTop)
+        tagline.addWidget(reset, 0, Qt.AlignVCenter)
+        titles.addLayout(tagline)
+        header.addLayout(titles, 1)
         lv.addLayout(header); lv.addSpacing(8)
 
         lv.addWidget(section("1 · Component", ACCENT))
@@ -292,6 +381,9 @@ class MainWindow(QMainWindow):
     def models_for(self, kind, brand=None):
         return [m for m in self.catalog["models"]
                 if m["kind"] == kind and (brand is None or m["brand"] == brand)]
+
+    def show_about(self):
+        AboutDialog(self, len(self.catalog["models"])).exec()
 
     def reset(self):
         for edit in (self.weight, self.height_ft, self.height_in):
@@ -564,7 +656,7 @@ class MainWindow(QMainWindow):
 def main(argv=None):
     app = QApplication(argv or sys.argv)
     app.setStyleSheet(STYLE)
-    app.setWindowIcon(QIcon(str(Path(__file__).resolve().parent / "icon.png")))
+    app.setWindowIcon(QIcon(str(HERE / "icon.png")))
     win = MainWindow()
     win.resize(1280, 860)
     win.show()

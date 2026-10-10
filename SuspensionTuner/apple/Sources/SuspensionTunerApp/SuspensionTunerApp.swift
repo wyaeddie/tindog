@@ -20,6 +20,28 @@ struct SuspensionTunerApp: App {
         }
         #if os(macOS)
         .defaultSize(width: 1280, height: 880)
+        .commands {
+            // Suspension Tuner ▸ About opens the same window as clicking the logo.
+            CommandGroup(replacing: .appInfo) { AboutMenuItem() }
+        }
+        #endif
+
+        #if os(macOS)
+        Window("About \(AppInfo.name)", id: AboutView.windowID) {
+            AboutView()
+        }
+        .windowResizability(.contentSize)
+        .windowStyle(.hiddenTitleBar)
+        .defaultPosition(.center)
         #endif
     }
 }
+
+#if os(macOS)
+private struct AboutMenuItem: View {
+    @Environment(\.openWindow) private var openWindow
+    var body: some View {
+        Button("About \(AppInfo.name)") { openWindow(id: AboutView.windowID) }
+    }
+}
+#endif

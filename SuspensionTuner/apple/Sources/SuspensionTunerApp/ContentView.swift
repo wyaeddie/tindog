@@ -37,32 +37,60 @@ struct ContentView: View {
 
 struct InputPanel: View {
     @Bindable var tuner: TunerModel
+    #if os(macOS)
+    @Environment(\.openWindow) private var openWindow
+    #else
+    @State private var aboutShown = false
+    #endif
+
+    /// Clicking the logo or the app name opens About: its own small window on the Mac, a sheet on iPhone/iPad.
+    private func showAbout() {
+        #if os(macOS)
+        openWindow(id: AboutView.windowID)
+        #else
+        aboutShown = true
+        #endif
+    }
 
     var body: some View {
         Panel {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Suspension Tuner")
-                            .font(.system(size: 26, weight: .heavy))
-                            .foregroundStyle(Theme.titleGradient)
-                        Text("Dial in your fork and shock in seconds.")
-                            .font(.footnote).foregroundStyle(Theme.muted)
-                    }
-                    Spacer()
-                    Button {
-                        withAnimation(.snappy) { tuner.reset() }
-                    } label: {
-                        Label("Reset", systemImage: "arrow.counterclockwise")
-                            .font(.system(size: 12, weight: .bold))
-                            .padding(.horizontal, 12).padding(.vertical, 7)
-                            .foregroundStyle(Theme.accent)
-                            .background(Theme.accent.opacity(0.12), in: Capsule())
-                            .overlay(Capsule().stroke(Theme.accent.opacity(0.5)))
+                HStack(alignment: .center, spacing: 12) {
+                    Button(action: showAbout) {
+                        AppLogo(size: 52)
                     }
                     .buttonStyle(.plain)
-                    .keyboardShortcut("r", modifiers: .command)
-                    .help("Clear all selections and inputs (⌘R)")
+                    .help("About Suspension Tuner")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Button(action: showAbout) {
+                            Text("Suspension Tuner")
+                                .font(.system(size: 26, weight: .heavy))
+                                .foregroundStyle(Theme.titleGradient)
+                        }
+                        .buttonStyle(.plain)
+                        .help("About Suspension Tuner")
+                        HStack(alignment: .center, spacing: 8) {
+                            Text("Dial in your fork and shock in seconds.")
+                                .font(.footnote).foregroundStyle(Theme.muted)
+                                .lineLimit(2)
+                            Spacer(minLength: 4)
+                            Button {
+                                withAnimation(.snappy) { tuner.reset() }
+                            } label: {
+                                Label("Reset", systemImage: "arrow.counterclockwise")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .lineLimit(1)
+                                    .padding(.horizontal, 12).padding(.vertical, 7)
+                                    .foregroundStyle(Theme.accent)
+                                    .background(Theme.accent.opacity(0.12), in: Capsule())
+                                    .overlay(Capsule().stroke(Theme.accent.opacity(0.5)))
+                                    .fixedSize()
+                            }
+                            .buttonStyle(.plain)
+                            .keyboardShortcut("r", modifiers: .command)
+                            .help("Clear all selections and inputs (⌘R)")
+                        }
+                    }
                 }
                 .padding(.bottom, 6)
 
@@ -129,6 +157,14 @@ struct InputPanel: View {
                 .opacity(tuner.riderEnabled ? 1 : 0.4)
             }
         }
+        #if os(iOS)
+        .sheet(isPresented: $aboutShown) {
+            ScrollView { AboutView().frame(maxWidth: .infinity) }
+                .background(Theme.panel)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
+        #endif
     }
 }
 
