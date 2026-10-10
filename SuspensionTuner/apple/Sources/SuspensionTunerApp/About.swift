@@ -17,16 +17,15 @@ enum AppInfo {
     }
 }
 
-/// The app logo (the ST spring-and-shock icon) as a rounded tile.
+/// The orange ST spring-and-shock logo on a transparent background (header and About).
 struct AppLogo: View {
     var size: CGFloat = 52
     var body: some View {
         Image("AppLogo")
             .resizable()
             .interpolation(.high)
+            .scaledToFit()
             .frame(width: size, height: size)
-            .clipShape(RoundedRectangle(cornerRadius: size * 0.225, style: .continuous))
-            .shadow(color: .black.opacity(0.35), radius: 6, y: 3)
             .accessibilityLabel("\(AppInfo.name) logo")
     }
 }

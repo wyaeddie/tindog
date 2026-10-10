@@ -7,7 +7,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import (
     QDesktopServices, QDoubleValidator, QGuiApplication, QIcon, QIntValidator, QKeySequence, QPainter,
-    QPainterPath, QPixmap, QShortcut,
+    QPixmap, QShortcut,
 )
 from PySide6.QtPrintSupport import QPrintDialog, QPrinter
 from PySide6.QtWidgets import (
@@ -207,15 +207,12 @@ class ClickableLabel(QLabel):
         super().mouseReleaseEvent(event)
 
 
-def rounded_pixmap(path: Path, size: int) -> QPixmap:
-    """The app logo scaled to `size` with iOS-style rounded corners."""
-    ratio = QGuiApplication.primaryScreen().devicePixelRatio() if QGuiApplication.primaryScreen() else 1.0
+def logo_pixmap(size: int) -> QPixmap:
+    """The orange ST logo (transparent background) scaled to `size`, sharp on Retina screens."""
+    screen = QGuiApplication.primaryScreen()
+    ratio = screen.devicePixelRatio() if screen else 1.0
     px = round(size * ratio)
-    src = QPixmap(str(path)).scaled(px, px, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-    out = QPixmap(px, px); out.fill(Qt.transparent)
-    p = QPainter(out); p.setRenderHint(QPainter.Antialiasing)
-    clip = QPainterPath(); clip.addRoundedRect(0, 0, px, px, px * 0.225, px * 0.225)
-    p.setClipPath(clip); p.drawPixmap(0, 0, src); p.end()
+    out = QPixmap(str(HERE / "logo.png")).scaled(px, px, Qt.KeepAspectRatio, Qt.SmoothTransformation)
     out.setDevicePixelRatio(ratio)
     return out
 
@@ -227,7 +224,7 @@ class AboutDialog(QDialog):
         self.setObjectName("about")
         self.setFixedWidth(380)
         v = QVBoxLayout(self); v.setContentsMargins(26, 26, 26, 22); v.setSpacing(12)
-        logo = QLabel(); logo.setPixmap(rounded_pixmap(HERE / "logo.png", 88)); logo.setAlignment(Qt.AlignCenter)
+        logo = QLabel(); logo.setPixmap(logo_pixmap(88)); logo.setAlignment(Qt.AlignCenter)
         v.addWidget(logo)
         name = QLabel(f"<span style='color:{ACCENT}'>Suspension</span> <span style='color:{GOLD}'>Tuner</span>")
         name.setStyleSheet("font-size: 22px; font-weight: 800;"); name.setAlignment(Qt.AlignCenter)
@@ -282,7 +279,7 @@ class MainWindow(QMainWindow):
         # Header: logo + name open About; Reset sits on the tagline row.
         header = QHBoxLayout(); header.setSpacing(12)
         logo = ClickableLabel(self.show_about)
-        logo.setPixmap(rounded_pixmap(HERE / "logo.png", 52))
+        logo.setPixmap(logo_pixmap(52))
         logo.setToolTip("About Suspension Tuner")
         header.addWidget(logo, 0, Qt.AlignVCenter)
         titles = QVBoxLayout(); titles.setSpacing(2)
