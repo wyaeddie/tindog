@@ -26,6 +26,9 @@ targets:
         product: SuspensionKit
     settings:
       base:
+        # Set explicitly so the app always has an ID; without one iOS kills it at launch
+        # (BUNDLE_IDENTIFIER_FOR_CURRENT_PROCESS_IS_NIL). Change along with bundleIdPrefix.
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.suspensiontuner.SuspensionTuner
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Suspension Tuner
