@@ -187,6 +187,9 @@ HERE = Path(__file__).resolve().parent
 APP_NAME = "Suspension Tuner"
 APP_VERSION = "1.0"
 APP_AUTHOR = "Eddie Sisomsun"
+APP_COMPANY = "Whole Stack Solutions"
+APP_COMPANY_URL = "https://www.wholestack.solutions"
+APP_COMPANY_LABEL = "www.wholestack.solutions"
 APP_YEAR = "2026"
 APP_SUMMARY = ("Suspension Tuner helps mountain bikers dial in their fork and rear shock. "
                "Pick your suspension, enter your weight, height, frame size and riding style, and get a "
@@ -235,23 +238,30 @@ class AboutDialog(QDialog):
         v.addWidget(summary)
         facts = QFrame(); facts.setObjectName("card")
         g = QGridLayout(facts); g.setContentsMargins(14, 12, 14, 12); g.setVerticalSpacing(6)
-        rows = [("Created by", APP_AUTHOR), ("Year created", APP_YEAR),
+        rows = [("Created by", APP_AUTHOR), ("Company", APP_COMPANY), ("Year created", APP_YEAR),
                 ("Suspension models", str(model_count)), ("Platforms", "Mac, Windows, Linux")]
         for i, (k, val) in enumerate(rows):
             key = QLabel(k); key.setObjectName("muted")
             value = QLabel(val); value.setStyleSheet("font-weight: 700;"); value.setAlignment(Qt.AlignRight)
             g.addWidget(key, i, 0); g.addWidget(value, i, 1)
         v.addWidget(facts)
+        site = QLabel(f"<a href='{APP_COMPANY_URL}' style='color:{GREEN}; text-decoration:none; "
+                      f"font-weight:700'>🌐  {APP_COMPANY_LABEL}</a>")
+        site.setOpenExternalLinks(True); site.setAlignment(Qt.AlignCenter)
+        site.setCursor(Qt.PointingHandCursor); site.setToolTip(f"Visit {APP_COMPANY}")
+        v.addWidget(site)
         note = QLabel("Settings are starting points. Always check the manufacturer's setup guide. "
                       "Not affiliated with any suspension brand.")
         note.setObjectName("muted"); note.setWordWrap(True); note.setAlignment(Qt.AlignCenter)
         v.addWidget(note)
-        copy = QLabel(f"© {APP_YEAR} {APP_AUTHOR}. All rights reserved.")
+        copy = QLabel(f"© {APP_YEAR} {APP_COMPANY}. All rights reserved.")
         copy.setObjectName("muted"); copy.setAlignment(Qt.AlignCenter)
         v.addWidget(copy)
         ok = QPushButton("Close"); ok.setObjectName("reset"); ok.setCursor(Qt.PointingHandCursor)
         ok.clicked.connect(self.accept)
         v.addWidget(ok, 0, Qt.AlignCenter)
+        # Size to the wrapped content at the fixed width; otherwise Qt squashes the facts card.
+        self.setFixedHeight(v.totalHeightForWidth(self.width()))
 
 
 class MainWindow(QMainWindow):

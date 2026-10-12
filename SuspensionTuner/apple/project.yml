@@ -32,6 +32,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Suspension Tuner
+        INFOPLIST_KEY_NSHumanReadableCopyright: "© 2026 Whole Stack Solutions. All rights reserved."
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.sports
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"

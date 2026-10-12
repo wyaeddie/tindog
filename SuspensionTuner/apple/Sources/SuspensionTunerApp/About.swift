@@ -5,6 +5,9 @@ import SuspensionKit
 enum AppInfo {
     static let name = "Suspension Tuner"
     static let author = "Eddie Sisomsun"
+    static let company = "Whole Stack Solutions"
+    static let websiteLabel = "www.wholestack.solutions"
+    static let website = URL(string: "https://www.wholestack.solutions")!
     static let year = "2026"
     static let summary = "Suspension Tuner helps mountain bikers dial in their fork and rear shock. "
         + "Pick your suspension, enter your weight, height, frame size and riding style, and get a "
@@ -51,18 +54,25 @@ struct AboutView: View {
                 .fixedSize(horizontal: false, vertical: true)
             VStack(spacing: 6) {
                 aboutRow("Created by", AppInfo.author)
+                aboutRow("Company", AppInfo.company)
                 aboutRow("Year created", AppInfo.year)
                 aboutRow("Suspension models", "\(modelCount)")
                 aboutRow("Platforms", "Mac, iPhone and iPad")
             }
             .padding(14)
             .background(Theme.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            Link(destination: AppInfo.website) {
+                Label(AppInfo.websiteLabel, systemImage: "globe")
+                    .font(.callout.weight(.semibold))
+                    .foregroundStyle(Theme.go)
+            }
+            .help("Visit \(AppInfo.company)")
             Text("Settings are starting points. Always check the manufacturer's setup guide. "
                  + "Not affiliated with any suspension brand.")
                 .font(.caption).foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("© \(AppInfo.year) \(AppInfo.author). All rights reserved.")
+            Text("© \(AppInfo.year) \(AppInfo.company). All rights reserved.")
                 .font(.caption2).foregroundStyle(Theme.muted)
             #if os(iOS)
             Button("Done") { dismiss() }
