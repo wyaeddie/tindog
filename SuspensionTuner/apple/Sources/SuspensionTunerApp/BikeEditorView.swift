@@ -123,9 +123,7 @@ struct BikeEditorView: View {
             .scrollDismissesKeyboard(.interactively)
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle(isNew ? "Add bike" : "Edit bike")
-            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
-            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -137,9 +135,6 @@ struct BikeEditorView: View {
                 }
             }
         }
-        #if os(macOS)
-        .frame(minWidth: 540, minHeight: 700)
-        #endif
         .foregroundStyle(.white)
         .tint(Theme.accent)
         .preferredColorScheme(.dark)

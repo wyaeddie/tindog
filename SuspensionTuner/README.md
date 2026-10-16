@@ -5,63 +5,44 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 ![Fork](docs/screenshot-fork.png)
 ![Shock](docs/screenshot-shock.png)
 
-## Features
-- **Garage (iPhone, iPad, Mac):** save bikes with their fork, shock and rider. The home screen shows the bike
-  with front and rear setups; a Trail / Enduro / Bike Park switch re-tunes both ends in one tap
-- **Tune tab:** pressure / spring-rate dial with ± nudges (hold to repeat), O-ring sag check, mixer-style damping
-  faders and token blocks to record what you actually ran, Share / Print / Save to History
-- **History tab:** saved setups with date, differences from the recommendation and your notes
-- **Settings:** kg / lb, the original quick calculator, About, erase data
-- Fork or shock → brand → model, then weight (lb/kg), height (ft + in), frame size and riding style
-- **Reset** button (⌘R / Ctrl+R) clears everything
-- Results card in green with colour-coded settings (rebound = blue, compression = purple, tokens = amber, lockout = teal)
-- Brand badge next to the model name. To use real logos in the SwiftUI app, add images named
-  `logo-<brand>` to the app's Assets catalog (`logo-fox`, `logo-rockshox`, `logo-ohlins`, `logo-cane-creek`, …).
-  They replace the coloured monogram automatically.
-- Click the brand badge or model name in the results header to open that model's spec page on the
-  manufacturer's website (`url` in catalog.json; models without a verified page fall back to a search of the brand's site)
-- **Share** (image or text on macOS/iOS; copy text / PNG / PDF in the Python app) and **Print** (⌘P / Ctrl+P)
+## Features (iPhone app)
+- **Garage:** save bikes with their fork, shock and rider. The home screen shows the bike with front and rear
+  setups; a Trail / Enduro / Bike Park switch re-tunes both ends in one tap
+- **Tune:** pressure / spring-rate dial with ± nudges (hold to repeat), O-ring sag check, damping sliders and
+  token blocks to record what you actually ran, (?) help for sag and damping, Share / Print / Save to History
+- **History:** saved setups with date, differences from the recommendation and your notes
+- **Settings:** kg / lb, quick calculator (single-screen version), About, erase data
+- Tap the brand badge or model name to open the model's spec page on the maker's website
+  (`url` in catalog.json; models without a verified page fall back to a search of the brand's site)
+- Real brand logos: add images named `logo-<brand>` (`logo-fox`, `logo-rockshox`, `logo-cane-creek`, …) to the
+  Assets catalog and they replace the coloured monogram badges
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `apple/Sources/SuspensionKit/Resources/catalog.json` | **Single source of truth**: 65 forks and shocks from 13 brands (both apps read it) |
-| `apple/Sources/SuspensionKit/` | Swift catalog and calculation engine |
-| `apple/Sources/SuspensionTunerApp/` | SwiftUI app (macOS + iOS, adaptive layout) |
-| `apple/AppResources/Assets.xcassets` | App icon (iOS + macOS) and the place to drop `logo-<brand>` images |
-| `apple/project.yml` | XcodeGen spec for the iOS/macOS Xcode project |
-| `python/suspension_engine.py` | Python port of the engine (kept 1:1 with `Engine.swift`) |
-| `python/app.py` | PySide6 desktop GUI (runs on macOS, Windows, Linux) |
+| `apple/Sources/SuspensionKit/Resources/catalog.json` | **Single source of truth**: 65 forks and shocks from 12 brands |
+| `apple/Sources/SuspensionKit/` | Swift catalog, calculation engine, saved-bike data model |
+| `apple/Sources/SuspensionTunerApp/` | SwiftUI iPhone app |
+| `apple/AppResources/` | App icon, `logo-<brand>` images, privacy manifest |
+| `apple/project.yml` | XcodeGen spec for the iOS Xcode project |
+| `apple/release.sh`, `apple/release/` | App Store archive/upload script and listing text |
+| `python/suspension_engine.py` | Python port of the engine (kept 1:1 with `Engine.swift`, used for parity tests) |
+| `python/app.py` | Optional PySide6 desktop calculator |
+| `tools/` | Website image helpers |
 
-## Run
+## Run the iPhone app
 
-**Install on your Mac (Applications + Dock)**
-```sh
-cd apple
-./build-mac.sh        # builds, copies "Suspension Tuner.app" to /Applications and opens it
-```
-Then right-click the Dock icon → Options → Keep in Dock. Re-run the script after pulling updates.
-
-**macOS / iOS (Xcode)**
 ```sh
 cd apple
 brew install xcodegen && xcodegen generate
-open SuspensionTuner.xcodeproj      # pick the SuspensionTuner scheme, then an iPhone simulator or "My Mac", and hit Run
+open SuspensionTuner.xcodeproj      # pick an iPhone simulator (or your iPhone) and press ⌘R
 ```
 Open `SuspensionTuner.xcodeproj`, not `Package.swift`: the package only holds the calculation library.
-Mac install without opening Xcode: `cd apple && ./build-mac.sh`
-
-**Python desktop**
-```sh
-cd python
-pip install -r requirements.txt
-python3 app.py
-```
 
 ## Publishing
 See `apple/release/APP_STORE.md` — listing text, privacy answers, screenshot sizes and the one-command
-`TEAM_ID=… ./release.sh --upload` that archives iPhone/iPad + Mac and uploads to App Store Connect.
+`TEAM_ID=… ./release.sh --upload` that archives the iPhone app and uploads it to App Store Connect.
 
 Website image: `python3 tools/web_screenshot.py shot1.png shot2.png -o suspension-tuner.png` turns two
 Simulator screenshots into one transparent PNG with phone frames.

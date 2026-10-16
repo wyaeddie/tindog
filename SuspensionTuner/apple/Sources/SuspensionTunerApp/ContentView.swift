@@ -37,19 +37,11 @@ struct ContentView: View {
 
 struct InputPanel: View {
     @Bindable var tuner: TunerModel
-    #if os(macOS)
-    @Environment(\.openWindow) private var openWindow
-    #else
     @State private var aboutShown = false
-    #endif
 
-    /// Clicking the logo or the app name opens About: its own small window on the Mac, a sheet on iPhone/iPad.
+    /// Clicking the logo or the app name opens the About sheet.
     private func showAbout() {
-        #if os(macOS)
-        openWindow(id: AboutView.windowID)
-        #else
         aboutShown = true
-        #endif
     }
 
     var body: some View {
@@ -157,14 +149,12 @@ struct InputPanel: View {
                 .opacity(tuner.riderEnabled ? 1 : 0.4)
             }
         }
-        #if os(iOS)
         .sheet(isPresented: $aboutShown) {
             ScrollView { AboutView().frame(maxWidth: .infinity) }
                 .background(Theme.panel)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
-        #endif
     }
 }
 
@@ -201,12 +191,8 @@ struct SliderRow: View {
 struct ResultsView: View {
     let tuner: TunerModel
     @Environment(\.openURL) private var openURL
-    #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
     private var isCompact: Bool { sizeClass == .compact }
-    #else
-    private let isCompact = false
-    #endif
 
     var body: some View {
         if let model = tuner.model, let rec = tuner.recommendation, let rider = tuner.rider {

@@ -7,19 +7,17 @@ options:
   bundleIdPrefix: solutions.wholestack
   deploymentTarget:
     iOS: "17.0"
-    macOS: "14.0"
 packages:
   SuspensionTuner:
     path: .
 targets:
   SuspensionTuner:
     type: application
-    supportedDestinations: [iOS, macOS]   # one app record → iPhone, iPad and Mac (universal purchase)
-    scheme: {}                            # shared scheme so build-mac.sh / xcodebuild can find it
+    platform: iOS                         # iPhone (also runs on iPad)
+    scheme: {}                            # shared scheme so release.sh / xcodebuild can find it
     sources:
       - Sources/SuspensionTunerApp
-      - path: AppResources          # Assets.xcassets: AppIcon + optional logo-<brand> images
-        excludes: ["*.entitlements"]
+      - AppResources                # Assets.xcassets (AppIcon, optional logo-<brand> images), privacy manifest
     dependencies:
       - package: SuspensionTuner
         product: SuspensionKit
@@ -32,7 +30,6 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Suspension Tuner
         INFOPLIST_KEY_NSHumanReadableCopyright: "© 2026 Whole Stack Solutions. All rights reserved."
-        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.sports
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1,2"   # iPhone + iPad
@@ -44,6 +41,3 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         # iPad must support all orientations (App Store requirement for multitasking)
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
-        # Mac App Store requires the App Sandbox; printing needs its own entitlement
-        "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": AppResources/SuspensionTuner-macOS.entitlements
-        ENABLE_HARDENED_RUNTIME: YES

@@ -1,9 +1,5 @@
 import SwiftUI
-#if canImport(AppKit)
-import AppKit
-#elseif canImport(UIKit)
 import UIKit
-#endif
 
 enum Theme {
     // Inputs
@@ -84,15 +80,8 @@ struct BrandStyle {
 
     static func logo(for brand: String) -> Image? {
         let name = "logo-" + slug(brand)
-        #if canImport(AppKit)
-        guard let image = NSImage(named: name) else { return nil }
-        return Image(nsImage: image)
-        #elseif canImport(UIKit)
         guard let image = UIImage(named: name) else { return nil }
         return Image(uiImage: image)
-        #else
-        return nil
-        #endif
     }
 }
 
@@ -198,9 +187,7 @@ struct InputBox: View {
     var body: some View {
         TextField(placeholder, text: $text)
             .textFieldStyle(.plain)
-            #if os(iOS)
             .keyboardType(.decimalPad)
-            #endif
             .padding(.horizontal, 12).padding(.vertical, 10)
             .background(Theme.control, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(Theme.stroke))

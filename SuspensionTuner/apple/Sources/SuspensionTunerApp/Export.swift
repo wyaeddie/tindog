@@ -1,10 +1,6 @@
 import SwiftUI
 import SuspensionKit
-#if canImport(AppKit)
-import AppKit
-#elseif canImport(UIKit)
 import UIKit
-#endif
 
 /// Light, print-friendly version of the results used for Share → image and Print.
 struct ReportView: View {
@@ -100,20 +96,6 @@ enum Exporter {
 
     static func printReport<V: View>(_ view: V, title: String) {
         guard let cg = cgImage(of: view) else { return }
-        #if canImport(AppKit)
-        let size = NSSize(width: CGFloat(cg.width) / scale, height: CGFloat(cg.height) / scale)
-        let imageView = NSImageView(frame: NSRect(origin: .zero, size: size))
-        imageView.image = NSImage(cgImage: cg, size: size)
-        imageView.imageScaling = .scaleProportionallyUpOrDown
-        let info = (NSPrintInfo.shared.copy() as? NSPrintInfo) ?? NSPrintInfo()
-        info.horizontalPagination = .fit
-        info.verticalPagination = .fit
-        info.isHorizontallyCentered = true
-        info.isVerticallyCentered = false
-        let op = NSPrintOperation(view: imageView, printInfo: info)
-        op.jobTitle = title
-        op.run()
-        #elseif canImport(UIKit)
         let info = UIPrintInfo(dictionary: nil)
         info.outputType = .general
         info.jobName = title
@@ -121,6 +103,5 @@ enum Exporter {
         controller.printInfo = info
         controller.printingItem = UIImage(cgImage: cg)
         controller.present(animated: true)
-        #endif
     }
 }

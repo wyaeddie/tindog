@@ -13,7 +13,8 @@ let products: [Product] = [.library(name: "SuspensionKit", targets: ["Suspension
 
 let package = Package(
     name: "SuspensionTuner",
-    platforms: [.macOS(.v14), .iOS(.v17)],
+    // iOS app; `swift test` still runs the SuspensionKit tests on the Mac in Terminal.
+    platforms: [.iOS(.v17)],
     products: products,
     targets: targets
 )

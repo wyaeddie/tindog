@@ -34,7 +34,6 @@ struct AppLogo: View {
 }
 
 struct AboutView: View {
-    static let windowID = "about"
     private let modelCount = Catalog.bundled.models.count
     @Environment(\.dismiss) private var dismiss
 
@@ -57,7 +56,7 @@ struct AboutView: View {
                 aboutRow("Company", AppInfo.company)
                 aboutRow("Year created", AppInfo.year)
                 aboutRow("Suspension models", "\(modelCount)")
-                aboutRow("Platforms", "Mac, iPhone and iPad")
+                aboutRow("Platforms", "iPhone and iPad")
             }
             .padding(14)
             .background(Theme.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
@@ -74,18 +73,12 @@ struct AboutView: View {
                 .fixedSize(horizontal: false, vertical: true)
             Text("© \(AppInfo.year) \(AppInfo.company). All rights reserved.")
                 .font(.caption2).foregroundStyle(Theme.muted)
-            #if os(iOS)
             Button("Done") { dismiss() }
                 .buttonStyle(.borderedProminent)
                 .tint(Theme.accent)
-            #endif
         }
         .padding(24)
-        #if os(macOS)
-        .frame(width: 360)
-        #else
         .frame(maxWidth: 420)
-        #endif
         .foregroundStyle(.white)
         .background(Theme.panel)
         .preferredColorScheme(.dark)

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Small (?) button that opens a help popover (a bubble on iPhone and iPad, a popover on Mac).
+/// Small (?) button that opens a help popover (shown as a bubble on iPhone and iPad).
 struct HelpButton<Content: View>: View {
     let title: String
     @ViewBuilder var content: Content

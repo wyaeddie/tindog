@@ -127,11 +127,7 @@ extension View {
 struct SettingsView: View {
     @Bindable var store: GarageStore
     @State private var confirmErase = false
-    #if os(macOS)
-    @Environment(\.openWindow) private var openWindow
-    #else
     @State private var aboutShown = false
-    #endif
 
     var body: some View {
         NavigationStack {
@@ -158,11 +154,7 @@ struct SettingsView: View {
 
                 SettingsGroup(title: "About") {
                     Button {
-                        #if os(macOS)
-                        openWindow(id: AboutView.windowID)
-                        #else
                         aboutShown = true
-                        #endif
                     } label: {
                         SettingsRow(icon: "info.circle.fill", color: Theme.accent, title: "About \(AppInfo.name)",
                                     subtitle: "Version, credits and website")
@@ -182,21 +174,17 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
                 }
             }
-            #if os(iOS)
             .toolbar(.hidden, for: .navigationBar)
-            #endif
         }
         .confirmationDialog("Erase all bikes and history?", isPresented: $confirmErase, titleVisibility: .visible) {
             Button("Erase everything", role: .destructive) { store.eraseAll() }
         }
-        #if os(iOS)
         .sheet(isPresented: $aboutShown) {
             ScrollView { AboutView().frame(maxWidth: .infinity) }
                 .background(Theme.panel)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
-        #endif
     }
 }
 

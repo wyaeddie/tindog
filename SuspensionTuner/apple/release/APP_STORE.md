@@ -1,6 +1,6 @@
-# Publishing Suspension Tuner (iPhone, iPad, Mac)
+# Publishing Suspension Tuner (iPhone)
 
-One app record covers iPhone, iPad and Mac (universal purchase).
+An iPhone app (it also runs on iPad).
 
 | | |
 |---|---|
@@ -19,7 +19,7 @@ One app record covers iPhone, iPad and Mac (universal purchase).
    (developer.apple.com → Account → Membership details).
 2. **Xcode** — Xcode → Settings → Accounts → add your Apple ID.
 3. **App record** — appstoreconnect.apple.com → Apps → **+ New App**
-   - Platforms: **iOS** and **macOS**
+   - Platforms: **iOS**
    - Name: `Suspension Tuner` (if taken: `Suspension Tuner: MTB Setup`)
    - Primary language: English (U.S.)
    - Bundle ID: `solutions.wholestack.suspensiontuner` (register it first under
@@ -31,12 +31,12 @@ One app record covers iPhone, iPad and Mac (universal purchase).
    cd SuspensionTuner/apple
    TEAM_ID=ABCDE12345 ./release.sh --upload
    ```
-   This regenerates the project, runs the unit tests, archives iPhone/iPad and Mac with your
-   signing team and uploads both. (Without `--upload` it exports signed files to `build/release/`
+   This regenerates the project, runs the unit tests, archives the app with your signing team
+   and uploads it. (Without `--upload` it exports signed files to `build/release/`
    for the Transporter app.) If anything fails, open `SuspensionTuner.xcodeproj`, pick
    **Any iOS Device** → **Product → Archive** to see the error in Xcode.
 5. **TestFlight** — after 10–30 min the builds appear under TestFlight. Install on your iPhone/iPad
-   and Mac and run through the app once.
+   and run through the app once.
 6. **Listing** — fill in the text below, add screenshots, pick the build for each platform.
 7. **Submit for Review** — usually 1–3 days.
 
@@ -78,7 +78,7 @@ Popular models from 12 suspension brands. Tap any model to open the maker's spec
 SHARE AND PRINT
 Send a setup card to a friend or print it for the workshop.
 
-Works on iPhone, iPad and Mac. No account, no ads, no tracking — your data stays on your device.
+Works on iPhone and iPad. No account, no ads, no tracking — your data stays on your device.
 
 Settings are starting points. Always check your manufacturer's setup guide and never exceed the maximum pressure printed on your fork or shock. Brand and model names are trademarks of their owners; Suspension Tuner is not affiliated with or endorsed by them.
 ```
@@ -106,6 +106,5 @@ Take them in the Simulator with **⌘S** (saved to the Desktop) — 3 to 5 per d
 |---|---|---|
 | iPhone 6.9″ (required) | iPhone 16 Pro Max / 17 Pro Max | 1320 × 2868 |
 | iPad 13″ (required, the app runs on iPad) | iPad Pro 13-inch (M4) | 2064 × 2752 |
-| Mac | My Mac, window ≥ 1440 × 900 | 2880 × 1800 (or 1440 × 900) |
 
 Suggested shots: Garage home · Tune (fork) with sliders · Tune (shock) · Add bike sheet · History.

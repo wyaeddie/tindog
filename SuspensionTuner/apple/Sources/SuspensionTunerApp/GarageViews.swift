@@ -26,7 +26,7 @@ struct RootView: View {
     }
 }
 
-/// Scrollable dark page with a readable max width on iPad / Mac.
+/// Scrollable dark page with a readable max width on iPad.
 struct Page<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
