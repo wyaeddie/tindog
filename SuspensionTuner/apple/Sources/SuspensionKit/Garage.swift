@@ -165,7 +165,7 @@ public extension Recommendation {
         }
         for c in clicks {
             if let v = ran.clicks[c.key], v != c.value {
-                out.append("\(c.label): \(v) clicks \(c.fromClosed ? "out" : "in") (recommended \(c.value))")
+                out.append("\(c.label): \(v) clicks \(c.direction) (recommended \(c.value))")
             }
         }
         return out

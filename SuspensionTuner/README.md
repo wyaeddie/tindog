@@ -56,11 +56,20 @@ cd apple && swift test
 cd python && python3 -m unittest test_engine.py
 ```
 
-## How the numbers are calculated
-- **System weight** = rider + 5 kg of gear. Front/rear weight split starts at 40/60 and shifts forward for larger frames, or when the rider is big for the chosen frame. The recommended frame size comes from height.
-- **Sag target** by style. Fork: trail 20%, enduro 22%, bike park 23%. Shock: 28, 30 and 31%. XC products run 2–3% less.
-- **Air pressure** = model pressure ratio × system weight × weight-split factor × sag factor (× leverage ratio for shocks). Capped at the model's maximum psi, with a warning.
-- **Coil rate** = rear load × leverage ratio ÷ (sag × stroke), rounded to 25 lb/in.
-- **Damping**: rebound slows as weight goes up. Low- and high-speed compression firm up from trail to enduro to bike park and with weight. Every value is given in clicks for that model's adjuster range.
+## Where the numbers come from
+Each model in `catalog.json` can carry an `mfg` block copied from the maker's own setup guide. The app reads it the way you would read the chart, using your body weight:
 
-These are starting points. Per-model ratios and click counts are approximations, so always check the manufacturer's setup chart and the max-pressure label on the product.
+| Data | Source |
+|---|---|
+| FOX 32 SC, 34 SL, 36 SL, 36, 38, 40, Podium | FOX 2026 owner's manuals: pressure by 10 lb row, rebound (GRIP / GRIP X / GRIP X2 LSR + HSR) by row, compression clicks, stock/max volume spacers by travel, 15–20% sag |
+| FOX FLOAT SL, FLOAT, FLOAT X, FLOAT X2, DHX2, DHX | FOX 2026 owner's manuals: start psi = body weight in lb, 25–30% sag (coil ~30%), rebound and compression by psi (air) or spring rate (DHX2) |
+| RockShox Pike, Lyrik, ZEB, BoXXer, SID, SID SL, Recon Gold | SRAM 2025 front suspension specifications: pressure bands by weight and travel (interpolated within the band), stock/max Bottomless Tokens, max psi. Charger 3 LSC/HSC start in the middle (SRAM setup guide) |
+| Marzocchi Bomber Z1, Z2, 58, Air, CR | Marzocchi owner's manuals: pressure and rebound by row, body-weight psi for the Bomber Air |
+| Öhlins RXF36 m.2, RXF38 m.2, DH38 | Öhlins manuals: main and ramp-up chamber pressure by kg, sag range (partial) |
+
+Anything a maker doesn't publish is calculated and labelled **Estimate** in the app (a badge at the top of each result shows Manufacturer chart / Partly manufacturer / Estimate and links to the guide):
+- **Coil spring rate** is always calculated, because it depends on the frame's leverage: weight with 5 kg gear × rear load × leverage ÷ (sag × stroke), rounded to 25 lb/in.
+- **Models without a chart** (DVO, Cane Creek, Manitou, EXT, Formula, PUSH, SR Suntour, X-Fusion, RockShox shocks, RockShox 35) use the older formula: per-model pressure ratio × weight with gear × front/rear split × sag factor, with style-based sag (fork 20/22/23%, shock 28/30/31%) and damping that firms up with weight and riding style.
+- Manufacturer charts don't change with riding style, so for those models the style only changes the advice.
+
+Always check the max-pressure label on the product.

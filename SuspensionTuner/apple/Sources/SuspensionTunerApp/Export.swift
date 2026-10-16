@@ -18,6 +18,9 @@ struct ReportView: View {
                     Text("\(model.kind.rawValue.capitalized) · \(model.spring.rawValue.capitalized) spring · \(model.damper) damper")
                         .font(.subheadline).foregroundStyle(.secondary)
                     Text(riderSummary).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.goDeep)
+                    Text(rec.quality == .estimate ? "Estimate — no published setup chart"
+                         : "\(rec.quality.title): \(rec.sourceTitle ?? "")")
+                        .font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                 }
             }
 

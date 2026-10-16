@@ -1,6 +1,6 @@
 {
- "version": 1,
- "disclaimer": "Starting-point estimates. Always confirm against the manufacturer's setup chart and the max-pressure label on your fork or shock. Brand and model names are trademarks of their owners; Suspension Tuner is not affiliated with or endorsed by them.",
+ "version": 2,
+ "disclaimer": "Manufacturer starting points where the maker publishes a chart (marked as such); other values are estimates. Always check the max pressure printed on your fork or shock. Brand and model names are trademarks of their owners; Suspension Tuner is not affiliated with or endorsed by them.",
  "models": [
   {
    "id": "fox-32-sc-factory",
@@ -17,7 +17,7 @@
    "stroke": null,
    "damper": "GRIP SL",
    "psiRatio": 0.55,
-   "maxPsi": 120,
+   "maxPsi": 140,
    "tokens": {
     "default": 1,
     "max": 3
@@ -31,7 +31,136 @@
    },
    "climb": "Remote lockout (Open / Firm)",
    "note": "Race fork — favour efficiency over plushness.",
-   "url": null
+   "url": null,
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3104/fork--2026-32mm--or-34mm-",
+    "sourceTitle": "FOX 2026 32/34 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        65
+       ],
+       [
+        130,
+        70
+       ],
+       [
+        140,
+        74
+       ],
+       [
+        150,
+        80
+       ],
+       [
+        160,
+        85
+       ],
+       [
+        170,
+        90
+       ],
+       [
+        180,
+        96
+       ],
+       [
+        190,
+        101
+       ],
+       [
+        200,
+        106
+       ],
+       [
+        210,
+        111
+       ],
+       [
+        220,
+        116
+       ],
+       [
+        230,
+        121
+       ],
+       [
+        240,
+        126
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        13
+       ],
+       [
+        130,
+        12
+       ],
+       [
+        140,
+        11
+       ],
+       [
+        150,
+        10
+       ],
+       [
+        160,
+        9
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        180,
+        7
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-34-sl-factory",
@@ -62,7 +191,136 @@
    },
    "climb": "Remote lockout (Open / Firm)",
    "note": "New for 2026, replaces the 34 Step-Cast.",
-   "url": "https://ridefox.com/pages/fox-34-sl"
+   "url": "https://ridefox.com/pages/fox-34-sl",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3087/fork--2026-34sl",
+    "sourceTitle": "FOX 2026 34 SL owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        64
+       ],
+       [
+        130,
+        69
+       ],
+       [
+        140,
+        74
+       ],
+       [
+        150,
+        78
+       ],
+       [
+        160,
+        83
+       ],
+       [
+        170,
+        88
+       ],
+       [
+        180,
+        92
+       ],
+       [
+        190,
+        97
+       ],
+       [
+        200,
+        102
+       ],
+       [
+        210,
+        106
+       ],
+       [
+        220,
+        111
+       ],
+       [
+        230,
+        116
+       ],
+       [
+        240,
+        120
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        13
+       ],
+       [
+        130,
+        12
+       ],
+       [
+        140,
+        11
+       ],
+       [
+        150,
+        10
+       ],
+       [
+        160,
+        9
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        180,
+        7
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-36-sl-factory",
@@ -93,7 +351,175 @@
    },
    "climb": null,
    "note": "New for 2026, replaces the 34.",
-   "url": "https://ridefox.com/pages/fox-36-sl"
+   "url": "https://ridefox.com/pages/fox-36-sl",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3088/fork--2026-36sl",
+    "sourceTitle": "FOX 2026 36 SL owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        65
+       ],
+       [
+        130,
+        68
+       ],
+       [
+        140,
+        72
+       ],
+       [
+        150,
+        76
+       ],
+       [
+        160,
+        79
+       ],
+       [
+        170,
+        83
+       ],
+       [
+        180,
+        87
+       ],
+       [
+        190,
+        90
+       ],
+       [
+        200,
+        94
+       ],
+       [
+        210,
+        97
+       ],
+       [
+        220,
+        101
+       ],
+       [
+        230,
+        105
+       ],
+       [
+        240,
+        108
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 140,
+      "installed": 1,
+      "max": 6
+     },
+     {
+      "travel": 130,
+      "installed": 2,
+      "max": 7
+     },
+     {
+      "travel": 120,
+      "installed": 4,
+      "max": 8
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        16
+       ],
+       [
+        130,
+        14
+       ],
+       [
+        140,
+        12
+       ],
+       [
+        150,
+        10
+       ],
+       [
+        160,
+        9
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        180,
+        7
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-36-factory",
@@ -124,7 +550,244 @@
    },
    "climb": null,
    "note": "2026 redesign with NA3 air spring.",
-   "url": "https://ridefox.com/pages/fox-36"
+   "url": "https://ridefox.com/pages/fox-36",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3089/fork--2026-36mm",
+    "sourceTitle": "FOX 2026 36 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        66
+       ],
+       [
+        130,
+        70
+       ],
+       [
+        140,
+        74
+       ],
+       [
+        150,
+        78
+       ],
+       [
+        160,
+        82
+       ],
+       [
+        170,
+        86
+       ],
+       [
+        180,
+        89
+       ],
+       [
+        190,
+        94
+       ],
+       [
+        200,
+        99
+       ],
+       [
+        210,
+        105
+       ],
+       [
+        220,
+        109
+       ],
+       [
+        230,
+        113
+       ],
+       [
+        240,
+        117
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 170,
+      "installed": 0,
+      "max": 5
+     },
+     {
+      "travel": 160,
+      "installed": 1,
+      "max": 6
+     },
+     {
+      "travel": 150,
+      "installed": 2,
+      "max": 7
+     },
+     {
+      "travel": 140,
+      "installed": 4,
+      "max": 8
+     },
+     {
+      "travel": 130,
+      "installed": 5,
+      "max": 9
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        9
+       ],
+       [
+        130,
+        8
+       ],
+       [
+        140,
+        7
+       ],
+       [
+        150,
+        7
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        170,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        190,
+        5
+       ],
+       [
+        200,
+        4
+       ],
+       [
+        210,
+        3
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     },
+     {
+      "key": "hsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        8
+       ],
+       [
+        130,
+        7
+       ],
+       [
+        140,
+        7
+       ],
+       [
+        150,
+        6
+       ],
+       [
+        160,
+        6
+       ],
+       [
+        170,
+        5
+       ],
+       [
+        180,
+        4
+       ],
+       [
+        190,
+        4
+       ],
+       [
+        200,
+        3
+       ],
+       [
+        210,
+        2
+       ],
+       [
+        220,
+        1
+       ],
+       [
+        230,
+        0
+       ],
+       [
+        240,
+        0
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        5
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-38-factory",
@@ -141,7 +804,7 @@
    "stroke": null,
    "damper": "GRIP X2",
    "psiRatio": 0.41,
-   "maxPsi": 120,
+   "maxPsi": 140,
    "tokens": {
     "default": 2,
     "max": 6
@@ -155,7 +818,239 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://ridefox.com/pages/fox-38"
+   "url": "https://ridefox.com/pages/fox-38",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3103/fork--2026-38mm",
+    "sourceTitle": "FOX 2026 38 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        72
+       ],
+       [
+        130,
+        76
+       ],
+       [
+        140,
+        80
+       ],
+       [
+        150,
+        84
+       ],
+       [
+        160,
+        89
+       ],
+       [
+        170,
+        93
+       ],
+       [
+        180,
+        97
+       ],
+       [
+        190,
+        102
+       ],
+       [
+        200,
+        106
+       ],
+       [
+        210,
+        110
+       ],
+       [
+        220,
+        114
+       ],
+       [
+        230,
+        119
+       ],
+       [
+        240,
+        123
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 180,
+      "installed": 1,
+      "max": 4
+     },
+     {
+      "travel": 170,
+      "installed": 2,
+      "max": 5
+     },
+     {
+      "travel": 160,
+      "installed": 3,
+      "max": 6
+     },
+     {
+      "travel": 150,
+      "installed": 4,
+      "max": 6
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        9
+       ],
+       [
+        130,
+        8
+       ],
+       [
+        140,
+        7
+       ],
+       [
+        150,
+        7
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        170,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        190,
+        5
+       ],
+       [
+        200,
+        4
+       ],
+       [
+        210,
+        3
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     },
+     {
+      "key": "hsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        8
+       ],
+       [
+        130,
+        7
+       ],
+       [
+        140,
+        7
+       ],
+       [
+        150,
+        6
+       ],
+       [
+        160,
+        6
+       ],
+       [
+        170,
+        5
+       ],
+       [
+        180,
+        4
+       ],
+       [
+        190,
+        4
+       ],
+       [
+        200,
+        3
+       ],
+       [
+        210,
+        2
+       ],
+       [
+        220,
+        1
+       ],
+       [
+        230,
+        0
+       ],
+       [
+        240,
+        0
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        5
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-40-factory",
@@ -186,7 +1081,197 @@
    },
    "climb": null,
    "note": "Dual crown — set crown height evenly.",
-   "url": "https://ridefox.com/pages/fox-40"
+   "url": "https://ridefox.com/pages/fox-40",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3102/fork--2026-40mm",
+    "sourceTitle": "FOX 2026 40 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        52
+       ],
+       [
+        150,
+        64
+       ],
+       [
+        180,
+        76
+       ],
+       [
+        210,
+        87
+       ],
+       [
+        250,
+        101
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 203,
+      "installed": 2,
+      "max": 5
+     },
+     {
+      "travel": 190,
+      "installed": 3,
+      "max": 7
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        10
+       ],
+       [
+        130,
+        9
+       ],
+       [
+        140,
+        8
+       ],
+       [
+        150,
+        8
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        170,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        190,
+        5
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        3
+       ],
+       [
+        240,
+        2
+       ]
+      ]
+     },
+     {
+      "key": "hsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        10
+       ],
+       [
+        130,
+        9
+       ],
+       [
+        140,
+        8
+       ],
+       [
+        150,
+        8
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        170,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        190,
+        5
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        3
+       ],
+       [
+        240,
+        2
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        5
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-podium",
@@ -203,7 +1288,7 @@
    "stroke": null,
    "damper": "GRIP X2",
    "psiRatio": 0.4,
-   "maxPsi": 120,
+   "maxPsi": 130,
    "tokens": {
     "default": 2,
     "max": 5
@@ -217,7 +1302,234 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://ridefox.com/pages/podium"
+   "url": "https://ridefox.com/pages/podium",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3108/fork--2026-podium-",
+    "sourceTitle": "FOX 2026 Podium owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        55
+       ],
+       [
+        130,
+        61
+       ],
+       [
+        140,
+        67
+       ],
+       [
+        150,
+        73
+       ],
+       [
+        160,
+        78
+       ],
+       [
+        170,
+        84
+       ],
+       [
+        180,
+        90
+       ],
+       [
+        190,
+        96
+       ],
+       [
+        200,
+        102
+       ],
+       [
+        210,
+        108
+       ],
+       [
+        220,
+        113
+       ],
+       [
+        230,
+        119
+       ],
+       [
+        240,
+        125
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 170,
+      "installed": 2,
+      "max": 8
+     },
+     {
+      "travel": 160,
+      "installed": 3,
+      "max": 8
+     },
+     {
+      "travel": 150,
+      "installed": 4,
+      "max": 8
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        15
+       ],
+       [
+        130,
+        13
+       ],
+       [
+        140,
+        13
+       ],
+       [
+        150,
+        12
+       ],
+       [
+        160,
+        10
+       ],
+       [
+        170,
+        9
+       ],
+       [
+        180,
+        8
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        5
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     },
+     {
+      "key": "hsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        8
+       ],
+       [
+        130,
+        7
+       ],
+       [
+        140,
+        7
+       ],
+       [
+        150,
+        6
+       ],
+       [
+        160,
+        6
+       ],
+       [
+        170,
+        5
+       ],
+       [
+        180,
+        4
+       ],
+       [
+        190,
+        4
+       ],
+       [
+        200,
+        3
+       ],
+       [
+        210,
+        2
+       ],
+       [
+        220,
+        1
+       ],
+       [
+        230,
+        0
+       ],
+       [
+        240,
+        0
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        8
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-sid-sl-ultimate",
@@ -234,7 +1546,7 @@
    "stroke": null,
    "damper": "Charger Race Day 2",
    "psiRatio": 0.6,
-   "maxPsi": 160,
+   "maxPsi": 195,
    "tokens": {
     "default": 1,
     "max": 3
@@ -248,7 +1560,51 @@
    },
    "climb": "TwistLoc remote lockout",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/sid-sl"
+   "url": "https://www.sram.com/en/rockshox/series/sid-sl",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — SID SL",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        70
+       ],
+       [
+        140,
+        90
+       ],
+       [
+        160,
+        105
+       ],
+       [
+        180,
+        120
+       ],
+       [
+        200,
+        135
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 100,
+      "installed": 0,
+      "max": 3
+     },
+     {
+      "travel": 110,
+      "installed": 0,
+      "max": 3
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-sid-ultimate",
@@ -265,7 +1621,7 @@
    "stroke": null,
    "damper": "Charger Race Day 2",
    "psiRatio": 0.58,
-   "maxPsi": 160,
+   "maxPsi": 150,
    "tokens": {
     "default": 1,
     "max": 3
@@ -279,7 +1635,60 @@
    },
    "climb": "TwistLoc remote lockout",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/sid"
+   "url": "https://www.sram.com/en/rockshox/series/sid",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — SID",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        100,
+        39
+       ],
+       [
+        120,
+        51
+       ],
+       [
+        140,
+        64
+       ],
+       [
+        160,
+        76
+       ],
+       [
+        180,
+        87
+       ],
+       [
+        200,
+        99
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 100,
+      "installed": 1,
+      "max": 3
+     },
+     {
+      "travel": 110,
+      "installed": 1,
+      "max": 3
+     },
+     {
+      "travel": 120,
+      "installed": 0,
+      "max": 3
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-pike-ultimate",
@@ -296,7 +1705,7 @@
    "stroke": null,
    "damper": "Charger 3.1",
    "psiRatio": 0.52,
-   "maxPsi": 150,
+   "maxPsi": 163,
    "tokens": {
     "default": 2,
     "max": 5
@@ -310,7 +1719,109 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/pike"
+   "url": "https://www.sram.com/en/rockshox/series/pike",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — Pike",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        60
+       ],
+       [
+        140,
+        70
+       ],
+       [
+        160,
+        80
+       ],
+       [
+        180,
+        90
+       ],
+       [
+        200,
+        100
+       ],
+       [
+        220,
+        110
+       ]
+      ],
+      "travel": [
+       120,
+       120
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        50
+       ],
+       [
+        140,
+        60
+       ],
+       [
+        160,
+        70
+       ],
+       [
+        180,
+        80
+       ],
+       [
+        200,
+        90
+       ],
+       [
+        220,
+        100
+       ]
+      ],
+      "travel": [
+       130,
+       140
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 120,
+      "installed": 1,
+      "max": 5
+     },
+     {
+      "travel": 130,
+      "installed": 0,
+      "max": 5
+     },
+     {
+      "travel": 140,
+      "installed": 0,
+      "max": 5
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsc",
+      "by": "middle",
+      "from": "open"
+     },
+     {
+      "key": "hsc",
+      "by": "middle",
+      "from": "open"
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-lyrik-ultimate",
@@ -327,7 +1838,7 @@
    "stroke": null,
    "damper": "Charger 3.1",
    "psiRatio": 0.48,
-   "maxPsi": 150,
+   "maxPsi": 163,
    "tokens": {
     "default": 2,
     "max": 5
@@ -341,7 +1852,109 @@
    },
    "climb": null,
    "note": "BikeRadar's top overall fork pick.",
-   "url": "https://www.sram.com/en/rockshox/series/lyrik"
+   "url": "https://www.sram.com/en/rockshox/series/lyrik",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — Lyrik",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        60
+       ],
+       [
+        140,
+        70
+       ],
+       [
+        160,
+        80
+       ],
+       [
+        180,
+        90
+       ],
+       [
+        200,
+        100
+       ],
+       [
+        220,
+        110
+       ]
+      ],
+      "travel": [
+       140,
+       140
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        50
+       ],
+       [
+        140,
+        60
+       ],
+       [
+        160,
+        70
+       ],
+       [
+        180,
+        80
+       ],
+       [
+        200,
+        90
+       ],
+       [
+        220,
+        100
+       ]
+      ],
+      "travel": [
+       150,
+       160
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 140,
+      "installed": 1,
+      "max": 5
+     },
+     {
+      "travel": 150,
+      "installed": 0,
+      "max": 5
+     },
+     {
+      "travel": 160,
+      "installed": 0,
+      "max": 5
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsc",
+      "by": "middle",
+      "from": "open"
+     },
+     {
+      "key": "hsc",
+      "by": "middle",
+      "from": "open"
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-zeb-ultimate",
@@ -358,7 +1971,7 @@
    "stroke": null,
    "damper": "Charger 3.1",
    "psiRatio": 0.44,
-   "maxPsi": 150,
+   "maxPsi": 148,
    "tokens": {
     "default": 2,
     "max": 5
@@ -372,7 +1985,152 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/zeb"
+   "url": "https://www.sram.com/en/rockshox/series/zeb",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — ZEB",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        45
+       ],
+       [
+        140,
+        54
+       ],
+       [
+        160,
+        62
+       ],
+       [
+        180,
+        70
+       ],
+       [
+        200,
+        78
+       ],
+       [
+        220,
+        87
+       ]
+      ],
+      "travel": [
+       150,
+       160
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        37
+       ],
+       [
+        140,
+        45
+       ],
+       [
+        160,
+        54
+       ],
+       [
+        180,
+        62
+       ],
+       [
+        200,
+        70
+       ],
+       [
+        220,
+        78
+       ]
+      ],
+      "travel": [
+       170,
+       180
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        29
+       ],
+       [
+        140,
+        37
+       ],
+       [
+        160,
+        46
+       ],
+       [
+        180,
+        54
+       ],
+       [
+        200,
+        62
+       ],
+       [
+        220,
+        70
+       ]
+      ],
+      "travel": [
+       190,
+       190
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 150,
+      "installed": 2,
+      "max": 5
+     },
+     {
+      "travel": 160,
+      "installed": 1,
+      "max": 5
+     },
+     {
+      "travel": 170,
+      "installed": 1,
+      "max": 5
+     },
+     {
+      "travel": 180,
+      "installed": 0,
+      "max": 4
+     },
+     {
+      "travel": 190,
+      "installed": 0,
+      "max": 4
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsc",
+      "by": "middle",
+      "from": "open"
+     },
+     {
+      "key": "hsc",
+      "by": "middle",
+      "from": "open"
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-boxxer-ultimate",
@@ -389,7 +2147,7 @@
    "stroke": null,
    "damper": "Charger 3.1",
    "psiRatio": 0.48,
-   "maxPsi": 150,
+   "maxPsi": 300,
    "tokens": {
     "default": 2,
     "max": 5
@@ -403,7 +2161,109 @@
    },
    "climb": null,
    "note": "Dual crown downhill fork.",
-   "url": "https://www.sram.com/en/rockshox/series/boxxer"
+   "url": "https://www.sram.com/en/rockshox/series/boxxer",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — BoXXer",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        115
+       ],
+       [
+        140,
+        140
+       ],
+       [
+        160,
+        165
+       ],
+       [
+        180,
+        190
+       ],
+       [
+        200,
+        215
+       ],
+       [
+        220,
+        240
+       ]
+      ],
+      "travel": [
+       180,
+       180
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        90
+       ],
+       [
+        140,
+        110
+       ],
+       [
+        160,
+        130
+       ],
+       [
+        180,
+        150
+       ],
+       [
+        200,
+        170
+       ],
+       [
+        220,
+        190
+       ]
+      ],
+      "travel": [
+       190,
+       200
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 180,
+      "installed": 1,
+      "max": 6
+     },
+     {
+      "travel": 190,
+      "installed": 0,
+      "max": 6
+     },
+     {
+      "travel": 200,
+      "installed": 0,
+      "max": 6
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsc",
+      "by": "middle",
+      "from": "open"
+     },
+     {
+      "key": "hsc",
+      "by": "middle",
+      "from": "open"
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-35-gold-rl",
@@ -434,7 +2294,8 @@
    },
    "climb": "Lockout lever",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/35"
+   "url": "https://www.sram.com/en/rockshox/series/35",
+   "mfg": null
   },
   {
    "id": "rockshox-recon-gold-rl",
@@ -451,7 +2312,7 @@
    "stroke": null,
    "damper": "Motion Control RL",
    "psiRatio": 0.52,
-   "maxPsi": 150,
+   "maxPsi": 205,
    "tokens": {
     "default": 1,
     "max": 3
@@ -465,7 +2326,81 @@
    },
    "climb": "Lockout lever",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/recon"
+   "url": "https://www.sram.com/en/rockshox/series/recon",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2025-front-suspension-specifications.pdf",
+    "sourceTitle": "SRAM 2025 front suspension specifications — Recon Gold",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        140,
+        70
+       ],
+       [
+        160,
+        85
+       ],
+       [
+        180,
+        100
+       ],
+       [
+        200,
+        120
+       ]
+      ],
+      "travel": [
+       100,
+       120
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        140,
+        60
+       ],
+       [
+        160,
+        75
+       ],
+       [
+        180,
+        90
+       ],
+       [
+        200,
+        105
+       ]
+      ],
+      "travel": [
+       130,
+       150
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 100,
+      "installed": 0,
+      "max": 2
+     },
+     {
+      "travel": 120,
+      "installed": 0,
+      "max": 2
+     },
+     {
+      "travel": 130,
+      "installed": 0,
+      "max": 2
+     }
+    ]
+   }
   },
   {
    "id": "ohlins-rxc34-m1",
@@ -493,7 +2428,8 @@
    },
    "climb": "Lockout lever",
    "note": "Uses a ramp-up chamber instead of tokens — follow the Öhlins chart.",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks",
+   "mfg": null
   },
   {
    "id": "ohlins-rxf36-m2",
@@ -521,7 +2457,94 @@
    },
    "climb": null,
    "note": "Three-chamber air spring: set main, then ramp-up chamber.",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks",
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.ohlins.com/storage/F215D6696D2C9FB948011A69BF9E7FC25CA74A3752EE43B9BBE48C95551E3858/275f5a21f13d4a0c840351a2ba8a0929/pdf/media/76327360c153475fba699581b7331237/OM_07258-04_MI_RXF34_RXF36.pdf",
+    "sourceTitle": "Öhlins RXF34/RXF36 owner's manual",
+    "sag": [
+     10,
+     15
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        110,
+        80
+       ],
+       [
+        132,
+        90
+       ],
+       [
+        154,
+        100
+       ],
+       [
+        176,
+        110
+       ],
+       [
+        198,
+        120
+       ],
+       [
+        220,
+        130
+       ],
+       [
+        243,
+        140
+       ],
+       [
+        265,
+        150
+       ]
+      ]
+     }
+    ],
+    "ramp": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        110,
+        160
+       ],
+       [
+        132,
+        170
+       ],
+       [
+        154,
+        180
+       ],
+       [
+        176,
+        190
+       ],
+       [
+        198,
+        200
+       ],
+       [
+        220,
+        210
+       ],
+       [
+        243,
+        220
+       ],
+       [
+        265,
+        230
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "ohlins-rxf38-m2",
@@ -549,7 +2572,94 @@
    },
    "climb": null,
    "note": "Three-chamber air spring: set main, then ramp-up chamber.",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks",
+   "mfg": {
+    "quality": "partial",
+    "source": null,
+    "sourceTitle": "Öhlins RXF38 m.2 owner's manual",
+    "sag": [
+     10,
+     15
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        110,
+        70
+       ],
+       [
+        132,
+        80
+       ],
+       [
+        154,
+        90
+       ],
+       [
+        176,
+        100
+       ],
+       [
+        198,
+        110
+       ],
+       [
+        220,
+        120
+       ],
+       [
+        243,
+        130
+       ],
+       [
+        265,
+        140
+       ]
+      ]
+     }
+    ],
+    "ramp": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        110,
+        160
+       ],
+       [
+        132,
+        170
+       ],
+       [
+        154,
+        180
+       ],
+       [
+        176,
+        190
+       ],
+       [
+        198,
+        200
+       ],
+       [
+        220,
+        210
+       ],
+       [
+        243,
+        220
+       ],
+       [
+        265,
+        230
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "ohlins-dh38-m1",
@@ -577,7 +2687,16 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks",
+   "mfg": {
+    "quality": "partial",
+    "source": null,
+    "sourceTitle": "Öhlins DH38 owner's manual",
+    "sag": [
+     20,
+     25
+    ]
+   }
   },
   {
    "id": "marzocchi-bomber-z2",
@@ -608,7 +2727,136 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://bike.marzocchi.com/products/bomber-z2"
+   "url": "https://bike.marzocchi.com/products/bomber-z2",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/2838/bomber-z2",
+    "sourceTitle": "Marzocchi Bomber Z2 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        58
+       ],
+       [
+        130,
+        63
+       ],
+       [
+        140,
+        68
+       ],
+       [
+        150,
+        72
+       ],
+       [
+        160,
+        77
+       ],
+       [
+        170,
+        82
+       ],
+       [
+        180,
+        86
+       ],
+       [
+        190,
+        91
+       ],
+       [
+        200,
+        96
+       ],
+       [
+        210,
+        100
+       ],
+       [
+        220,
+        105
+       ],
+       [
+        230,
+        110
+       ],
+       [
+        240,
+        114
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        13
+       ],
+       [
+        130,
+        10
+       ],
+       [
+        140,
+        9
+       ],
+       [
+        150,
+        9
+       ],
+       [
+        160,
+        8
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        180,
+        8
+       ],
+       [
+        190,
+        7
+       ],
+       [
+        200,
+        7
+       ],
+       [
+        210,
+        6
+       ],
+       [
+        220,
+        4
+       ],
+       [
+        230,
+        3
+       ],
+       [
+        240,
+        2
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "marzocchi-bomber-z1",
@@ -639,7 +2887,136 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://bike.marzocchi.com/products/bomber-z1"
+   "url": "https://bike.marzocchi.com/products/bomber-z1",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/2837/bomber-z1-or-dj",
+    "sourceTitle": "Marzocchi Bomber Z1 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        55
+       ],
+       [
+        130,
+        59
+       ],
+       [
+        140,
+        63
+       ],
+       [
+        150,
+        67
+       ],
+       [
+        160,
+        72
+       ],
+       [
+        170,
+        76
+       ],
+       [
+        180,
+        80
+       ],
+       [
+        190,
+        85
+       ],
+       [
+        200,
+        89
+       ],
+       [
+        210,
+        93
+       ],
+       [
+        220,
+        97
+       ],
+       [
+        230,
+        102
+       ],
+       [
+        240,
+        106
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        13
+       ],
+       [
+        130,
+        12
+       ],
+       [
+        140,
+        11
+       ],
+       [
+        150,
+        10
+       ],
+       [
+        160,
+        9
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        180,
+        7
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "marzocchi-bomber-58",
@@ -670,7 +3047,136 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://bike.marzocchi.com/products/bomber-58"
+   "url": "https://bike.marzocchi.com/products/bomber-58",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/2839/bomber-58",
+    "sourceTitle": "Marzocchi Bomber 58 owner's manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        49
+       ],
+       [
+        130,
+        53
+       ],
+       [
+        140,
+        57
+       ],
+       [
+        150,
+        61
+       ],
+       [
+        160,
+        65
+       ],
+       [
+        170,
+        69
+       ],
+       [
+        180,
+        73
+       ],
+       [
+        190,
+        76
+       ],
+       [
+        200,
+        80
+       ],
+       [
+        210,
+        84
+       ],
+       [
+        220,
+        88
+       ],
+       [
+        230,
+        92
+       ],
+       [
+        240,
+        96
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        13
+       ],
+       [
+        130,
+        12
+       ],
+       [
+        140,
+        11
+       ],
+       [
+        150,
+        10
+       ],
+       [
+        160,
+        9
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        180,
+        7
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        230,
+        2
+       ],
+       [
+        240,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "cane-creek-helm-mkii-air",
@@ -701,7 +3207,8 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://www.canecreek.com/products/helm-mkii-air-29-tan"
+   "url": "https://www.canecreek.com/products/helm-mkii-air-29-tan",
+   "mfg": null
   },
   {
    "id": "dvo-sapphire-d1",
@@ -732,7 +3239,8 @@
    },
    "climb": null,
    "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "dvo-diamond-d1",
@@ -763,7 +3271,8 @@
    },
    "climb": null,
    "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "dvo-onyx-sc-d1",
@@ -794,7 +3303,8 @@
    },
    "climb": null,
    "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "formula-belva",
@@ -822,7 +3332,8 @@
    },
    "climb": null,
    "note": "Progression via Neopos inserts and swappable CTS valves.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "formula-selva-s",
@@ -850,7 +3361,8 @@
    },
    "climb": null,
    "note": "Progression via Neopos inserts and swappable CTS valves.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "manitou-mattoc-pro",
@@ -881,7 +3393,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "manitou-mezzer-pro",
@@ -912,7 +3425,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "manitou-dorado-pro",
@@ -943,7 +3457,8 @@
    },
    "climb": null,
    "note": "Inverted dual crown.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "ext-era-v2",
@@ -974,7 +3489,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "sr-suntour-auron-35",
@@ -1005,7 +3521,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "sr-suntour-zeron-35",
@@ -1036,7 +3553,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "sr-suntour-durolux-38",
@@ -1067,7 +3585,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "x-fusion-trace-36",
@@ -1098,7 +3617,8 @@
    },
    "climb": "Lockout lever",
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "fox-float-sl-factory",
@@ -1133,7 +3653,66 @@
    },
    "climb": "3-position lever (Open / Medium / Firm)",
    "note": "",
-   "url": "https://ridefox.com/products/fox-float-sl-performance"
+   "url": "https://ridefox.com/products/fox-float-sl-performance",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3098/shock--2026-float-sl-and-float-x",
+    "sourceTitle": "FOX 2026 FLOAT SL / FLOAT X owner's manual",
+    "sag": [
+     25,
+     30
+    ],
+    "pressureRule": "bodyWeight",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ],
+       [
+        120,
+        9
+       ],
+       [
+        140,
+        8
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        220,
+        4
+       ],
+       [
+        240,
+        3
+       ],
+       [
+        260,
+        2
+       ],
+       [
+        280,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-float-factory",
@@ -1168,7 +3747,66 @@
    },
    "climb": "3-position lever (Open / Medium / Firm)",
    "note": "LSC adjusts the Open mode only.",
-   "url": "https://ridefox.com/products/fox-float-factory"
+   "url": "https://ridefox.com/products/fox-float-factory",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3099/shock--2026-float",
+    "sourceTitle": "FOX 2026 FLOAT owner's manual",
+    "sag": [
+     25,
+     30
+    ],
+    "pressureRule": "bodyWeight",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ],
+       [
+        120,
+        9
+       ],
+       [
+        140,
+        8
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        220,
+        4
+       ],
+       [
+        240,
+        3
+       ],
+       [
+        260,
+        2
+       ],
+       [
+        280,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-float-x-factory",
@@ -1203,7 +3841,66 @@
    },
    "climb": "2-position lever (Open / Firm)",
    "note": "",
-   "url": "https://ridefox.com/products/fox-float-x-factory"
+   "url": "https://ridefox.com/products/fox-float-x-factory",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3098/shock--2026-float-sl-and-float-x",
+    "sourceTitle": "FOX 2026 FLOAT SL / FLOAT X owner's manual",
+    "sag": [
+     25,
+     30
+    ],
+    "pressureRule": "bodyWeight",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ],
+       [
+        120,
+        9
+       ],
+       [
+        140,
+        8
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        220,
+        4
+       ],
+       [
+        240,
+        3
+       ],
+       [
+        260,
+        2
+       ],
+       [
+        280,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-float-x2-factory",
@@ -1238,7 +3935,165 @@
    },
    "climb": "Climb switch (Open / Firm)",
    "note": "",
-   "url": "https://ridefox.com/blogs/academy/fox-dhx2-and-float-x2-explained"
+   "url": "https://ridefox.com/blogs/academy/fox-dhx2-and-float-x2-explained",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3023/shock--2026-float-x2",
+    "sourceTitle": "FOX 2026 FLOAT X2 owner's manual",
+    "sag": [
+     25,
+     30
+    ],
+    "pressureRule": "bodyWeight",
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        13
+       ],
+       [
+        100,
+        12
+       ],
+       [
+        120,
+        11
+       ],
+       [
+        140,
+        10
+       ],
+       [
+        160,
+        9
+       ],
+       [
+        180,
+        8
+       ],
+       [
+        200,
+        7
+       ],
+       [
+        220,
+        6
+       ],
+       [
+        240,
+        5
+       ],
+       [
+        260,
+        4
+       ],
+       [
+        280,
+        3
+       ]
+      ]
+     },
+     {
+      "key": "hsr",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        7
+       ],
+       [
+        100,
+        7
+       ],
+       [
+        120,
+        6
+       ],
+       [
+        140,
+        6
+       ],
+       [
+        160,
+        5
+       ],
+       [
+        180,
+        4
+       ],
+       [
+        200,
+        4
+       ],
+       [
+        220,
+        3
+       ],
+       [
+        240,
+        2
+       ],
+       [
+        260,
+        2
+       ],
+       [
+        280,
+        1
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        11,
+        13
+       ],
+       [
+        140,
+        9,
+        10
+       ],
+       [
+        240,
+        7,
+        8
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        6,
+        7
+       ],
+       [
+        140,
+        4,
+        5
+       ],
+       [
+        240,
+        2,
+        3
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-dhx-factory",
@@ -1270,7 +4125,16 @@
    },
    "climb": "2-position lever (Open / Firm)",
    "note": "",
-   "url": "https://ridefox.com/products/fox-dhx-factory"
+   "url": "https://ridefox.com/products/fox-dhx-factory",
+   "mfg": {
+    "quality": "partial",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3100/shock--2026-dhx-",
+    "sourceTitle": "FOX 2026 DHX owner's manual",
+    "sag": [
+     30,
+     30
+    ]
+   }
   },
   {
    "id": "fox-dhx2-factory",
@@ -1302,7 +4166,252 @@
    },
    "climb": "Climb switch (Open / Firm)",
    "note": "",
-   "url": "https://ridefox.com/blogs/academy/fox-dhx2-and-float-x2-explained"
+   "url": "https://ridefox.com/blogs/academy/fox-dhx2-and-float-x2-explained",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/3090/shock--2026-dhx2",
+    "sourceTitle": "FOX 2026 DHX2 owner's manual",
+    "sag": [
+     30,
+     30
+    ],
+    "damping": [
+     {
+      "key": "lsr",
+      "by": "rate",
+      "from": "closed",
+      "rows": [
+       [
+        200,
+        14
+       ],
+       [
+        225,
+        14
+       ],
+       [
+        250,
+        13
+       ],
+       [
+        275,
+        13
+       ],
+       [
+        300,
+        12
+       ],
+       [
+        325,
+        11
+       ],
+       [
+        350,
+        11
+       ],
+       [
+        375,
+        10
+       ],
+       [
+        400,
+        10
+       ],
+       [
+        425,
+        9
+       ],
+       [
+        450,
+        8
+       ],
+       [
+        475,
+        8
+       ],
+       [
+        500,
+        7
+       ],
+       [
+        525,
+        6
+       ],
+       [
+        550,
+        6
+       ],
+       [
+        575,
+        5
+       ],
+       [
+        600,
+        4
+       ],
+       [
+        625,
+        4
+       ],
+       [
+        650,
+        4
+       ],
+       [
+        675,
+        3
+       ],
+       [
+        700,
+        2
+       ],
+       [
+        725,
+        2
+       ]
+      ]
+     },
+     {
+      "key": "hsr",
+      "by": "rate",
+      "from": "closed",
+      "rows": [
+       [
+        200,
+        8
+       ],
+       [
+        225,
+        8
+       ],
+       [
+        250,
+        7
+       ],
+       [
+        275,
+        7
+       ],
+       [
+        300,
+        7
+       ],
+       [
+        325,
+        6
+       ],
+       [
+        350,
+        6
+       ],
+       [
+        375,
+        5
+       ],
+       [
+        400,
+        5
+       ],
+       [
+        425,
+        5
+       ],
+       [
+        450,
+        4
+       ],
+       [
+        475,
+        4
+       ],
+       [
+        500,
+        3
+       ],
+       [
+        525,
+        3
+       ],
+       [
+        550,
+        2
+       ],
+       [
+        575,
+        2
+       ],
+       [
+        600,
+        2
+       ],
+       [
+        625,
+        1
+       ],
+       [
+        650,
+        1
+       ],
+       [
+        675,
+        1
+       ],
+       [
+        700,
+        1
+       ],
+       [
+        725,
+        0
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "rate",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        11,
+        12
+       ],
+       [
+        350,
+        9,
+        10
+       ],
+       [
+        525,
+        7,
+        8
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "rate",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        6,
+        7
+       ],
+       [
+        350,
+        4,
+        5
+       ],
+       [
+        525,
+        2,
+        3
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-sidluxe-ultimate",
@@ -1337,7 +4446,8 @@
    },
    "climb": "Remote lockout (Open / Lock)",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/sidluxe"
+   "url": "https://www.sram.com/en/rockshox/series/sidluxe",
+   "mfg": null
   },
   {
    "id": "rockshox-deluxe-ultimate",
@@ -1372,7 +4482,8 @@
    },
    "climb": "Threshold lever (Open / Pedal)",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/deluxe"
+   "url": "https://www.sram.com/en/rockshox/series/deluxe",
+   "mfg": null
   },
   {
    "id": "rockshox-super-deluxe-ultimate-air",
@@ -1407,7 +4518,8 @@
    },
    "climb": "Threshold lever (Open / Pedal)",
    "note": "MBR: the most coil-like air shock.",
-   "url": "https://www.sram.com/en/rockshox/series/super-deluxe"
+   "url": "https://www.sram.com/en/rockshox/series/super-deluxe",
+   "mfg": null
   },
   {
    "id": "rockshox-super-deluxe-ultimate-coil",
@@ -1439,7 +4551,8 @@
    },
    "climb": "Threshold lever (Open / Pedal)",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/super-deluxe"
+   "url": "https://www.sram.com/en/rockshox/series/super-deluxe",
+   "mfg": null
   },
   {
    "id": "rockshox-vivid-ultimate-air",
@@ -1474,7 +4587,8 @@
    },
    "climb": "Threshold lever (Open / Pedal)",
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/vivid"
+   "url": "https://www.sram.com/en/rockshox/series/vivid",
+   "mfg": null
   },
   {
    "id": "rockshox-vivid-ultimate-coil",
@@ -1506,7 +4620,8 @@
    },
    "climb": null,
    "note": "",
-   "url": "https://www.sram.com/en/rockshox/series/vivid"
+   "url": "https://www.sram.com/en/rockshox/series/vivid",
+   "mfg": null
   },
   {
    "id": "ohlins-ttx-air",
@@ -1541,7 +4656,8 @@
    },
    "climb": "Climb lever (Open / Climb)",
    "note": "",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks",
+   "mfg": null
   },
   {
    "id": "ohlins-ttx-flow",
@@ -1573,7 +4689,8 @@
    },
    "climb": "Climb lever (Open / Climb)",
    "note": "",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks",
+   "mfg": null
   },
   {
    "id": "ohlins-ttx22m",
@@ -1605,7 +4722,8 @@
    },
    "climb": "Climb lever (Open / Climb)",
    "note": "",
-   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks"
+   "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks",
+   "mfg": null
   },
   {
    "id": "marzocchi-bomber-air",
@@ -1640,7 +4758,66 @@
    },
    "climb": "Climb lever (Open / Firm)",
    "note": "",
-   "url": "https://bike.marzocchi.com/products/bomber-air"
+   "url": "https://bike.marzocchi.com/products/bomber-air",
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/2841/bomber-air",
+    "sourceTitle": "Marzocchi Bomber Air owner's manual",
+    "sag": [
+     25,
+     30
+    ],
+    "pressureRule": "bodyWeight",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ],
+       [
+        120,
+        9
+       ],
+       [
+        140,
+        8
+       ],
+       [
+        160,
+        7
+       ],
+       [
+        180,
+        6
+       ],
+       [
+        200,
+        5
+       ],
+       [
+        220,
+        4
+       ],
+       [
+        240,
+        3
+       ],
+       [
+        260,
+        2
+       ],
+       [
+        280,
+        1
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "marzocchi-bomber-cr",
@@ -1672,7 +4849,16 @@
    },
    "climb": null,
    "note": "MBR's value coil pick.",
-   "url": "https://bike.marzocchi.com/products/bomber-cr-rear-shock"
+   "url": "https://bike.marzocchi.com/products/bomber-cr-rear-shock",
+   "mfg": {
+    "quality": "partial",
+    "source": "https://tech.ridefox.com/bike/owners-manuals/2840/bomber-cr",
+    "sourceTitle": "Marzocchi Bomber CR owner's manual",
+    "sag": [
+     30,
+     30
+    ]
+   }
   },
   {
    "id": "cane-creek-kitsuma-air",
@@ -1707,7 +4893,8 @@
    },
    "climb": "Climb Switch",
    "note": "",
-   "url": "https://www.canecreek.com/products/kitsuma-g2-air"
+   "url": "https://www.canecreek.com/products/kitsuma-g2-air",
+   "mfg": null
   },
   {
    "id": "cane-creek-kitsuma-coil",
@@ -1739,7 +4926,8 @@
    },
    "climb": "Climb Switch",
    "note": "MBR's top coil pick (9/10).",
-   "url": "https://www.canecreek.com/products/kitsuma-coil"
+   "url": "https://www.canecreek.com/products/kitsuma-coil",
+   "mfg": null
   },
   {
    "id": "cane-creek-db-air-il",
@@ -1774,7 +4962,8 @@
    },
    "climb": "Climb Switch",
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "dvo-topaz-t3-air",
@@ -1809,7 +4998,8 @@
    },
    "climb": "3-mode LSC lever",
    "note": "Also set the bladder pressure (DVO chart).",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "dvo-jade-x",
@@ -1841,7 +5031,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "formula-mod",
@@ -1873,7 +5064,8 @@
    },
    "climb": "Lockout lever",
    "note": "Progression via Neopos inserts.",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "manitou-mara-pro",
@@ -1905,7 +5097,8 @@
    },
    "climb": null,
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "ext-aria",
@@ -1940,7 +5133,8 @@
    },
    "climb": "Climb lever",
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "ext-storia-v3",
@@ -1972,7 +5166,8 @@
    },
    "climb": "Climb lever",
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "push-industries-elevensix",
@@ -2004,7 +5199,8 @@
    },
    "climb": "Mode lever (Climb / Descend)",
    "note": "Custom-valved for your weight — PUSH tunes it to your order.",
-   "url": "https://pushindustries.com/products/elevensix"
+   "url": "https://pushindustries.com/products/elevensix",
+   "mfg": null
   },
   {
    "id": "sr-suntour-triair",
@@ -2039,7 +5235,8 @@
    },
    "climb": "3-position lever (Open / Medium / Firm)",
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   },
   {
    "id": "x-fusion-o2-pro-rcx",
@@ -2074,7 +5271,8 @@
    },
    "climb": "Lockout lever",
    "note": "",
-   "url": null
+   "url": null,
+   "mfg": null
   }
  ],
  "brandSites": {

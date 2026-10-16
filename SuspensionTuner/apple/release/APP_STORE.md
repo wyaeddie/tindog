@@ -56,6 +56,9 @@ Save your bikes, pick Trail, Enduro or Bike Park, and get air pressure, sag, reb
 ```
 Suspension Tuner gives you a solid starting setup for your mountain bike fork and rear shock — in seconds.
 
+FOR FOX, ROCKSHOX, MARZOCCHI AND ÖHLINS: THE MAKER'S NUMBERS
+Air pressure, rebound and compression clicks, volume spacers and sag are read from the manufacturer's own setup charts for your weight — with a link to the guide. Other models get a calculated estimate, clearly labelled.
+
 SAVE YOUR BIKES
 Add each bike once with its fork, shock, your weight, height and frame size. Your garage shows both ends of every bike at a glance.
 

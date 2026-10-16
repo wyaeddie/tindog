@@ -250,6 +250,7 @@ struct ResultsView: View {
                         buttons
                     }
                 }
+                SourceBadge(rec: rec)
                 HeroCard(rec: rec)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 12)], spacing: 12) {
                     ForEach(rec.settings.dropFirst().filter { $0.label != "Sag" }) { SettingCard(setting: $0) }

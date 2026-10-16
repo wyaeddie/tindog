@@ -15,13 +15,13 @@ final class GarageTests: XCTestCase {
     func testBikeRecommendationMatchesDirectCalculation() {
         let bike = makeBike()
         let rec = catalog.recommendation(for: bike, end: .fork)!
-        XCTAssertEqual(rec.headlineValue, "88")          // same golden value as EngineTests
-        XCTAssertEqual(rec.springValue, 88)
+        XCTAssertEqual(rec.headlineValue, "89")          // same golden value as EngineTests
+        XCTAssertEqual(rec.springValue, 89)
         XCTAssertTrue(rec.isAir)
-        XCTAssertEqual(rec.sagPercent, 22)
-        XCTAssertEqual(rec.tokens, 3)
+        XCTAssertEqual(rec.sagPercent, 18)
+        XCTAssertEqual(rec.tokens, 2)
         XCTAssertEqual(rec.clicks.map(\.short), ["LSR", "HSR", "LSC", "HSC"])
-        XCTAssertEqual(rec.clicks.first { $0.key == "lsc" }?.value, 7)
+        XCTAssertEqual(rec.clicks.first { $0.key == "lsc" }?.value, 10)
         XCTAssertEqual(bike.ends, [.fork, .shock])
         XCTAssertNotNil(catalog.recommendation(for: bike, end: .shock))
     }
@@ -42,9 +42,9 @@ final class GarageTests: XCTestCase {
     func testDifferences() {
         let rec = catalog.recommendation(for: makeBike(), end: .fork)!
         XCTAssertEqual(rec.differences(from: RanSetup()), [])
-        let ran = RanSetup(springValue: 90, tokens: 3, clicks: ["lsc": 5, "lsr": 7])
+        let ran = RanSetup(springValue: 92, tokens: 2, clicks: ["lsc": 8, "lsr": 6])
         XCTAssertEqual(rec.differences(from: ran),
-                       ["Air pressure: 90 psi (recommended 88)", "Low-speed compression: 5 clicks in (recommended 7)"])
+                       ["Air pressure: 92 psi (recommended 89)", "Low-speed compression: 8 clicks out (recommended 10)"])
     }
 
     func testRoundTripJSON() throws {
@@ -52,7 +52,7 @@ final class GarageTests: XCTestCase {
         bike.setRan(RanSetup(springValue: 86, clicks: ["lsr": 6]), for: .fork)
         let entry = HistoryEntry(date: Date(timeIntervalSince1970: 1_790_000_000), bikeID: bike.id,
                                  bikeName: bike.name, end: .fork, brand: "Fox", modelName: "36 Factory",
-                                 style: .enduro, recommended: ["Air pressure: 88 psi"], ran: [], note: "felt great")
+                                 style: .enduro, recommended: ["Air pressure: 89 psi"], ran: [], note: "felt great")
         let data = GarageData(bikes: [bike], selectedBikeID: bike.id, history: [entry], useKilograms: true)
         let back = try GarageData.decode(data.encoded())
         XCTAssertEqual(back, data)

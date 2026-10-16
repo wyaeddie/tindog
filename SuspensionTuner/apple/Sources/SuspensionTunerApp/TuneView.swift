@@ -98,6 +98,7 @@ struct TuneEndView: View {
         let differences = rec.differences(from: ran)
         VStack(alignment: .leading, spacing: 16) {
             header
+            SourceBadge(rec: rec)
 
             // Pressure / spring dial
             PressureDial(value: ran.springValue ?? rec.springValue,
@@ -229,7 +230,9 @@ struct TuneEndView: View {
     }
 
     private func shareText(_ differences: [String]) -> String {
-        var lines = ["Suspension Tuner — \(bike.name): \(model.brand) \(model.name)", "Rider: \(riderSummary)", ""]
+        var lines = ["Suspension Tuner — \(bike.name): \(model.brand) \(model.name)", "Rider: \(riderSummary)",
+                     rec.quality == .estimate ? "Source: estimate (no published setup chart)"
+                                              : "Source: \(rec.sourceTitle ?? "") (\(rec.quality.title.lowercased()))", ""]
         lines += rec.lines
         if !differences.isEmpty { lines += ["", "Running:"] + differences.map { "• \($0)" } }
         lines += ["", store.catalog.disclaimer]
@@ -360,6 +363,9 @@ struct SagCheckCard: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(String(format: "%.0f mm", rec.sagMm)).font(.system(size: 26, weight: .heavy, design: .rounded))
                     Text("· \(rec.sagPercent)%").font(.subheadline.weight(.bold)).foregroundStyle(Theme.muted)
+                    if let lo = rec.sagMin, let hi = rec.sagMax, lo != hi {
+                        Text("(maker: \(lo)–\(hi)%)").font(.caption.weight(.semibold)).foregroundStyle(Theme.go)
+                    }
                 }
                 Text(end == .fork
                      ? "Push the O-ring down to the seal, sit on the bike in attack position, step off and measure."
@@ -427,7 +433,8 @@ struct FaderView: View {
                 .font(.system(size: 17, weight: .heavy, design: .rounded))
                 .contentTransition(.numericText(value: Double(value)))
                 .foregroundStyle(changed ? color : .white)
-            Text(setting.short).font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.muted)
+            Text("\(setting.short) · \(setting.direction)").font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.muted)
+                .lineLimit(1).minimumScaleFactor(0.8)
         }
         .padding(.vertical, 10).padding(.horizontal, 4)
         .frame(maxWidth: .infinity)
@@ -435,10 +442,10 @@ struct FaderView: View {
         .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(changed ? color.opacity(0.6) : Theme.stroke))
         .animation(.snappy(duration: 0.2), value: value)
         .sensoryFeedback(.selection, trigger: value)
-        .help("\(setting.label): \(value) clicks \(setting.fromClosed ? "out from closed" : "in from open") · recommended \(setting.value) of \(setting.of)")
+        .help("\(setting.label): \(value) clicks \(setting.countedFrom) · recommended \(setting.rangeText ?? "\(setting.value)")\(setting.isManufacturer ? " (maker's chart)" : " (estimate)") of \(setting.of)")
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(setting.label)
-        .accessibilityValue("\(value) clicks \(setting.fromClosed ? "out" : "in"), recommended \(setting.value)")
+        .accessibilityValue("\(value) clicks \(setting.countedFrom), recommended \(setting.rangeText ?? "\(setting.value)")")
         .accessibilityAdjustableAction { direction in
             switch direction {
             case .increment: onChange(min(value + 1, setting.of))

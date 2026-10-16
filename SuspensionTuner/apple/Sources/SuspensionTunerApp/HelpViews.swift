@@ -1,4 +1,5 @@
 import SwiftUI
+import SuspensionKit
 
 /// Small (?) button that opens a help popover (shown as a bubble on iPhone and iPad).
 struct HelpButton<Content: View>: View {
@@ -58,6 +59,59 @@ struct HelpItem: View {
     }
 }
 
+/// Shows where a recommendation's numbers come from; tap to open the maker's setup guide.
+struct SourceBadge: View {
+    let rec: Recommendation
+    @Environment(\.openURL) private var openURL
+
+    private var color: Color {
+        switch rec.quality {
+        case .manufacturer: return Theme.go
+        case .partial: return Theme.amber
+        case .estimate: return Theme.muted
+        }
+    }
+    private var icon: String {
+        switch rec.quality {
+        case .manufacturer: return "checkmark.seal.fill"
+        case .partial: return "circle.lefthalf.filled"
+        case .estimate: return "function"
+        }
+    }
+    private var subtitle: String {
+        switch rec.quality {
+        case .manufacturer: return rec.sourceTitle ?? ""
+        case .partial: return "\(rec.sourceTitle ?? "Maker's guide") · rest estimated"
+        case .estimate: return "No published setup chart for this model"
+        }
+    }
+
+    var body: some View {
+        let url = rec.sourceURL.flatMap { URL(string: $0) }
+        Button { if let url { openURL(url) } } label: {
+            HStack(spacing: 8) {
+                Image(systemName: icon).font(.system(size: 14, weight: .bold)).foregroundStyle(color)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(rec.quality.title).font(.caption.weight(.heavy)).foregroundStyle(color)
+                    Text(subtitle).font(.caption2).foregroundStyle(Theme.muted).lineLimit(1)
+                }
+                Spacer(minLength: 0)
+                if url != nil {
+                    Image(systemName: "arrow.up.right.square").font(.caption).foregroundStyle(Theme.muted)
+                }
+            }
+            .padding(.horizontal, 12).padding(.vertical, 8)
+            .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(color.opacity(0.35)))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(url == nil)
+        .accessibilityLabel("\(rec.quality.title). \(subtitle)")
+        .accessibilityHint(url == nil ? "" : "Opens the manufacturer's setup guide")
+    }
+}
+
 struct DampingHelp: View {
     let isFork: Bool
 
@@ -66,8 +120,10 @@ struct DampingHelp: View {
                  text: "Each slider matches an adjuster knob on your \(isFork ? "fork" : "shock"). The number under it is how many clicks to set.")
         HelpItem(icon: "arrow.uturn.up", color: Theme.sky, title: "Rebound (blue) — clicks OUT",
                  text: "Turn the rebound knob clockwise until it stops (fully closed, slowest). Then count that many clicks back out, anticlockwise.")
-        HelpItem(icon: "arrow.down.to.line", color: Theme.violet, title: "Compression (purple) — clicks IN",
-                 text: "Turn the compression knob anticlockwise until it stops (fully open, softest). Then count that many clicks in, clockwise.")
+        HelpItem(icon: "arrow.down.to.line", color: Theme.violet, title: "Compression (purple) — read OUT or IN",
+                 text: "The word under each number tells you how to count, the same way the maker's guide does. OUT: turn clockwise to the stop (fully closed), then count back out — FOX and Marzocchi count this way. IN: turn anticlockwise to the stop (fully open), then count in.")
+        HelpItem(icon: "checkmark.seal.fill", color: Theme.go, title: "Manufacturer chart vs estimate",
+                 text: "Values marked Manufacturer chart are copied from the maker's setup guide for your weight — tap the badge to open it. Where a maker publishes no number, the app calculates one and marks it as an estimate.")
         HelpItem(icon: "cube.fill", color: Theme.amber, title: "Tokens (yellow blocks)",
                  text: "Volume spacers inside the air spring. More tokens = more bottom-out support. Tap a block to record how many you have fitted.")
         HelpItem(icon: "hand.draw.fill", color: Theme.go, title: "Record what you ran",

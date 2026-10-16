@@ -45,6 +45,66 @@ public struct Adjusters: Codable, Hashable {
     public let hsr: Int
 }
 
+/// Where a recommendation's numbers come from.
+public enum DataQuality: String, Codable {
+    /// Taken from the maker's published setup chart
+    case manufacturer
+    /// Some values from the maker (pressure or sag), the rest estimated
+    case partial
+    /// No published chart found — calculated
+    case estimate
+
+    public var title: String {
+        switch self {
+        case .manufacturer: return "Manufacturer chart"
+        case .partial: return "Partly manufacturer"
+        case .estimate: return "Estimate"
+        }
+    }
+}
+
+/// A maker's chart: "steps" rows are [from, value] (e.g. the 180–190 lb row starts at 180);
+/// "linear" rows are [x, y] points, interpolated between.
+public struct ChartTable: Codable, Hashable {
+    public let type: String
+    public let rows: [[Double]]
+    /// [min, max] travel this table applies to (nil = all)
+    public let travel: [Double]?
+}
+
+public struct TokenRow: Codable, Hashable {
+    public let travel: Double
+    public let installed: Int
+    public let max: Int
+}
+
+/// Maker's starting point for one adjuster.
+public struct DampingRule: Codable, Hashable {
+    /// rebound, lsr, hsr, lsc, hsc
+    public let key: String
+    /// weight (rider lb), psi, rate (lb/in), fixed, middle
+    public let by: String
+    /// closed = clicks out from fully closed; open = clicks in from fully open
+    public let from: String
+    /// [from, clicks] or [from, low, high] steps
+    public let rows: [[Double]]?
+}
+
+public struct ManufacturerData: Codable, Hashable {
+    public let quality: DataQuality
+    public let source: String?
+    public let sourceTitle: String
+    /// Recommended sag range in % [min, max]
+    public let sag: [Double]?
+    public let pressure: [ChartTable]?
+    /// "bodyWeight": start psi = rider weight in lb, then set sag
+    public let pressureRule: String?
+    /// Öhlins ramp-up chamber
+    public let ramp: [ChartTable]?
+    public let tokens: [TokenRow]?
+    public let damping: [DampingRule]?
+}
+
 public struct SuspensionModel: Codable, Hashable, Identifiable {
     public let id: String
     public let brand: String
@@ -62,6 +122,9 @@ public struct SuspensionModel: Codable, Hashable, Identifiable {
     public let climb: String?
     public let note: String
     public let url: String?
+    public let mfg: ManufacturerData?
+
+    public var quality: DataQuality { mfg?.quality ?? .estimate }
 }
 
 public struct Catalog: Codable {
