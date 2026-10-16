@@ -21,6 +21,7 @@ enum Theme {
     static let background = Color(hex: 0x0D0F13)
     static let panel = Color(hex: 0x15181E)
     static let card = Color(hex: 0x1A1E25)
+    static let card2 = Color(hex: 0x20252E)
     static let stroke = Color(hex: 0x262B34)
     static let control = Color(hex: 0x1E222A)
     static let muted = Color(hex: 0x8A919C)

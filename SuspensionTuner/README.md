@@ -6,6 +6,12 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 ![Shock](docs/screenshot-shock.png)
 
 ## Features
+- **Garage (iPhone, iPad, Mac):** save bikes with their fork, shock and rider. The home screen shows the bike
+  with front and rear setups; a Trail / Enduro / Bike Park switch re-tunes both ends in one tap
+- **Tune tab:** pressure / spring-rate dial with ± nudges (hold to repeat), O-ring sag check, mixer-style damping
+  faders and token blocks to record what you actually ran, Share / Print / Save to History
+- **History tab:** saved setups with date, differences from the recommendation and your notes
+- **Settings:** kg / lb, the original quick calculator, About, erase data
 - Fork or shock → brand → model, then weight (lb/kg), height (ft + in), frame size and riding style
 - **Reset** button (⌘R / Ctrl+R) clears everything
 - Results card in green with colour-coded settings (rebound = blue, compression = purple, tokens = amber, lockout = teal)

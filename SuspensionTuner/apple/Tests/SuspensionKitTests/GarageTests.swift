@@ -1,0 +1,68 @@
+import XCTest
+@testable import SuspensionKit
+
+final class GarageTests: XCTestCase {
+    let catalog = Catalog.bundled
+
+    func makeBike() -> Bike {
+        Bike(name: "Enduro Rig",
+             rider: RiderProfile(weightLb: 84 * 2.20462, heightIn: 180 / 2.54, frameSize: .L),
+             style: .enduro,
+             fork: SuspensionSlot(modelID: "fox-36-factory", travelMm: 150),
+             shock: SuspensionSlot(modelID: "fox-float-x2-factory", travelMm: 160, strokeMm: 62.5))
+    }
+
+    func testBikeRecommendationMatchesDirectCalculation() {
+        let bike = makeBike()
+        let rec = catalog.recommendation(for: bike, end: .fork)!
+        XCTAssertEqual(rec.headlineValue, "88")          // same golden value as EngineTests
+        XCTAssertEqual(rec.springValue, 88)
+        XCTAssertTrue(rec.isAir)
+        XCTAssertEqual(rec.sagPercent, 22)
+        XCTAssertEqual(rec.tokens, 3)
+        XCTAssertEqual(rec.clicks.map(\.short), ["LSR", "HSR", "LSC", "HSC"])
+        XCTAssertEqual(rec.clicks.first { $0.key == "lsc" }?.value, 7)
+        XCTAssertEqual(bike.ends, [.fork, .shock])
+        XCTAssertNotNil(catalog.recommendation(for: bike, end: .shock))
+    }
+
+    func testCoilHasSpringRateAndNoTokens() {
+        var bike = makeBike()
+        bike.style = .park
+        bike.rider.frameSize = .L
+        bike.shock = SuspensionSlot(modelID: "cane-creek-kitsuma-coil", travelMm: 170, strokeMm: 65)
+        let rec = catalog.recommendation(for: bike, end: .shock)!
+        XCTAssertFalse(rec.isAir)
+        XCTAssertEqual(rec.headlineUnit, "lb/in")
+        XCTAssertEqual(rec.springValue, Int(rec.headlineValue))
+        XCTAssertNil(rec.tokens)
+        XCTAssertNil(rec.maxPsi)
+    }
+
+    func testDifferences() {
+        let rec = catalog.recommendation(for: makeBike(), end: .fork)!
+        XCTAssertEqual(rec.differences(from: RanSetup()), [])
+        let ran = RanSetup(springValue: 90, tokens: 3, clicks: ["lsc": 5, "lsr": 7])
+        XCTAssertEqual(rec.differences(from: ran),
+                       ["Air pressure: 90 psi (recommended 88)", "Low-speed compression: 5 clicks in (recommended 7)"])
+    }
+
+    func testRoundTripJSON() throws {
+        var bike = makeBike()
+        bike.setRan(RanSetup(springValue: 86, clicks: ["lsr": 6]), for: .fork)
+        let entry = HistoryEntry(date: Date(timeIntervalSince1970: 1_790_000_000), bikeID: bike.id,
+                                 bikeName: bike.name, end: .fork, brand: "Fox", modelName: "36 Factory",
+                                 style: .enduro, recommended: ["Air pressure: 88 psi"], ran: [], note: "felt great")
+        let data = GarageData(bikes: [bike], selectedBikeID: bike.id, history: [entry], useKilograms: true)
+        let back = try GarageData.decode(data.encoded())
+        XCTAssertEqual(back, data)
+        XCTAssertEqual(back.selectedBike?.ran(.fork).springValue, 86)
+        XCTAssertEqual(back.selectedBike?.rider.heightText, "5′11″")
+    }
+
+    func testSelectedBikeFallsBackToFirst() {
+        let bike = makeBike()
+        XCTAssertEqual(GarageData(bikes: [bike], selectedBikeID: UUID()).selectedBike?.id, bike.id)
+        XCTAssertNil(GarageData().selectedBike)
+    }
+}

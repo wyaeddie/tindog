@@ -15,8 +15,7 @@ struct SuspensionTunerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .preferredColorScheme(.dark)
+            RootView()
         }
         #if os(macOS)
         .defaultSize(width: 1280, height: 880)

@@ -25,6 +25,21 @@ public struct Setting: Identifiable, Hashable {
     public let detail: String
 }
 
+/// One damping adjuster as numbers (for dials / faders), alongside the text in `settings`.
+public struct ClickSetting: Hashable, Identifiable {
+    public var id: String { key }
+    /// rebound, lsr, hsr, lsc, hsc
+    public let key: String
+    /// Short label for tight UI, e.g. "LSR"
+    public let short: String
+    public let label: String
+    public let value: Int
+    public let of: Int
+    /// Rebound is counted out from fully closed; compression is counted in from fully open.
+    public let fromClosed: Bool
+    public var isRebound: Bool { fromClosed }
+}
+
 public struct Recommendation {
     public let headlineLabel: String
     public let headlineValue: String
@@ -32,6 +47,16 @@ public struct Recommendation {
     public let settings: [Setting]
     public let tips: [String]
     public let warnings: [String]
+    // Structured values (same numbers as the text above)
+    public let isAir: Bool
+    /// psi for air springs, lb/in for coil springs
+    public let springValue: Int
+    public let maxPsi: Int?
+    public let sagPercent: Int
+    public let sagMm: Double
+    public let tokens: Int?
+    public let tokenMax: Int?
+    public let clicks: [ClickSetting]
 
     public func value(_ label: String) -> String? { settings.first { $0.label == label }?.value }
 }
@@ -95,6 +120,9 @@ public enum SuspensionEngine {
             }
         }
 
+        var springValue = rate
+        var tokens: Int? = nil
+        var clicks: [ClickSetting] = []
         if m.spring == .air {
             var p = roundHalfUp(psi)
             let maxPsi = m.maxPsi ?? 999
@@ -103,6 +131,7 @@ public enum SuspensionEngine {
                 p = maxPsi
             }
             headline = ("Air pressure", "\(p)", "psi")
+            springValue = p
             settings.append(Setting(label: "Air pressure", value: "\(p) psi",
                                     detail: "Max \(maxPsi) psi. Adjust ±5 psi per ~2% sag change."))
         } else {
@@ -119,6 +148,7 @@ public enum SuspensionEngine {
             var n = t.default + tokenBump[style]!
             if systemLb > 210 { n += 1 } else if systemLb < 140 { n -= 1 }
             n = Int(clamp(Double(n), 0, Double(t.max)))
+            tokens = n
             settings.append(Setting(label: "Volume spacers", value: "\(n) token\(n == 1 ? "" : "s")",
                                     detail: "Max \(t.max). Add one if you bottom out harshly."))
         } else if m.spring == .air {
@@ -134,22 +164,32 @@ public enum SuspensionEngine {
         }
         let a = m.adjusters
         if a.rebound > 0 {
+            clicks.append(ClickSetting(key: "rebound", short: "Reb", label: "Rebound", value: fromClosed(a.rebound, 0.65),
+                                       of: a.rebound, fromClosed: true))
             settings.append(Setting(label: "Rebound", value: "\(fromClosed(a.rebound, 0.65)) clicks out",
                                     detail: "From fully closed (slowest), of \(a.rebound)"))
         }
         if a.lsr > 0 {
+            clicks.append(ClickSetting(key: "lsr", short: "LSR", label: "Low-speed rebound", value: fromClosed(a.lsr, 0.65),
+                                       of: a.lsr, fromClosed: true))
             settings.append(Setting(label: "Low-speed rebound", value: "\(fromClosed(a.lsr, 0.65)) clicks out",
                                     detail: "From fully closed, of \(a.lsr)"))
         }
         if a.hsr > 0 {
+            clicks.append(ClickSetting(key: "hsr", short: "HSR", label: "High-speed rebound", value: fromClosed(a.hsr, 0.55),
+                                       of: a.hsr, fromClosed: true))
             settings.append(Setting(label: "High-speed rebound", value: "\(fromClosed(a.hsr, 0.55)) clicks out",
                                     detail: "From fully closed, of \(a.hsr)"))
         }
         if a.lsc > 0 {
+            clicks.append(ClickSetting(key: "lsc", short: "LSC", label: "Low-speed compression", value: fromOpen(a.lsc, lscFraction[style]!),
+                                       of: a.lsc, fromClosed: false))
             settings.append(Setting(label: "Low-speed compression", value: "\(fromOpen(a.lsc, lscFraction[style]!)) clicks in",
                                     detail: "From fully open, of \(a.lsc). Controls brake dive and pedal bob."))
         }
         if a.hsc > 0 {
+            clicks.append(ClickSetting(key: "hsc", short: "HSC", label: "High-speed compression", value: fromOpen(a.hsc, hscFraction[style]!),
+                                       of: a.hsc, fromClosed: false))
             settings.append(Setting(label: "High-speed compression", value: "\(fromOpen(a.hsc, hscFraction[style]!)) clicks in",
                                     detail: "From fully open, of \(a.hsc). Controls big hits and square edges."))
         }
@@ -180,6 +220,10 @@ public enum SuspensionEngine {
         if !m.note.isEmpty { tips.append(m.note) }
 
         return Recommendation(headlineLabel: headline.0, headlineValue: headline.1, headlineUnit: headline.2,
-                              settings: settings, tips: tips, warnings: warnings)
+                              settings: settings, tips: tips, warnings: warnings,
+                              isAir: m.spring == .air, springValue: springValue,
+                              maxPsi: m.spring == .air ? m.maxPsi : nil,
+                              sagPercent: sagPct, sagMm: sagMm,
+                              tokens: tokens, tokenMax: m.tokens?.max, clicks: clicks)
     }
 }
