@@ -1,11 +1,10 @@
 # Generate the Xcode project:  brew install xcodegen && xcodegen generate && open SuspensionTuner.xcodeproj
 #
-# BEFORE PUBLISHING: change bundleIdPrefix below to something you own (reverse domain,
-# e.g. com.yourname). The final bundle ID becomes <prefix>.SuspensionTuner and must match
-# the app record you create in App Store Connect.
+# Bundle ID: solutions.wholestack.suspensiontuner (from wholestack.solutions). It must match
+# the app record in App Store Connect. To publish, run ./release.sh (see release/APP_STORE.md).
 name: SuspensionTuner
 options:
-  bundleIdPrefix: com.example.suspensiontuner
+  bundleIdPrefix: solutions.wholestack
   deploymentTarget:
     iOS: "17.0"
     macOS: "14.0"
@@ -27,8 +26,8 @@ targets:
     settings:
       base:
         # Set explicitly so the app always has an ID; without one iOS kills it at launch
-        # (BUNDLE_IDENTIFIER_FOR_CURRENT_PROCESS_IS_NIL). Change along with bundleIdPrefix.
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.suspensiontuner.SuspensionTuner
+        # (BUNDLE_IDENTIFIER_FOR_CURRENT_PROCESS_IS_NIL).
+        PRODUCT_BUNDLE_IDENTIFIER: solutions.wholestack.suspensiontuner
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Suspension Tuner

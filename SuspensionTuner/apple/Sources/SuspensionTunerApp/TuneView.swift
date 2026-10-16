@@ -116,6 +116,7 @@ struct TuneEndView: View {
             if !rec.clicks.isEmpty || rec.tokens != nil {
                 HStack {
                     SectionLabel(text: "Damping · drag to match your \(end == .fork ? "fork" : "shock")")
+                    HelpButton(title: "How to use the damping sliders") { DampingHelp(isFork: end == .fork) }
                     Spacer()
                     if !differences.isEmpty {
                         Button("Reset") { withAnimation(.snappy) { store.setRan(RanSetup(), end: end, for: bike.id) } }
@@ -371,6 +372,10 @@ struct SagCheckCard: View {
         .padding(14)
         .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+        .overlay(alignment: .topTrailing) {
+            HelpButton(title: "How to check sag") { SagHelp(isFork: end == .fork) }
+                .padding(6)
+        }
     }
 }
 

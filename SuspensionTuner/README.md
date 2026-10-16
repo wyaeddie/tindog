@@ -59,6 +59,13 @@ pip install -r requirements.txt
 python3 app.py
 ```
 
+## Publishing
+See `apple/release/APP_STORE.md` — listing text, privacy answers, screenshot sizes and the one-command
+`TEAM_ID=… ./release.sh --upload` that archives iPhone/iPad + Mac and uploads to App Store Connect.
+
+Website image: `python3 tools/web_screenshot.py shot1.png shot2.png -o suspension-tuner.png` turns two
+Simulator screenshots into one transparent PNG with phone frames.
+
 ## Tests
 Both engines are pinned to the same golden values:
 ```sh
