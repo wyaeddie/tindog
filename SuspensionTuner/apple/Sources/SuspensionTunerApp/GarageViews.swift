@@ -82,6 +82,7 @@ struct GarageHomeView: View {
 
                 SectionLabel(text: "Riding today")
                 RideStylePicker(selection: bike.style) { store.setStyle($0, for: bike.id) }
+                RideConditionsCard(ride: bike.ride) { store.setRide($0, for: bike.id) }
 
                 let others = store.bikes.filter { $0.id != bike.id }
                 if !others.isEmpty {

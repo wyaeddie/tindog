@@ -103,6 +103,10 @@ public struct ManufacturerData: Codable, Hashable {
     public let ramp: [ChartTable]?
     public let tokens: [TokenRow]?
     public let damping: [DampingRule]?
+    /// FOX "E-Bike+" / Marzocchi e-bike charts
+    public let ebikePressure: [ChartTable]?
+    public let ebikeTokens: [TokenRow]?
+    public let ebikeMaxPsi: Int?
 }
 
 public struct SuspensionModel: Codable, Hashable, Identifiable {

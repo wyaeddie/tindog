@@ -33,6 +33,8 @@ enum Theme {
         if l.contains("compression") { return (violet, "arrow.down.to.line") }
         if l.contains("spacer") || l.contains("progression") { return (amber, "cube.fill") }
         if l.contains("lockout") { return (teal, "lock.fill") }
+        if l.contains("tire") { return (gold, "circle.circle") }
+        if l.contains("service") { return (warnText, "wrench.and.screwdriver.fill") }
         return (go, "gauge.with.dots.needle.67percent")
     }
 }

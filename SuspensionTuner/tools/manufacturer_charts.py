@@ -170,6 +170,21 @@ mfg["ohlins-rxf36-m2"] = dict(quality="partial", source=OHL,
 mfg["ohlins-dh38-m1"] = dict(quality="partial", source=None,
     sourceTitle="Öhlins DH38 owner's manual", sag=[20, 25])
 
+# ---------------- E-bike charts (FOX "E-Bike+" columns, Marzocchi Z2 E-Bike) ----------------
+def ebike(mid, vals, tokens=None, max_psi=None):
+    mfg[mid]["ebikePressure"] = [steps(vals)]
+    if tokens:
+        mfg[mid]["ebikeTokens"] = tok(*tokens)
+    if max_psi:
+        mfg[mid]["ebikeMaxPsi"] = max_psi
+ebike("fox-36-factory", [71, 76, 81, 85, 90, 95, 99, 104, 109, 113, 115, 117, 120],
+      [(160, 3, 6), (150, 4, 7), (140, 4, 8)])
+ebike("fox-38-factory", [81, 85, 89, 93, 98, 102, 106, 111, 115, 119, 123, 128, 132],
+      [(180, 2, 4), (170, 3, 5), (160, 4, 6), (150, 5, 6)])
+ebike("fox-podium", [55, 61, 68, 74, 80, 86, 93, 99, 105, 111, 118, 124, 130],
+      [(170, 3, 8), (160, 4, 8), (150, 5, 8)])
+ebike("marzocchi-bomber-z2", [65, 70, 74, 80, 85, 90, 96, 101, 106, 111, 116, 121, 126], max_psi=140)
+
 for mid, d in mfg.items():
     m = M[mid]
     if "maxPsi" in d:

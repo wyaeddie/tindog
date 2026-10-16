@@ -144,6 +144,24 @@ struct InputPanel: View {
                             SliderRow(title: "Shock stroke", value: $tuner.stroke, range: s.min...s.max, step: 2.5)
                         }
                     }
+
+                    DisclosureGroup {
+                        VStack(alignment: .leading, spacing: 14) {
+                            SectionLabel(text: "Today's ride", color: Theme.sky)
+                            RideConditionsEditor(ride: $tuner.ride)
+                            SectionLabel(text: "Rider", color: Theme.sky)
+                            RiderHabitsEditor(skill: $tuner.skill, position: $tuner.position)
+                            SectionLabel(text: "Bike", color: Theme.teal)
+                            BikeSetupEditor(setup: $tuner.setup)
+                            if tuner.kind == .shock {
+                                FrameSagEditor(frameRearSag: $tuner.setup.frameRearSag)
+                            }
+                        }
+                        .padding(.top, 10)
+                    } label: {
+                        SectionLabel(text: "5 · More factors (optional)", color: Theme.teal)
+                    }
+                    .tint(Theme.muted)
                 }
                 .disabled(!tuner.riderEnabled)
                 .opacity(tuner.riderEnabled ? 1 : 0.4)

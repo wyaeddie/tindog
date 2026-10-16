@@ -89,6 +89,10 @@ final class GarageStore {
         update(bikeID) { $0.style = style }
     }
 
+    func setRide(_ ride: RideConditions, for bikeID: UUID) {
+        update(bikeID) { $0.ride = ride }
+    }
+
     func setRan(_ ran: RanSetup, end: ComponentKind, for bikeID: UUID) {
         update(bikeID) { $0.setRan(ran, for: end) }
     }

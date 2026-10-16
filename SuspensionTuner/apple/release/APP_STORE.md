@@ -71,6 +71,8 @@ EVERYTHING YOU NEED AT THE BIKE
 • Rebound and compression clicks for every adjuster your fork or shock has
 • Volume spacer (token) count and lockout / climb switch advice
 • Fit check if your height and frame size don't match
+• Adjusts for e-bikes, your pack, temperature, wet or rocky trails, riding style and your frame's recommended sag
+• Tire pressure starting point and service reminders
 
 RECORD WHAT YOU ACTUALLY RAN
 Nudge the pressure dial and drag the damping sliders to what you set on the trail. Save it to History with a note like "harsh on roots — 1 click less LSC" and compare later.

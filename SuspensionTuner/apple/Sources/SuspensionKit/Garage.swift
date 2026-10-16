@@ -8,9 +8,22 @@ public struct RiderProfile: Codable, Hashable {
     /// Total height in inches (5′11″ = 71)
     public var heightIn: Double
     public var frameSize: FrameSize
+    public var skill: Skill
+    public var position: RidingPosition
 
-    public init(weightLb: Double, heightIn: Double, frameSize: FrameSize) {
+    public init(weightLb: Double, heightIn: Double, frameSize: FrameSize,
+                skill: Skill = .intermediate, position: RidingPosition = .neutral) {
         self.weightLb = weightLb; self.heightIn = heightIn; self.frameSize = frameSize
+        self.skill = skill; self.position = position
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        weightLb = try c.decode(Double.self, forKey: .weightLb)
+        heightIn = try c.decode(Double.self, forKey: .heightIn)
+        frameSize = try c.decode(FrameSize.self, forKey: .frameSize)
+        skill = try c.decodeIfPresent(Skill.self, forKey: .skill) ?? .intermediate
+        position = try c.decodeIfPresent(RidingPosition.self, forKey: .position) ?? .neutral
     }
 
     public var weightKg: Double { weightLb / 2.20462 }
@@ -56,12 +69,30 @@ public struct Bike: Codable, Identifiable, Hashable {
     public var shock: SuspensionSlot?
     public var forkRan: RanSetup
     public var shockRan: RanSetup
+    public var setup: BikeSetup
+    public var ride: RideConditions
 
     public init(id: UUID = UUID(), name: String, rider: RiderProfile, style: RidingStyle = .trail,
                 fork: SuspensionSlot? = nil, shock: SuspensionSlot? = nil,
-                forkRan: RanSetup = RanSetup(), shockRan: RanSetup = RanSetup()) {
+                forkRan: RanSetup = RanSetup(), shockRan: RanSetup = RanSetup(),
+                setup: BikeSetup = BikeSetup(), ride: RideConditions = RideConditions()) {
         self.id = id; self.name = name; self.rider = rider; self.style = style
         self.fork = fork; self.shock = shock; self.forkRan = forkRan; self.shockRan = shockRan
+        self.setup = setup; self.ride = ride
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        rider = try c.decode(RiderProfile.self, forKey: .rider)
+        style = try c.decode(RidingStyle.self, forKey: .style)
+        fork = try c.decodeIfPresent(SuspensionSlot.self, forKey: .fork)
+        shock = try c.decodeIfPresent(SuspensionSlot.self, forKey: .shock)
+        forkRan = try c.decodeIfPresent(RanSetup.self, forKey: .forkRan) ?? RanSetup()
+        shockRan = try c.decodeIfPresent(RanSetup.self, forKey: .shockRan) ?? RanSetup()
+        setup = try c.decodeIfPresent(BikeSetup.self, forKey: .setup) ?? BikeSetup()
+        ride = try c.decodeIfPresent(RideConditions.self, forKey: .ride) ?? RideConditions()
     }
 
     /// The ends this bike has, front first.
@@ -82,7 +113,8 @@ public struct Bike: Codable, Identifiable, Hashable {
     public func riderInput(for end: ComponentKind) -> RiderInput? {
         guard let slot = slot(end) else { return nil }
         return RiderInput(weightKg: rider.weightKg, heightCm: rider.heightCm, frameSize: rider.frameSize,
-                          style: style, travelMm: slot.travelMm, strokeMm: slot.strokeMm)
+                          style: style, travelMm: slot.travelMm, strokeMm: slot.strokeMm,
+                          skill: rider.skill, position: rider.position, ride: ride, bike: setup)
     }
 }
 

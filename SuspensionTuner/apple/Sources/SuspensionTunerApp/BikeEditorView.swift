@@ -37,6 +37,9 @@ struct BikeEditorView: View {
     @State private var style: RidingStyle
     @State private var fork: PartDraft
     @State private var shock: PartDraft
+    @State private var skill: Skill
+    @State private var position: RidingPosition
+    @State private var setup: BikeSetup
 
     init(store: GarageStore, bike: Bike) {
         let isNewBike = !store.bikes.contains { $0.id == bike.id }
@@ -53,6 +56,9 @@ struct BikeEditorView: View {
         _style = State(initialValue: bike.style)
         _fork = State(initialValue: PartDraft(slot: bike.fork, catalog: store.catalog, defaultEnabled: isNewBike))
         _shock = State(initialValue: PartDraft(slot: bike.shock, catalog: store.catalog, defaultEnabled: isNewBike))
+        _skill = State(initialValue: bike.rider.skill)
+        _position = State(initialValue: bike.rider.position)
+        _setup = State(initialValue: bike.setup)
     }
 
     private var weightLb: Double? {
@@ -108,10 +114,31 @@ struct BikeEditorView: View {
                             SegmentedRow(options: FrameSize.allCases, selection: $frame, title: \.rawValue)
                             SectionLabel(text: "Riding style", color: Theme.go)
                             SegmentedRow(options: RidingStyle.allCases, selection: $style, title: \.title)
+                            RiderHabitsEditor(skill: $skill, position: $position)
+                        }
+                    }
+                    Panel {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(text: "Bike details", color: Theme.teal)
+                            BikeSetupEditor(setup: $setup)
                         }
                     }
                     PartEditor(title: "Front · Fork", kind: .fork, draft: $fork, catalog: store.catalog, color: Theme.accent)
                     PartEditor(title: "Rear · Shock", kind: .shock, draft: $shock, catalog: store.catalog, color: Theme.gold)
+                    if shock.enabled {
+                        Panel { FrameSagEditor(frameRearSag: $setup.frameRearSag) }
+                    }
+                    if fork.enabled || shock.enabled {
+                        Panel {
+                            VStack(alignment: .leading, spacing: 10) {
+                                SectionLabel(text: "Hours since last service", color: Theme.warnText)
+                                if fork.enabled { ServiceHoursField(title: "Fork", hours: $setup.forkHours) }
+                                if shock.enabled { ServiceHoursField(title: "Shock", hours: $setup.shockHours) }
+                                Text("Leave at 0 if you don't know. You'll get a reminder when a service is due.")
+                                    .font(.caption).foregroundStyle(Theme.muted)
+                            }
+                        }
+                    }
                     if let problem {
                         Label(problem, systemImage: "info.circle").font(.footnote).foregroundStyle(Theme.muted)
                     }
@@ -144,7 +171,11 @@ struct BikeEditorView: View {
         guard problem == nil, let lb = weightLb, let h = heightIn else { return }
         var bike = original
         bike.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        bike.rider = RiderProfile(weightLb: lb, heightIn: h, frameSize: frame)
+        bike.rider = RiderProfile(weightLb: lb, heightIn: h, frameSize: frame, skill: skill, position: position)
+        var cleaned = setup
+        cleaned.forkHours = max(0, cleaned.forkHours)
+        cleaned.shockHours = max(0, cleaned.shockHours)
+        bike.setup = cleaned
         bike.style = style
         let newFork = fork.slot
         let newShock = shock.slot

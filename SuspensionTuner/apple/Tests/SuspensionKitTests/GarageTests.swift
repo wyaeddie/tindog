@@ -60,6 +60,22 @@ final class GarageTests: XCTestCase {
         XCTAssertEqual(back.selectedBike?.rider.heightText, "5′11″")
     }
 
+    func testGarageSavedByOlderVersionStillLoads() throws {
+        let old = """
+        {"bikes":[{"id":"6B1F4E1A-1C7B-4C1E-9C55-0F0B8A5D1E01","name":"Old Rig",
+          "rider":{"weightLb":185,"heightIn":71,"frameSize":"L"},"style":"enduro",
+          "fork":{"modelID":"fox-36-factory","travelMm":150,"strokeMm":0},
+          "forkRan":{"clicks":{}},"shockRan":{"clicks":{}}}],
+         "history":[],"useKilograms":false}
+        """
+        let data = try GarageData.decode(Data(old.utf8))
+        let bike = try XCTUnwrap(data.bikes.first)
+        XCTAssertEqual(bike.setup, BikeSetup())
+        XCTAssertEqual(bike.ride, RideConditions())
+        XCTAssertEqual(bike.rider.skill, .intermediate)
+        XCTAssertEqual(catalog.recommendation(for: bike, end: .fork)?.headlineValue, "89")
+    }
+
     func testSelectedBikeFallsBackToFirst() {
         let bike = makeBike()
         XCTAssertEqual(GarageData(bikes: [bike], selectedBikeID: UUID()).selectedBike?.id, bike.id)

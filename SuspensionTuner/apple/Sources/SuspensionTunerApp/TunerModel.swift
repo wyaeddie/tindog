@@ -20,6 +20,10 @@ final class TunerModel {
     var style: RidingStyle = .trail
     var travel: Double = 150
     var stroke: Double = 60
+    var skill: Skill = .intermediate
+    var position: RidingPosition = .neutral
+    var ride = RideConditions()
+    var setup = BikeSetup()
 
     var brands: [String] { catalog.brands(for: kind) }
     var models: [SuspensionModel] { brand.map { catalog.models(for: kind, brand: $0) } ?? [] }
@@ -54,6 +58,10 @@ final class TunerModel {
         style = .trail
         travel = 150
         stroke = 60
+        skill = .intermediate
+        position = .neutral
+        ride = RideConditions()
+        setup = BikeSetup()
     }
 
     /// Total height in inches from the ft + in fields (inches may be blank).
@@ -70,7 +78,8 @@ final class TunerModel {
         let h = totalIn * 2.54
         guard (30...180).contains(w), (120...230).contains(h) else { return nil }
         return RiderInput(weightKg: w, heightCm: h, frameSize: frameSize, style: style,
-                          travelMm: travel, strokeMm: stroke)
+                          travelMm: travel, strokeMm: stroke, skill: skill, position: position,
+                          ride: ride, bike: setup)
     }
 
     var recommendation: Recommendation? {
@@ -81,6 +90,7 @@ final class TunerModel {
     var riderSummary: String {
         let inches = heightInches.isEmpty ? "0" : heightInches
         return "\(weightText) \(weightUnit.rawValue) · \(heightFeet)′\(inches)″ · Frame \(frameSize.rawValue) · \(style.title)"
+            + (setup.eBike ? " · E-bike" : "") + " · \(rideSummary(ride))"
     }
 
     /// Plain-text version of the setup, for sharing to Messages, Mail, Notes…

@@ -74,6 +74,59 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(rec.headline_value, "140")
         self.assertTrue(any("exceeds" in w for w in rec.warnings))
 
+    # ---- ride, rider and bike factors (same values as EngineTests.swift)
+    def _fox36(self, **kw):
+        return calculate(MODELS["fox-36-factory"], RiderInput(**RIDER, style="enduro", travel_mm=150, **kw))
+
+    def test_ebike_uses_fox_ebike_chart(self):
+        rec = self._fox36(e_bike=True)
+        v = values(rec)
+        self.assertEqual(rec.headline_value, "99")
+        self.assertEqual(v["Volume spacers"], "4 tokens")
+        self.assertEqual(v["Low-speed rebound"], "5 clicks out")
+
+    def test_ebike_adds_ten_psi_on_rockshox(self):
+        rec = calculate(MODELS["rockshox-lyrik-ultimate"], RiderInput(**RIDER, style="trail", travel_mm=160, e_bike=True))
+        self.assertEqual(rec.headline_value, "93")
+
+    def test_pack_reads_heavier_row(self):
+        self.assertEqual(self._fox36(pack="day").headline_value, "94")
+
+    def test_feel_picks_end_of_sag_range(self):
+        firm = self._fox36(feel="firm")
+        self.assertEqual((firm.sag_percent, firm.headline_value), (15, "96"))
+        self.assertEqual(self._fox36(feel="plush").sag_percent, 20)
+
+    def test_cold_trail_means_pump_more_indoors(self):
+        rec = self._fox36(temperature_f=40.0)
+        self.assertEqual((rec.trail_psi, rec.headline_value), (89, "95"))
+
+    def test_terrain_and_skill_nudge_clicks(self):
+        v = values(self._fox36(terrain="rough"))
+        self.assertEqual(v["Low-speed rebound"], "7 clicks out")
+        self.assertEqual(v["High-speed compression"], "6 clicks out")
+        v = values(self._fox36(skill="aggressive"))
+        self.assertEqual(v["Low-speed compression"], "9 clicks out")
+        self.assertEqual(v["Volume spacers"], "3 tokens")
+        rec = calculate(MODELS["rockshox-lyrik-ultimate"], RiderInput(**RIDER, style="enduro", travel_mm=150, priority="climb"))
+        self.assertEqual(values(rec)["Low-speed compression"], "4 clicks in")
+
+    def test_forward_position_adds_front_pressure(self):
+        self.assertEqual(self._fox36(position="forward").headline_value, "93")
+
+    def test_frame_sag_overrides_shock_sag(self):
+        rec = calculate(MODELS["fox-float-x2-factory"],
+                        RiderInput(**RIDER, style="trail", travel_mm=160, stroke_mm=62.5, frame_rear_sag=32))
+        self.assertEqual((rec.sag_percent, rec.headline_value), (32, "172"))
+
+    def test_tire_pressure_and_service(self):
+        self.assertEqual(values(self._fox36())["Tire pressure"], "22 psi front")
+        rec = self._fox36(inserts=True, tire_width="wide", service_hours=130)
+        self.assertEqual(rec.tire_psi, 18)
+        self.assertTrue(rec.service_due)
+        rec = calculate(MODELS["rockshox-lyrik-ultimate"], RiderInput(**RIDER, style="enduro", travel_mm=150, service_hours=60))
+        self.assertTrue(rec.service_due)
+
     def test_xc_fork_in_park_warns(self):
         rec = calculate(MODELS["rockshox-sid-sl-ultimate"], RiderInput(**RIDER, style="park", travel_mm=100))
         self.assertTrue(any("XC product" in w for w in rec.warnings))

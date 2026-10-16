@@ -74,6 +74,91 @@ final class EngineTests: XCTestCase {
         XCTAssertTrue(r.warnings.contains { $0.contains("exceeds") })
     }
 
+    // MARK: Ride, rider and bike factors
+
+    func testEBikeUsesFoxEBikeChart() {
+        var r = rider(.enduro, 150)
+        r.bike.eBike = true
+        let rec = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
+        XCTAssertEqual(rec.headlineValue, "99")            // 36 E-Bike+ chart, 180–190 lb row
+        XCTAssertEqual(rec.value("Volume spacers"), "4 tokens")
+        XCTAssertEqual(rec.value("Low-speed rebound"), "5 clicks out")   // 1 slower for the heavier bike
+    }
+
+    func testEBikeAddsTenPsiOnRockShox() {
+        var r = rider(.trail, 160)
+        r.bike.eBike = true
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("rockshox-lyrik-ultimate"), rider: r).headlineValue, "93")
+    }
+
+    func testPackReadsHeavierRow() {
+        var r = rider(.enduro, 150)
+        r.ride.pack = .day                                  // 185 + 12 = 197 lb → 190–200 row
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r).headlineValue, "94")
+    }
+
+    func testFeelPicksEndOfSagRange() {
+        var r = rider(.enduro, 150)
+        r.ride.feel = .firm
+        let firm = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
+        XCTAssertEqual(firm.sagPercent, 15)
+        XCTAssertEqual(firm.headlineValue, "96")            // 89 × √(17.5 / 15)
+        r.ride.feel = .plush
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r).sagPercent, 20)
+    }
+
+    func testColdTrailMeansPumpMoreIndoors() {
+        var r = rider(.enduro, 150)
+        r.ride.temperatureF = 40
+        let rec = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
+        XCTAssertEqual(rec.trailPsi, 89)
+        XCTAssertEqual(rec.headlineValue, "95")
+    }
+
+    func testTerrainAndSkillNudgeClicks() {
+        var r = rider(.enduro, 150)
+        r.ride.terrain = .rough
+        var rec = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
+        XCTAssertEqual(rec.value("Low-speed rebound"), "7 clicks out")       // 1 faster
+        XCTAssertEqual(rec.value("High-speed compression"), "6 clicks out")  // 1 softer
+        r.ride.terrain = .mixed
+        r.skill = .aggressive
+        rec = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
+        XCTAssertEqual(rec.value("Low-speed compression"), "9 clicks out")   // 1 firmer
+        XCTAssertEqual(rec.value("Volume spacers"), "3 tokens")
+        r.skill = .intermediate
+        r.ride.priority = .climb
+        rec = SuspensionEngine.calculate(model: model("rockshox-lyrik-ultimate"), rider: r)
+        XCTAssertEqual(rec.value("Low-speed compression"), "4 clicks in")    // counted in from open: firmer = more
+    }
+
+    func testForwardPositionAddsFrontPressure() {
+        var r = rider(.enduro, 150)
+        r.position = .forward
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r).headlineValue, "93")
+    }
+
+    func testFrameSagOverridesShockSag() {
+        var r = rider(.trail, 160, 62.5)
+        r.bike.frameRearSag = 32
+        let rec = SuspensionEngine.calculate(model: model("fox-float-x2-factory"), rider: r)
+        XCTAssertEqual(rec.sagPercent, 32)
+        XCTAssertEqual(rec.headlineValue, "172")           // 185.2 × √(27.5 / 32) = 171.7
+    }
+
+    func testTirePressureAndService() {
+        var r = rider(.enduro, 150)
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r).value("Tire pressure"), "22 psi front")
+        r.bike.inserts = true
+        r.bike.tireWidth = .wide
+        r.bike.forkHours = 130
+        let rec = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
+        XCTAssertEqual(rec.tirePsi, 18)
+        XCTAssertTrue(rec.serviceDue)
+        r.bike.forkHours = 60
+        XCTAssertTrue(SuspensionEngine.calculate(model: model("rockshox-lyrik-ultimate"), rider: r).serviceDue)  // 50 h lowers
+    }
+
     func testXCForkInParkWarns() {
         let r = SuspensionEngine.calculate(model: model("rockshox-sid-sl-ultimate"), rider: rider(.park, 100))
         XCTAssertTrue(r.warnings.contains { $0.contains("XC product") })

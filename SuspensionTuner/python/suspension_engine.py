@@ -31,6 +31,14 @@ LSC_FRACTION = {"trail": 0.30, "enduro": 0.40, "park": 0.50}
 HSC_FRACTION = {"trail": 0.25, "enduro": 0.40, "park": 0.55}
 CATEGORY_RANK = {"xc": 0, "trail": 1, "enduro": 2, "dh": 3}
 TOKEN_BUMP = {"trail": 0, "enduro": 1, "park": 2}
+EBIKE_EXTRA_LB = 15.0   # extra sprung weight of an e-bike, used by the calculated estimates
+PUMP_TEMP_F = 70.0      # assume the pump is used indoors
+PACK_LB = {"none": 0.0, "hip": 5.0, "day": 12.0, "big": 20.0}
+PACK_TITLES = {"none": "No pack", "hip": "Hip pack", "day": "Day pack", "big": "Big pack"}
+TERRAIN_TITLES = {"mixed": "Mixed", "rough": "Rocky / rooty", "flow": "Flow / jumps"}
+PRIORITY_TITLES = {"climb": "Climbing", "balanced": "Balanced", "descend": "Descending"}
+WHEEL_TITLES = {"29": "29″", "27.5": "27.5″", "mixed": "Mixed"}
+TIRE_WIDTH_TITLES = {"standard": "2.3–2.4″", "wide": "2.5–2.6″"}
 STYLE_TIP = {
     "trail": "Trail: the firm end of the sag range pedals best.",
     "enduro": "Enduro: aim for the middle of the sag range.",
@@ -61,6 +69,22 @@ class RiderInput:
     style: str               # trail / enduro / park
     travel_mm: float         # fork travel, or rear-wheel travel for a shock
     stroke_mm: float = 0.0   # shock stroke (shocks only)
+    skill: str = "intermediate"      # relaxed / intermediate / aggressive
+    position: str = "neutral"        # neutral / forward
+    # today's ride
+    terrain: str = "mixed"           # mixed / rough / flow
+    condition: str = "dry"           # dry / wet
+    temperature_f: float = 70.0
+    pack: str = "none"               # none / hip / day / big
+    feel: str = "balanced"           # firm / balanced / plush
+    priority: str = "balanced"       # climb / balanced / descend
+    # the bike
+    e_bike: bool = False
+    wheel: str = "29"                # 29 / 27.5 / mixed
+    tire_width: str = "standard"     # standard (2.3–2.4) / wide (2.5–2.6)
+    inserts: bool = False
+    frame_rear_sag: float | None = None
+    service_hours: float = 0.0       # hours since this end was serviced
 
 
 @dataclass
@@ -98,6 +122,9 @@ class Recommendation:
     quality: str = "estimate"
     source_title: str | None = None
     source_url: str | None = None
+    trail_psi: int | None = None
+    tire_psi: int = 0
+    service_due: bool = False
 
 
 def recommended_frame_size(height_cm: float) -> str:
@@ -175,19 +202,26 @@ def _chart_span(t: dict) -> str:
     return f"{_num(rows[0][0])}–{_num(end)} lb"
 
 
+def _describe(nudges) -> str:
+    return ", ".join(r for r, _ in nudges)
+
+
 def calculate(model: dict, rider: RiderInput) -> Recommendation:
     is_fork = model["kind"] == "fork"
     style = rider.style
     mfg = model.get("mfg")
     brand = model["brand"]
-    rider_lb = rider.weight_kg * LB_PER_KG                  # what the maker's charts are read with
-    system_lb = (rider.weight_kg + GEAR_KG) * LB_PER_KG     # used by the calculated estimates
+    pack_lb = PACK_LB[rider.pack]
+    rider_lb = rider.weight_kg * LB_PER_KG                  # body weight
+    chart_lb = rider_lb + pack_lb                           # what the maker's charts are read with
+    system_lb = (rider.weight_kg + GEAR_KG) * LB_PER_KG + pack_lb + (EBIKE_EXTRA_LB if rider.e_bike else 0)
     w = _weight_index(system_lb)
 
     rec_size = recommended_frame_size(rider.height_cm)
     frame_idx = FRAME_SIZES.index(rider.frame_size)
     fit_delta = FRAME_SIZES.index(rec_size) - frame_idx
-    front_bias = _clamp(0.40 + 0.01 * (frame_idx - 1) + 0.01 * fit_delta, 0.36, 0.46)
+    forward = 0.02 if rider.position == "forward" else 0
+    front_bias = _clamp(0.40 + 0.01 * (frame_idx - 1) + 0.01 * fit_delta + forward, 0.36, 0.48)
     rear_bias = 1 - front_bias
 
     warnings: list[str] = []
@@ -196,47 +230,65 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
     estimated: list[str] = []
 
     # ---- sag --------------------------------------------------------------
+    # base = the middle of the recommended range; feel picks the firm end, middle or plush end.
     sag_min = sag_max = None
-    if mfg and mfg.get("sag") and len(mfg["sag"]) == 2:
-        sag_min, sag_max = int(mfg["sag"][0]), int(mfg["sag"][1])
-        sag_pct = _round_half_up((mfg["sag"][0] + mfg["sag"][1]) / 2)
+    sag_note = ""
+    style_sag = float(FORK_SAG[style] if is_fork else SHOCK_SAG[style])
+    if model["category"] == "xc":
+        style_sag -= 3 if is_fork else 2
+    maker_sag = mfg["sag"] if mfg and mfg.get("sag") and len(mfg["sag"]) == 2 else None
+    if not is_fork and rider.frame_rear_sag and rider.frame_rear_sag > 0:
+        fs = rider.frame_rear_sag
+        base, lo, hi = fs, fs - 2, fs + 2
+        maker_mid = (maker_sag[0] + maker_sag[1]) / 2 if maker_sag else style_sag
+        sag_note = f"Frame maker: {_num(fs)}%. "
+    elif maker_sag:
+        s0, s1 = maker_sag
+        sag_min, sag_max = int(s0), int(s1)
+        base = (s0 + s1) / 2
+        lo = s0 - 2 if s0 == s1 else s0
+        hi = s1 + 2 if s0 == s1 else s1
+        maker_mid = base
+        rng = f"about {_num(s0)}%" if s0 == s1 else f"{_num(s0)}–{_num(s1)}%"
+        sag_note = f"{brand}: {rng} of {'travel' if is_fork else 'shock stroke'}. "
     else:
-        sag_pct = FORK_SAG[style] if is_fork else SHOCK_SAG[style]
-        if model["category"] == "xc":
-            sag_pct -= 3 if is_fork else 2
+        base, lo, hi, maker_mid = style_sag, style_sag - 2, style_sag + 2, style_sag
         if mfg:
             estimated.append("sag target")
+    target = lo if rider.feel == "firm" else hi if rider.feel == "plush" else base
+    sag_pct = _round_half_up(target)
     sag = sag_pct / 100
     sag_mm = (rider.travel_mm if is_fork else rider.stroke_mm) * sag
-    sag_range = None
-    if sag_min is not None:
-        sag_range = f"about {sag_min}%" if sag_min == sag_max else f"{sag_min}–{sag_max}%"
+    sag_range_text = f"{_num(lo)}–{_num(hi)}%"
 
     # ---- spring -----------------------------------------------------------
+    trail_psi = None
     pressure_from_chart = False
     leverage = 0.0
     if model["spring"] == "air":
-        max_psi = model["maxPsi"] or 999
-        t = _table(mfg and mfg.get("pressure"), rider.travel_mm)
+        max_psi = (rider.e_bike and mfg and mfg.get("ebikeMaxPsi")) or model["maxPsi"] or 999
+        ebike_chart = bool(rider.e_bike and mfg and mfg.get("ebikePressure"))
+        changes: list[str] = []
+        t = _table(mfg and (mfg.get("ebikePressure") if ebike_chart else mfg.get("pressure")), rider.travel_mm)
         if t:
-            hit = _lookup(t["type"], t["rows"], rider_lb)
-            p = _round_half_up(hit["value"])
+            hit = _lookup(t["type"], t["rows"], chart_lb)
+            psi = hit["value"]
             pressure_from_chart = True
+            chart = f"{brand} E-Bike+ chart" if ebike_chart else f"{brand} chart"
             if t["type"] == "linear":
-                detail = (f"{brand} chart: {_num(hit['y0'])}–{_num(hit['y1'])} psi for "
+                detail = (f"{chart}: {_num(hit['y0'])}–{_num(hit['y1'])} psi for "
                           f"{_num(hit['x0'])}–{_num(hit['x1'])} lb riders.")
             else:
-                detail = f"{brand} chart, {_num(hit['x0'])}–{_num(hit['x1'])} lb row."
-            detail += f" Fine-tune ±10 psi to hit {sag_range or f'{sag_pct}%'} sag."
+                detail = f"{chart}, {_num(hit['x0'])}–{_num(hit['x1'])} lb row."
             if hit["outside"]:
-                warnings.append(f"At {_round_half_up(rider_lb)} lb you're outside {_possessive(brand)} chart ({_chart_span(t)}) — "
+                warnings.append(f"At {_round_half_up(chart_lb)} lb you're outside {_possessive(brand)} chart ({_chart_span(t)}) — "
                                 + ("the chart was extended in a straight line." if t["type"] == "linear"
                                    else "the nearest row was used.")
                                 + " Set sag carefully.")
         elif mfg and mfg.get("pressureRule") == "bodyWeight":
-            p = _round_half_up(rider_lb)
+            psi = chart_lb
             pressure_from_chart = True
-            detail = f"{brand}: start at your body weight in lb, then adjust until sag is {sag_range or f'{sag_pct}%'}."
+            detail = f"{brand}: start at your body weight in lb."
         else:
             if is_fork:
                 psi = model["psiRatio"] * system_lb * (front_bias / 0.40) * math.sqrt(20 / sag_pct)
@@ -244,19 +296,46 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
                 leverage = rider.travel_mm / rider.stroke_mm
                 psi = (model["psiRatio"] * system_lb * (rear_bias / 0.60)
                        * math.sqrt(28 / sag_pct) * (leverage / 2.7))
-            p = _round_half_up(psi)
             estimated.append("air pressure")
             detail = "Estimate — set to sag. Adjust ±5 psi per ~2% sag change."
-        if p > max_psi:
-            warnings.append(f"{p} psi exceeds the {max_psi} psi max — capped. "
+        if pressure_from_chart:
+            f = math.sqrt(maker_mid / target)
+            if abs(f - 1) > 1e-9:
+                psi *= f
+                changes.append(f"{'more' if f > 1 else 'less'} for {sag_pct}% sag")
+            if is_fork and rider.position == "forward":
+                psi *= 1.04
+                changes.append("+4% for weight over the front")
+            if rider.e_bike and not ebike_chart:
+                psi += 10
+                sram = brand == "RockShox" and is_fork
+                changes.append(f"+10 psi for an e-bike{' (SRAM)' if sram else ''}")
+                if not sram:
+                    estimated.append("e-bike pressure")
+            if changes:
+                detail += f" Adjusted: {', '.join(changes)}."
+            detail += f" Fine-tune ±10 psi to hit {sag_pct}% sag."
+        on_trail = _round_half_up(psi)
+        if on_trail > max_psi:
+            warnings.append(f"{on_trail} psi exceeds the {max_psi} psi max — capped. "
                             "Consider more volume spacers or a firmer spring.")
-            p = max_psi
-        headline = ("Air pressure", str(p), "psi")
-        spring_value = p
-        settings.append(Setting("Air pressure", f"{p} psi", f"{detail} Max {max_psi} psi."))
+            on_trail = max_psi
+        # Air pressure follows absolute temperature: pump more indoors if the trail is colder.
+        pump = on_trail
+        if rider.temperature_f != PUMP_TEMP_F:
+            pump = _round_half_up((on_trail + 14.7) * (PUMP_TEMP_F + 459.67) / (rider.temperature_f + 459.67) - 14.7)
+            if pump > max_psi:
+                pump = max_psi
+            if pump != on_trail:
+                detail += (f" Pump {pump} psi indoors ({_num(PUMP_TEMP_F)}°F) so it's {on_trail} psi at "
+                           f"{_num(rider.temperature_f)}°F on the trail — set {on_trail} if you pump at the trailhead.")
+        trail_psi = on_trail
+        headline = ("Air pressure", str(pump), "psi")
+        spring_value = pump
+        settings.append(Setting("Air pressure", f"{pump} psi", f"{detail} Max {max_psi} psi."))
         rt = _table(mfg and mfg.get("ramp"), rider.travel_mm)
         if rt:
-            r = _round_half_up(_lookup(rt["type"], rt["rows"], rider_lb)["value"])
+            r = _round_half_up(_lookup(rt["type"], rt["rows"], chart_lb)["value"])
             settings.append(Setting("Ramp-up chamber", f"{r} psi",
                                     f"{brand} chart. More = more progressive (less bottom-out)."))
     else:
@@ -271,29 +350,65 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
                                 f"Calculated for {sag_pct}% sag at a {leverage:.2f}:1 leverage ratio — coil rates "
                                 "depend on the frame, so makers don't chart them. Use 1–2 turns of preload at most."))
 
+    feel_text = "" if rider.feel == "balanced" else f" {rider.feel.capitalize()} end of {sag_range_text}."
     settings.append(Setting("Sag", f"{sag_pct}%  ·  {sag_mm:.1f} mm",
-                            (f"{brand}: {sag_range} of {'travel' if is_fork else 'shock stroke'}. " if sag_range else "")
-                            + ("Measured on the stanchion" if is_fork
-                               else "Measured on the shock shaft, seated in attack position")))
+                            sag_note + ("Measured on the stanchion." if is_fork
+                                        else "Measured on the shock shaft, seated in attack position.") + feel_text))
+
+    # ---- adjustments for today's ride and the rider ------------------------
+    reb, lsc, hsc, tok = [], [], [], []
+    if rider.terrain == "rough":
+        reb.append(("rocky terrain", -1))
+        hsc.append(("rocky terrain", -1))
+    elif rider.terrain == "flow":
+        reb.append(("flow / jumps", 1))
+        lsc.append(("flow / jumps", 1))
+        hsc.append(("flow / jumps", 1))
+        tok.append(("flow / jumps", 1))
+    if rider.condition == "wet":
+        reb.append(("wet", 1))
+        lsc.append(("wet", -1))
+    if rider.temperature_f < 40:
+        reb.append(("cold oil", -1))
+    if rider.skill == "relaxed":
+        lsc.append(("relaxed riding", -1))
+        hsc.append(("relaxed riding", -1))
+    elif rider.skill == "aggressive":
+        lsc.append(("aggressive riding", 1))
+        hsc.append(("aggressive riding", 1))
+        tok.append(("aggressive riding", 1))
+    if rider.priority == "climb":
+        lsc.append(("climbing priority", 1))
+    elif rider.priority == "descend":
+        lsc.append(("descending priority", -1))
+    if rider.e_bike:
+        reb.append(("e-bike", 1))
 
     # ---- progression ------------------------------------------------------
     tokens = token_max = None
-    if mfg and mfg.get("tokens"):
-        row = min(mfg["tokens"], key=lambda r: abs(r["travel"] - rider.travel_mm))
-        tokens, token_max = row["installed"], row["max"]
-        settings.append(Setting("Volume spacers", f"{tokens} token{'s' if tokens != 1 else ''}",
-                                f"{brand} stock for {_num(row['travel'])} mm travel. Max {token_max}. "
-                                "Add one if you bottom out harshly."))
+    ebike_tokens = bool(rider.e_bike and mfg and mfg.get("ebikeTokens"))
+    if rider.e_bike and not ebike_tokens:
+        tok.append(("e-bike", 1))
+    tok_sum = sum(a for _, a in tok)
+    tok_text = f" +{tok_sum} for {_describe(tok)}." if tok else ""
+    rows = mfg and (mfg.get("ebikeTokens") if ebike_tokens else mfg.get("tokens"))
+    if rows:
+        row = min(rows, key=lambda r: abs(r["travel"] - rider.travel_mm))
+        n = int(_clamp(row["installed"] + tok_sum, 0, row["max"]))
+        tokens, token_max = n, row["max"]
+        settings.append(Setting("Volume spacers", f"{n} token{'s' if n != 1 else ''}",
+                                f"{brand}{' E-Bike+' if ebike_tokens else ''} stock for {_num(row['travel'])} mm travel: "
+                                f"{row['installed']}.{tok_text} Max {row['max']}. Add one if you bottom out harshly."))
     elif model["tokens"]:
         t = model["tokens"]["default"] + TOKEN_BUMP[style]
         if system_lb > 210:
             t += 1
         elif system_lb < 140:
             t -= 1
-        tokens, token_max = int(_clamp(t, 0, model["tokens"]["max"])), model["tokens"]["max"]
+        tokens, token_max = int(_clamp(t + tok_sum, 0, model["tokens"]["max"])), model["tokens"]["max"]
         estimated.append("volume spacers")
         settings.append(Setting("Volume spacers", f"{tokens} token{'s' if tokens != 1 else ''}",
-                                f"Estimate. Max {token_max}. Add one if you bottom out harshly."))
+                                f"Estimate.{tok_text} Max {token_max}. Add one if you bottom out harshly."))
     elif model["spring"] == "air" and not (mfg and mfg.get("ramp")):
         settings.append(Setting("Progression", "See brand chart",
                                 "Uses a ramp-up chamber / inserts instead of tokens."))
@@ -313,59 +428,125 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         n = adj[key]
         if not n:
             continue
+        is_reb = key in ("rebound", "lsr", "hsr")
+        nudges = reb if is_reb else lsc if key == "lsc" else hsc
+        firm = sum(a for _, a in nudges)
         rule = rules.get(key)
-        if rule and rule["by"] == "middle":
-            v = _round_half_up(n / 2)
-            clicks.append(Click(key, v, n, False, None, True))
-            settings.append(Setting(label, f"{v} {_clicks(v)} in",
-                                    f"{brand}: start in the middle (of {n}), then add or remove to taste.{why}"))
-        elif rule:
-            rows = rule.get("rows") or [[0, 0]]
-            by = rule["by"]
-            if by == "weight":
-                hit = _lookup("steps", rows, rider_lb)
-                basis = f" for {_num(hit['x0'])}–{_num(hit['x1'])} lb riders"
-            elif by == "psi":
-                hit = _lookup("steps", rows, spring_value)
-                basis = f" at {spring_value} psi"
-            elif by == "rate":
-                hit = _lookup("steps", rows, spring_value)
-                basis = f" for a {spring_value} lb/in spring"
-            else:
-                hit = _lookup("steps", rows, 0)
-                basis = ""
-            lo = hit["row"][1]
-            hi = hit["row"][2] if len(hit["row"]) > 2 else None
-            v = _round_half_up((lo + hi) / 2) if hi is not None else int(lo)
-            of = max(n, int(hi if hi is not None else lo))
+        of = n
+        is_mfg = True
+        if rule:
             from_closed = rule["from"] == "closed"
-            rng = f"{int(lo)}–{int(hi)}" if hi is not None else None
-            clicks.append(Click(key, v, of, from_closed, rng, True))
-            settings.append(Setting(label, f"{rng or v} {_clicks(rng or v)} {'out' if from_closed else 'in'}",
-                                    f"{brand} chart{basis}. Counted "
-                                    f"{'out from fully closed' if from_closed else 'in from fully open'}, of {of}.{why}"))
+            if rule["by"] == "middle":
+                base_lo, base_hi = _round_half_up(n / 2), None
+                detail = f"{brand}: start in the middle (of {n}), then add or remove to taste."
+            else:
+                rows_ = rule.get("rows") or [[0, 0]]
+                by = rule["by"]
+                if by == "weight":
+                    hit = _lookup("steps", rows_, chart_lb)
+                    basis = f" for {_num(hit['x0'])}–{_num(hit['x1'])} lb riders"
+                elif by == "psi":
+                    p_ = trail_psi if trail_psi is not None else spring_value
+                    hit = _lookup("steps", rows_, p_)
+                    basis = f" at {p_} psi"
+                elif by == "rate":
+                    hit = _lookup("steps", rows_, spring_value)
+                    basis = f" for a {spring_value} lb/in spring"
+                else:
+                    hit = _lookup("steps", rows_, 0)
+                    basis = ""
+                base_lo = int(hit["row"][1])
+                base_hi = int(hit["row"][2]) if len(hit["row"]) > 2 else None
+                of = max(n, base_hi if base_hi is not None else base_lo)
+                detail = (f"{brand} chart{basis}. Counted "
+                          f"{'out from fully closed' if from_closed else 'in from fully open'}, of {of}.")
         else:
-            is_reb = key in ("rebound", "lsr", "hsr")
+            from_closed = is_reb
+            is_mfg = False
             if is_reb:
-                base = 0.55 if key == "hsr" else 0.65
-                v = int(_clamp(_round_half_up(n * (base - 0.35 * w)), 1, max(1, n - 1)))
+                b = 0.55 if key == "hsr" else 0.65
+                base_lo = int(_clamp(_round_half_up(n * (b - 0.35 * w)), 1, max(1, n - 1)))
             else:
                 frac = LSC_FRACTION[style] if key == "lsc" else HSC_FRACTION[style]
-                v = int(_clamp(_round_half_up(n * _clamp(frac + 0.1 * w, 0, 1)), 0, n))
+                base_lo = int(_clamp(_round_half_up(n * _clamp(frac + 0.1 * w, 0, 1)), 0, n))
+            base_hi = None
             estimated.append(label.lower())
-            clicks.append(Click(key, v, n, is_reb, None, False))
-            settings.append(Setting(label, f"{v} {_clicks(v)} {'out' if is_reb else 'in'}",
-                                    f"Estimate. Counted {'out from fully closed' if is_reb else 'in from fully open'}, "
-                                    f"of {n}.{why}"))
+            detail = f"Estimate. Counted {'out from fully closed' if is_reb else 'in from fully open'}, of {n}."
+        # + firm means firmer / slower: fewer clicks out from closed, or more clicks in from open
+        shift = -firm if from_closed else firm
+        new_lo = int(_clamp(base_lo + shift, 0, of))
+        new_hi = int(_clamp(base_hi + shift, 0, of)) if base_hi is not None else None
+        base_text = f"{base_lo}–{base_hi}" if base_hi is not None else f"{base_lo}"
+        if firm != 0:
+            direction = ("slower" if firm > 0 else "faster") if is_reb else ("firmer" if firm > 0 else "softer")
+            detail += f" Adjusted {abs(firm)} {_clicks(abs(firm))} {direction} from {base_text} for {_describe(nudges)}."
+        elif nudges:
+            detail += f" ({_describe(nudges)} cancel out.)"
+        rng = f"{new_lo}–{new_hi}" if new_hi is not None and new_hi != new_lo else None
+        value = _round_half_up((new_lo + new_hi) / 2) if new_hi is not None else new_lo
+        clicks.append(Click(key, value, of, from_closed, rng, is_mfg))
+        settings.append(Setting(label, f"{rng or value} {_clicks(value) if rng is None else 'clicks'} "
+                                       f"{'out' if from_closed else 'in'}", detail + why))
 
     # ---- lockout / climb --------------------------------------------------
     if model["climb"]:
-        how = ("Leave open for lift laps; use only on long fire-road climbs."
-               if style == "park" else "Open on descents, firm for long climbs and pavement.")
+        if style == "park":
+            how = "Leave open for lift laps; use only on long fire-road climbs."
+        elif rider.priority == "climb":
+            how = "Climbing priority: use the firm / climb mode on every sustained climb."
+        elif rider.priority == "descend":
+            how = "Descending priority: leave it open except on pavement."
+        else:
+            how = "Open on descents, firm for long climbs and pavement."
         settings.append(Setting("Lockout / climb", model["climb"], how))
     else:
         settings.append(Setting("Lockout / climb", "None",
                                 "Use more low-speed compression for climbing support."))
+
+    # ---- tires (an estimate: tires are part of the suspension) -------------
+    tire_lb = rider_lb + GEAR_KG * LB_PER_KG + pack_lb
+    rear_tire = 0.11 * tire_lb + 3.5
+    if rider.e_bike:
+        rear_tire += 3
+    if rider.tire_width == "wide":
+        rear_tire -= 2
+    if rider.inserts:
+        rear_tire -= 2
+    if rider.condition == "wet":
+        rear_tire -= 1
+    front_tire = rear_tire - 3
+    if rider.wheel == "27.5":
+        front_tire += 1
+        rear_tire += 1
+    elif rider.wheel == "mixed":
+        rear_tire += 1
+    front_psi = int(_clamp(_round_half_up(front_tire), 15, 40))
+    rear_psi = int(_clamp(_round_half_up(rear_tire), 15, 40))
+    tire_psi = front_psi if is_fork else rear_psi
+    settings.append(Setting("Tire pressure", f"{tire_psi} psi {'front' if is_fork else 'rear'}",
+                            f"Estimate for tubeless {WHEEL_TITLES[rider.wheel]} {TIRE_WIDTH_TITLES[rider.tire_width]} tires"
+                            f"{' with inserts' if rider.inserts else ''}{' on an e-bike' if rider.e_bike else ''}. "
+                            f"{'Rear' if is_fork else 'Front'}: {rear_psi if is_fork else front_psi} psi. "
+                            "Lower = more grip; add 1–2 psi if you feel rim strikes."))
+
+    # ---- service ------------------------------------------------------------
+    hours = rider.service_hours
+    service_due = False
+    if hours > 0:
+        if brand in ("Fox", "Marzocchi"):
+            interval, full, schedule = 125, 125, f"{brand}: full service every 125 h or once a year"
+        elif brand == "RockShox":
+            interval, full = 50, 200
+            schedule = (f"RockShox: {'lower-leg' if is_fork else 'air-can'} service every 50 h, "
+                        "damper and spring every 200 h")
+        else:
+            interval, full, schedule = 100, 100, f"Typical interval about 100 h — check {_possessive(brand)} schedule"
+        settings.append(Setting("Service", f"{_num(hours)} h since service", f"{schedule}."))
+        if hours >= interval:
+            service_due = True
+            what = "a full service" if hours >= full else f"a {'lower-leg' if is_fork else 'air-can'} service"
+            warnings.append(f"{model['name']} is due {what}: {_num(hours)} h since the last one. "
+                            "Old oil and dry seals make damping feel slow and harsh.")
 
     # ---- fit & warnings -----------------------------------------------------
     if fit_delta != 0:
@@ -378,6 +559,9 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
                         f"{STYLE_LABELS[style].lower()} riding.")
     if style == "park" and CATEGORY_RANK[model["category"]] < 2:
         warnings.append("Bike park riding usually calls for an enduro or DH-rated product.")
+    if rider.temperature_f <= 32:
+        warnings.append("Below freezing: fork and shock oil thickens, so everything feels slower and firmer "
+                        "until it warms up.")
 
     # ---- source & tips --------------------------------------------------------
     quality = mfg["quality"] if mfg else "estimate"
@@ -390,20 +574,44 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         tips.append(f"Manufacturer charts don't change with riding style. {STYLE_TIP[style]}")
     else:
         tips.append(f"No published {brand} setup chart was found for this model — all values are calculated estimates.")
+    today = []
+    if rider.terrain != "mixed":
+        today.append(TERRAIN_TITLES[rider.terrain].lower())
+    if rider.condition == "wet":
+        today.append("wet")
+    if rider.temperature_f != PUMP_TEMP_F:
+        today.append(f"{_num(rider.temperature_f)}°F")
+    if rider.pack != "none":
+        today.append(PACK_TITLES[rider.pack].lower())
+    if rider.feel != "balanced":
+        today.append(f"{rider.feel} feel")
+    if rider.priority != "balanced":
+        today.append(f"{PRIORITY_TITLES[rider.priority].lower()} priority")
+    if rider.e_bike:
+        today.append("e-bike")
+    if today:
+        tips.append(f"Adjusted for: {', '.join(today)}.")
     if pressure_from_chart:
-        tips.append(f"Chart read at your body weight: {_round_half_up(rider_lb)} lb. "
-                    "Riding with a heavy pack? Enter your weight with gear.")
+        tips.append(f"Chart read at {_round_half_up(chart_lb)} lb"
+                    + (f" (your {_round_half_up(rider_lb)} lb + {_num(pack_lb)} lb {PACK_TITLES[rider.pack].lower()})."
+                       if pack_lb > 0 else " — your body weight."))
     else:
         tips.append(f"Estimates use your weight with gear: {_round_half_up(system_lb)} lb "
-                    f"({_round_half_up(rider.weight_kg)} kg rider + {GEAR_KG:.0f} kg gear).")
+                    f"({_round_half_up(rider.weight_kg)} kg rider + {GEAR_KG:.0f} kg gear"
+                    + (f" + {_num(pack_lb)} lb pack" if pack_lb > 0 else "")
+                    + (f" + {_num(EBIKE_EXTRA_LB)} lb e-bike" if rider.e_bike else "") + ").")
     if model["spring"] == "air":
         tips.append("Cycle the suspension 10× after inflating, then re-check sag.")
     tips.append("Change one setting at a time, 2 clicks at a time, on the same test loop.")
     if model["note"]:
         tips.append(model["note"])
 
+    max_out = None
+    if model["spring"] == "air":
+        max_out = (rider.e_bike and mfg and mfg.get("ebikeMaxPsi")) or model["maxPsi"]
     return Recommendation(*headline, settings=settings, tips=tips, warnings=warnings,
                           spring_value=spring_value, sag_percent=sag_pct, sag_min=sag_min, sag_max=sag_max,
                           tokens=tokens, token_max=token_max, clicks=clicks, quality=quality,
                           source_title=mfg["sourceTitle"] if mfg else None,
-                          source_url=mfg.get("source") if mfg else None)
+                          source_url=mfg.get("source") if mfg else None,
+                          trail_psi=trail_psi, tire_psi=tire_psi, service_due=service_due)

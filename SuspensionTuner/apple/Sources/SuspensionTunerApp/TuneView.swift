@@ -111,6 +111,12 @@ struct TuneEndView: View {
             }
             .frame(maxWidth: .infinity)
 
+            if let trail = rec.trailPsi, trail != rec.springValue {
+                InfoCard(icon: "thermometer.medium", color: Theme.sky,
+                         title: "Pump \(rec.springValue) psi indoors → \(trail) psi on the trail",
+                         detail: "Air loses pressure as it cools (\(Int(bike.ride.temperatureF))°F today). Pumping at the trailhead? Set \(trail) psi.")
+            }
+
             SagCheckCard(rec: rec, end: end)
 
             // Damping
@@ -156,6 +162,13 @@ struct TuneEndView: View {
                 .padding(14)
                 .background(Theme.teal.opacity(0.08), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.teal.opacity(0.35)))
+            }
+            if let tire = rec.settings.first(where: { $0.label == "Tire pressure" }) {
+                InfoCard(icon: "circle.circle", color: Theme.gold, title: "Tires · \(tire.value)", detail: tire.detail)
+            }
+            if let service = rec.settings.first(where: { $0.label == "Service" }) {
+                InfoCard(icon: "wrench.and.screwdriver.fill", color: rec.serviceDue ? Theme.warnText : Theme.muted,
+                         title: "Service · \(service.value)", detail: service.detail)
             }
             ForEach(rec.warnings, id: \.self) { w in
                 Label(w, systemImage: "exclamationmark.triangle.fill")

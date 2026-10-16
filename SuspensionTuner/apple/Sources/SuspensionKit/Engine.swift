@@ -11,11 +11,18 @@ public struct RiderInput {
     public var style: RidingStyle
     public var travelMm: Double   // fork travel, or rear-wheel travel for a shock
     public var strokeMm: Double   // shock stroke (shocks only)
+    public var skill: Skill
+    public var position: RidingPosition
+    public var ride: RideConditions
+    public var bike: BikeSetup
 
     public init(weightKg: Double, heightCm: Double, frameSize: FrameSize,
-                style: RidingStyle, travelMm: Double, strokeMm: Double = 0) {
+                style: RidingStyle, travelMm: Double, strokeMm: Double = 0,
+                skill: Skill = .intermediate, position: RidingPosition = .neutral,
+                ride: RideConditions = RideConditions(), bike: BikeSetup = BikeSetup()) {
         self.weightKg = weightKg; self.heightCm = heightCm; self.frameSize = frameSize
         self.style = style; self.travelMm = travelMm; self.strokeMm = strokeMm
+        self.skill = skill; self.position = position; self.ride = ride; self.bike = bike
     }
 }
 
@@ -74,6 +81,11 @@ public struct Recommendation {
     public let quality: DataQuality
     public let sourceTitle: String?
     public let sourceURL: String?
+    /// Air pressure on the trail at the riding temperature (the headline is what to pump at 70°F)
+    public let trailPsi: Int?
+    /// Suggested tire pressure for this end (front for a fork, rear for a shock)
+    public let tirePsi: Int
+    public let serviceDue: Bool
 
     public func value(_ label: String) -> String? { settings.first { $0.label == label }?.value }
 }
@@ -86,6 +98,8 @@ public enum SuspensionEngine {
     static let lscFraction: [RidingStyle: Double] = [.trail: 0.30, .enduro: 0.40, .park: 0.50]
     static let hscFraction: [RidingStyle: Double] = [.trail: 0.25, .enduro: 0.40, .park: 0.55]
     static let tokenBump: [RidingStyle: Int] = [.trail: 0, .enduro: 1, .park: 2]
+    static let eBikeExtraLb = 15.0      // extra sprung weight of an e-bike, used by the calculated estimates
+    static let pumpTempF = 70.0         // assume the pump is used indoors
     static let categoryRank = ["xc": 0, "trail": 1, "enduro": 2, "dh": 3]
     static let styleTip: [RidingStyle: String] = [
         .trail: "Trail: the firm end of the sag range pedals best.",
@@ -149,19 +163,34 @@ public enum SuspensionEngine {
 
     // MARK: calculate
 
+    /// One reason a damping / spacer value moved away from the base number (+ = firmer / slower / more).
+    struct Nudge {
+        let reason: String
+        let amount: Int
+    }
+
+    static func describe(_ nudges: [Nudge]) -> String {
+        nudges.map(\.reason).joined(separator: ", ")
+    }
+
     public static func calculate(model m: SuspensionModel, rider: RiderInput) -> Recommendation {
         let isFork = m.kind == .fork
         let style = rider.style
+        let ride = rider.ride
+        let bk = rider.bike
         let mfg = m.mfg
         let brand = m.brand
-        let riderLb = rider.weightKg * lbPerKg               // what the maker's charts are read with
-        let systemLb = (rider.weightKg + gearKg) * lbPerKg   // used by the calculated estimates
+        let packLb = ride.pack.lb
+        let riderLb = rider.weightKg * lbPerKg               // body weight
+        let chartLb = riderLb + packLb                       // what the maker's charts are read with
+        let systemLb = (rider.weightKg + gearKg) * lbPerKg + packLb + (bk.eBike ? eBikeExtraLb : 0)
         let w = clamp((systemLb - 120) / 140, 0, 1)
 
         let recSize = recommendedFrameSize(heightCm: rider.heightCm)
         let frameIdx = Double(rider.frameSize.index)
         let fitDelta = recSize.index - rider.frameSize.index
-        let frontBias = clamp(0.40 + 0.01 * (frameIdx - 1) + 0.01 * Double(fitDelta), 0.36, 0.46)
+        let forward = rider.position == .forward ? 0.02 : 0
+        let frontBias = clamp(0.40 + 0.01 * (frameIdx - 1) + 0.01 * Double(fitDelta) + forward, 0.36, 0.48)
         let rearBias = 1 - frontBias
 
         var settings: [Setting] = []
@@ -171,52 +200,69 @@ public enum SuspensionEngine {
         var headline: (String, String, String)
 
         // ---- sag ----------------------------------------------------------
-        var sagPct: Int
+        // base = the middle of the recommended range; feel picks the firm end, middle or plush end.
         var sagMin: Int? = nil, sagMax: Int? = nil
-        if let s = mfg?.sag, s.count == 2 {
+        let base: Double, lo: Double, hi: Double, makerMid: Double
+        var sagNote = ""
+        let styleSag: Double = {
+            var v = isFork ? forkSag[style]! : shockSag[style]!
+            if m.category == "xc" { v -= isFork ? 3 : 2 }
+            return Double(v)
+        }()
+        let makerSag = mfg?.sag.flatMap { $0.count == 2 ? $0 : nil }
+        if !isFork, let fs = bk.frameRearSag, fs > 0 {
+            base = fs; lo = fs - 2; hi = fs + 2
+            makerMid = makerSag.map { ($0[0] + $0[1]) / 2 } ?? styleSag
+            sagNote = "Frame maker: \(num(fs))%. "
+        } else if let s = makerSag {
             sagMin = Int(s[0]); sagMax = Int(s[1])
-            sagPct = roundHalfUp((s[0] + s[1]) / 2)
+            base = (s[0] + s[1]) / 2
+            lo = s[0] == s[1] ? s[0] - 2 : s[0]
+            hi = s[0] == s[1] ? s[1] + 2 : s[1]
+            makerMid = base
+            let range = s[0] == s[1] ? "about \(num(s[0]))%" : "\(num(s[0]))–\(num(s[1]))%"
+            sagNote = "\(brand): \(range) of \(isFork ? "travel" : "shock stroke"). "
         } else {
-            sagPct = isFork ? forkSag[style]! : shockSag[style]!
-            if m.category == "xc" { sagPct -= isFork ? 3 : 2 }
+            base = styleSag; lo = styleSag - 2; hi = styleSag + 2; makerMid = styleSag
             if mfg != nil { estimated.append("sag target") }
         }
+        let target = ride.feel == .firm ? lo : ride.feel == .plush ? hi : base
+        let sagPct = roundHalfUp(target)
         let sag = Double(sagPct) / 100
-        let sagBase = isFork ? rider.travelMm : rider.strokeMm
-        let sagMm = sagBase * sag
-        let sagRangeText: String? = sagMin.map { lo in
-            lo == sagMax! ? "about \(lo)%" : "\(lo)–\(sagMax!)%"
-        }
+        let sagMm = (isFork ? rider.travelMm : rider.strokeMm) * sag
+        let sagRangeText = "\(num(lo))–\(num(hi))%"
 
         // ---- spring -------------------------------------------------------
         var springValue = 0
+        var trailPsi: Int? = nil
         var pressureFromChart = false
         var leverage = 0.0
         if m.spring == .air {
-            let maxPsi = m.maxPsi ?? 999
-            var p: Int
+            let maxPsi = (bk.eBike ? mfg?.ebikeMaxPsi : nil) ?? m.maxPsi ?? 999
+            let ebikeChart = bk.eBike && mfg?.ebikePressure != nil
+            var psi: Double
             var detail: String
-            if let t = table(mfg?.pressure, travel: rider.travelMm) {
-                let hit = lookup(t.type, t.rows, riderLb)
-                p = roundHalfUp(hit.value)
+            var changes: [String] = []
+            if let t = table(ebikeChart ? mfg?.ebikePressure : mfg?.pressure, travel: rider.travelMm) {
+                let hit = lookup(t.type, t.rows, chartLb)
+                psi = hit.value
                 pressureFromChart = true
+                let chart = ebikeChart ? "\(brand) E-Bike+ chart" : "\(brand) chart"
                 if t.type == "linear" {
-                    detail = "\(brand) chart: \(num(hit.y0))–\(num(hit.y1)) psi for \(num(hit.x0))–\(num(hit.x1)) lb riders."
+                    detail = "\(chart): \(num(hit.y0))–\(num(hit.y1)) psi for \(num(hit.x0))–\(num(hit.x1)) lb riders."
                 } else {
-                    detail = "\(brand) chart, \(num(hit.x0))–\(num(hit.x1)) lb row."
+                    detail = "\(chart), \(num(hit.x0))–\(num(hit.x1)) lb row."
                 }
-                detail += " Fine-tune ±10 psi to hit \(sagRangeText ?? "\(sagPct)%") sag."
                 if hit.outside {
-                    warnings.append("At \(roundHalfUp(riderLb)) lb you're outside \(possessive(brand)) chart (\(chartSpan(t))) — "
+                    warnings.append("At \(roundHalfUp(chartLb)) lb you're outside \(possessive(brand)) chart (\(chartSpan(t))) — "
                                     + (t.type == "linear" ? "the chart was extended in a straight line." : "the nearest row was used.")
                                     + " Set sag carefully.")
                 }
             } else if mfg?.pressureRule == "bodyWeight" {
-                p = roundHalfUp(riderLb)
+                psi = chartLb
                 pressureFromChart = true
-                detail = "\(brand): start at your body weight in lb, then adjust until sag is \(sagRangeText ?? "\(sagPct)%")."
+                detail = "\(brand): start at your body weight in lb."
             } else {
-                let psi: Double
                 if isFork {
                     psi = (m.psiRatio ?? 0) * systemLb * (frontBias / 0.40) * (20 / Double(sagPct)).squareRoot()
                 } else {
@@ -224,19 +270,48 @@ public enum SuspensionEngine {
                     psi = (m.psiRatio ?? 0) * systemLb * (rearBias / 0.60)
                         * (28 / Double(sagPct)).squareRoot() * (leverage / 2.7)
                 }
-                p = roundHalfUp(psi)
                 estimated.append("air pressure")
                 detail = "Estimate — set to sag. Adjust ±5 psi per ~2% sag change."
             }
-            if p > maxPsi {
-                warnings.append("\(p) psi exceeds the \(maxPsi) psi max — capped. Consider more volume spacers or a firmer spring.")
-                p = maxPsi
+            if pressureFromChart {
+                let f = (makerMid / target).squareRoot()
+                if abs(f - 1) > 1e-9 {
+                    psi *= f
+                    changes.append("\(f > 1 ? "more" : "less") for \(sagPct)% sag")
+                }
+                if isFork && rider.position == .forward {
+                    psi *= 1.04
+                    changes.append("+4% for weight over the front")
+                }
+                if bk.eBike && !ebikeChart {
+                    psi += 10
+                    let sram = brand == "RockShox" && isFork
+                    changes.append("+10 psi for an e-bike\(sram ? " (SRAM)" : "")")
+                    if !sram { estimated.append("e-bike pressure") }
+                }
+                if !changes.isEmpty { detail += " Adjusted: \(changes.joined(separator: ", "))." }
+                detail += " Fine-tune ±10 psi to hit \(sagPct)% sag."
             }
-            headline = ("Air pressure", "\(p)", "psi")
-            springValue = p
-            settings.append(Setting(label: "Air pressure", value: "\(p) psi", detail: "\(detail) Max \(maxPsi) psi."))
+            var onTrail = roundHalfUp(psi)
+            if onTrail > maxPsi {
+                warnings.append("\(onTrail) psi exceeds the \(maxPsi) psi max — capped. Consider more volume spacers or a firmer spring.")
+                onTrail = maxPsi
+            }
+            // Air pressure follows absolute temperature: pump more indoors if the trail is colder.
+            var pump = onTrail
+            if ride.temperatureF != pumpTempF {
+                pump = roundHalfUp((Double(onTrail) + 14.7) * (pumpTempF + 459.67) / (ride.temperatureF + 459.67) - 14.7)
+                if pump > maxPsi { pump = maxPsi }
+                if pump != onTrail {
+                    detail += " Pump \(pump) psi indoors (\(num(pumpTempF))°F) so it's \(onTrail) psi at \(num(ride.temperatureF))°F on the trail — set \(onTrail) if you pump at the trailhead."
+                }
+            }
+            trailPsi = onTrail
+            headline = ("Air pressure", "\(pump)", "psi")
+            springValue = pump
+            settings.append(Setting(label: "Air pressure", value: "\(pump) psi", detail: "\(detail) Max \(maxPsi) psi."))
             if let t = table(mfg?.ramp, travel: rider.travelMm) {
-                let r = roundHalfUp(lookup(t.type, t.rows, riderLb).value)
+                let r = roundHalfUp(lookup(t.type, t.rows, chartLb).value)
                 settings.append(Setting(label: "Ramp-up chamber", value: "\(r) psi",
                                         detail: "\(brand) chart. More = more progressive (less bottom-out)."))
             }
@@ -252,26 +327,66 @@ public enum SuspensionEngine {
                                     detail: "Calculated for \(sagPct)% sag at a \(f2(leverage)):1 leverage ratio — coil rates depend on the frame, so makers don't chart them. Use 1–2 turns of preload at most."))
         }
 
+        let feelText = ride.feel == .balanced ? "" : " \(ride.feel.title) end of \(sagRangeText)."
         settings.append(Setting(label: "Sag", value: "\(sagPct)%  ·  \(f1(sagMm)) mm",
-                                detail: (sagRangeText.map { "\(brand): \($0) of \(isFork ? "travel" : "shock stroke"). " } ?? "")
-                                    + (isFork ? "Measured on the stanchion" : "Measured on the shock shaft, seated in attack position")))
+                                detail: sagNote + (isFork ? "Measured on the stanchion." : "Measured on the shock shaft, seated in attack position.") + feelText))
+
+        // ---- adjustments for today's ride and the rider ----------------------
+        var reb: [Nudge] = [], lsc: [Nudge] = [], hsc: [Nudge] = [], tok: [Nudge] = []
+        switch ride.terrain {
+        case .rough:
+            reb.append(Nudge(reason: "rocky terrain", amount: -1))
+            hsc.append(Nudge(reason: "rocky terrain", amount: -1))
+        case .flow:
+            reb.append(Nudge(reason: "flow / jumps", amount: 1))
+            lsc.append(Nudge(reason: "flow / jumps", amount: 1))
+            hsc.append(Nudge(reason: "flow / jumps", amount: 1))
+            tok.append(Nudge(reason: "flow / jumps", amount: 1))
+        case .mixed: break
+        }
+        if ride.condition == .wet {
+            reb.append(Nudge(reason: "wet", amount: 1))
+            lsc.append(Nudge(reason: "wet", amount: -1))
+        }
+        if ride.temperatureF < 40 { reb.append(Nudge(reason: "cold oil", amount: -1)) }
+        switch rider.skill {
+        case .relaxed:
+            lsc.append(Nudge(reason: "relaxed riding", amount: -1))
+            hsc.append(Nudge(reason: "relaxed riding", amount: -1))
+        case .aggressive:
+            lsc.append(Nudge(reason: "aggressive riding", amount: 1))
+            hsc.append(Nudge(reason: "aggressive riding", amount: 1))
+            tok.append(Nudge(reason: "aggressive riding", amount: 1))
+        case .intermediate: break
+        }
+        switch ride.priority {
+        case .climb: lsc.append(Nudge(reason: "climbing priority", amount: 1))
+        case .descend: lsc.append(Nudge(reason: "descending priority", amount: -1))
+        case .balanced: break
+        }
+        if bk.eBike { reb.append(Nudge(reason: "e-bike", amount: 1)) }
 
         // ---- progression ----------------------------------------------------
         var tokens: Int? = nil
         var tokenMax: Int? = nil
-        if let rows = mfg?.tokens, !rows.isEmpty {
+        let ebikeTokens = bk.eBike && mfg?.ebikeTokens != nil
+        if bk.eBike && !ebikeTokens { tok.append(Nudge(reason: "e-bike", amount: 1)) }
+        let tokSum = tok.reduce(0) { $0 + $1.amount }
+        let tokText = tok.isEmpty ? "" : " +\(tokSum) for \(describe(tok))."
+        if let rows = (ebikeTokens ? mfg?.ebikeTokens : mfg?.tokens), !rows.isEmpty {
             let row = rows.min { abs($0.travel - rider.travelMm) < abs($1.travel - rider.travelMm) }!
-            tokens = row.installed; tokenMax = row.max
-            settings.append(Setting(label: "Volume spacers", value: "\(row.installed) token\(row.installed == 1 ? "" : "s")",
-                                    detail: "\(brand) stock for \(num(row.travel)) mm travel. Max \(row.max). Add one if you bottom out harshly."))
+            let n = Int(clamp(Double(row.installed + tokSum), 0, Double(row.max)))
+            tokens = n; tokenMax = row.max
+            settings.append(Setting(label: "Volume spacers", value: "\(n) token\(n == 1 ? "" : "s")",
+                                    detail: "\(brand)\(ebikeTokens ? " E-Bike+" : "") stock for \(num(row.travel)) mm travel: \(row.installed).\(tokText) Max \(row.max). Add one if you bottom out harshly."))
         } else if let t = m.tokens {
             var n = t.default + tokenBump[style]!
             if systemLb > 210 { n += 1 } else if systemLb < 140 { n -= 1 }
-            n = Int(clamp(Double(n), 0, Double(t.max)))
+            n = Int(clamp(Double(n + tokSum), 0, Double(t.max)))
             tokens = n; tokenMax = t.max
             estimated.append("volume spacers")
             settings.append(Setting(label: "Volume spacers", value: "\(n) token\(n == 1 ? "" : "s")",
-                                    detail: "Estimate. Max \(t.max). Add one if you bottom out harshly."))
+                                    detail: "Estimate.\(tokText) Max \(t.max). Add one if you bottom out harshly."))
         } else if m.spring == .air && mfg?.ramp == nil {
             settings.append(Setting(label: "Progression", value: "See brand chart",
                                     detail: "Uses a ramp-up chamber / inserts instead of tokens."))
@@ -288,67 +403,132 @@ public enum SuspensionEngine {
             ("hsc", "HSC", "High-speed compression", a.hsc, " Controls big hits and square edges."),
         ]
         for (key, short, label, n, why) in adjusters where n > 0 {
+            let isReb = key == "rebound" || key == "lsr" || key == "hsr"
+            let nudges = isReb ? reb : key == "lsc" ? lsc : hsc
+            let firm = nudges.reduce(0) { $0 + $1.amount }
+            // base value(s) before today's adjustments
+            var baseLo: Int, baseHi: Int?
+            var of = n
+            var fromClosed: Bool
+            var isMfg = true
+            var detail: String
             if let rule = mfg?.damping?.first(where: { $0.key == key }) {
+                fromClosed = rule.from == "closed"
                 if rule.by == "middle" {
-                    let v = roundHalfUp(Double(n) / 2)
-                    clicks.append(ClickSetting(key: key, short: short, label: label, value: v, of: n, fromClosed: false,
-                                               rangeText: nil, isManufacturer: true))
-                    settings.append(Setting(label: label, value: "\(v) \(clicksWord(v)) in",
-                                            detail: "\(brand): start in the middle (of \(n)), then add or remove to taste.\(why)"))
-                    continue
+                    baseLo = roundHalfUp(Double(n) / 2); baseHi = nil
+                    detail = "\(brand): start in the middle (of \(n)), then add or remove to taste."
+                } else {
+                    let rows = rule.rows ?? [[0, 0]]
+                    var basis = ""
+                    let hit: ChartHit
+                    switch rule.by {
+                    case "weight":
+                        hit = lookup("steps", rows, chartLb)
+                        basis = " for \(num(hit.x0))–\(num(hit.x1)) lb riders"
+                    case "psi":
+                        hit = lookup("steps", rows, Double(trailPsi ?? springValue))
+                        basis = " at \(trailPsi ?? springValue) psi"
+                    case "rate":
+                        hit = lookup("steps", rows, Double(springValue))
+                        basis = " for a \(springValue) lb/in spring"
+                    default:
+                        hit = lookup("steps", rows, 0)
+                    }
+                    baseLo = Int(hit.row[1])
+                    baseHi = hit.row.count > 2 ? Int(hit.row[2]) : nil
+                    of = Swift.max(n, baseHi ?? baseLo)
+                    detail = "\(brand) chart\(basis). Counted \(fromClosed ? "out from fully closed" : "in from fully open"), of \(of)."
                 }
-                let rows = rule.rows ?? [[0, 0]]
-                var basis = ""
-                let hit: ChartHit
-                switch rule.by {
-                case "weight":
-                    hit = lookup("steps", rows, riderLb)
-                    basis = " for \(num(hit.x0))–\(num(hit.x1)) lb riders"
-                case "psi":
-                    hit = lookup("steps", rows, Double(springValue))
-                    basis = " at \(springValue) psi"
-                case "rate":
-                    hit = lookup("steps", rows, Double(springValue))
-                    basis = " for a \(springValue) lb/in spring"
-                default:
-                    hit = lookup("steps", rows, 0)
-                }
-                let lo = hit.row[1]
-                let hi: Double? = hit.row.count > 2 ? hit.row[2] : nil
-                let v = hi.map { roundHalfUp((lo + $0) / 2) } ?? Int(lo)
-                let of = Swift.max(n, Int(hi ?? lo))
-                let fromClosed = rule.from == "closed"
-                let range = hi.map { "\(Int(lo))–\(Int($0))" }
-                clicks.append(ClickSetting(key: key, short: short, label: label, value: v, of: of, fromClosed: fromClosed,
-                                           rangeText: range, isManufacturer: true))
-                settings.append(Setting(label: label, value: "\(range ?? "\(v)") \(range == nil ? clicksWord(v) : "clicks") \(fromClosed ? "out" : "in")",
-                                        detail: "\(brand) chart\(basis). Counted \(fromClosed ? "out from fully closed" : "in from fully open"), of \(of).\(why)"))
             } else {
-                let isReb = key == "rebound" || key == "lsr" || key == "hsr"
-                let v: Int
+                fromClosed = isReb
+                isMfg = false
                 if isReb {
-                    let base = key == "hsr" ? 0.55 : 0.65
-                    v = Int(clamp(Double(roundHalfUp(Double(n) * (base - 0.35 * w))), 1, Double(Swift.max(1, n - 1))))
+                    let b = key == "hsr" ? 0.55 : 0.65
+                    baseLo = Int(clamp(Double(roundHalfUp(Double(n) * (b - 0.35 * w))), 1, Double(Swift.max(1, n - 1))))
                 } else {
                     let frac = key == "lsc" ? lscFraction[style]! : hscFraction[style]!
-                    v = Int(clamp(Double(roundHalfUp(Double(n) * clamp(frac + 0.1 * w, 0, 1))), 0, Double(n)))
+                    baseLo = Int(clamp(Double(roundHalfUp(Double(n) * clamp(frac + 0.1 * w, 0, 1))), 0, Double(n)))
                 }
+                baseHi = nil
                 estimated.append(label.lowercased())
-                clicks.append(ClickSetting(key: key, short: short, label: label, value: v, of: n, fromClosed: isReb,
-                                           rangeText: nil, isManufacturer: false))
-                settings.append(Setting(label: label, value: "\(v) \(clicksWord(v)) \(isReb ? "out" : "in")",
-                                        detail: "Estimate. Counted \(isReb ? "out from fully closed" : "in from fully open"), of \(n).\(why)"))
+                detail = "Estimate. Counted \(isReb ? "out from fully closed" : "in from fully open"), of \(n)."
             }
+            // + firm means firmer / slower: fewer clicks out from closed, or more clicks in from open
+            let shift = fromClosed ? -firm : firm
+            let newLo = Int(clamp(Double(baseLo + shift), 0, Double(of)))
+            let newHi = baseHi.map { Int(clamp(Double($0 + shift), 0, Double(of))) }
+            let baseText = baseHi.map { "\(baseLo)–\($0)" } ?? "\(baseLo)"
+            if firm != 0 {
+                let dir = isReb ? (firm > 0 ? "slower" : "faster") : (firm > 0 ? "firmer" : "softer")
+                detail += " Adjusted \(abs(firm)) \(clicksWord(abs(firm))) \(dir) from \(baseText) for \(describe(nudges))."
+            } else if !nudges.isEmpty {
+                detail += " (\(describe(nudges)) cancel out.)"
+            }
+            let range: String? = newHi.flatMap { $0 == newLo ? nil : "\(newLo)–\($0)" }
+            let value = newHi.map { roundHalfUp(Double(newLo + $0) / 2) } ?? newLo
+            clicks.append(ClickSetting(key: key, short: short, label: label, value: value, of: of, fromClosed: fromClosed,
+                                       rangeText: range, isManufacturer: isMfg))
+            settings.append(Setting(label: label,
+                                    value: "\(range ?? "\(value)") \(range == nil ? clicksWord(value) : "clicks") \(fromClosed ? "out" : "in")",
+                                    detail: detail + why))
         }
 
         // ---- lockout / climb --------------------------------------------------
         if let climb = m.climb {
-            let how = style == .park ? "Leave open for lift laps; use only on long fire-road climbs."
-                                     : "Open on descents, firm for long climbs and pavement."
+            let how: String
+            if style == .park {
+                how = "Leave open for lift laps; use only on long fire-road climbs."
+            } else if ride.priority == .climb {
+                how = "Climbing priority: use the firm / climb mode on every sustained climb."
+            } else if ride.priority == .descend {
+                how = "Descending priority: leave it open except on pavement."
+            } else {
+                how = "Open on descents, firm for long climbs and pavement."
+            }
             settings.append(Setting(label: "Lockout / climb", value: climb, detail: how))
         } else {
             settings.append(Setting(label: "Lockout / climb", value: "None",
                                     detail: "Use more low-speed compression for climbing support."))
+        }
+
+        // ---- tires (an estimate: tires are part of the suspension) ---------------
+        let tireLb = riderLb + gearKg * lbPerKg + packLb
+        var rearTire = 0.11 * tireLb + 3.5
+        if bk.eBike { rearTire += 3 }
+        if bk.tireWidth == .wide { rearTire -= 2 }
+        if bk.inserts { rearTire -= 2 }
+        if ride.condition == .wet { rearTire -= 1 }
+        var frontTire = rearTire - 3
+        switch bk.wheel {
+        case .w275: frontTire += 1; rearTire += 1
+        case .mixed: rearTire += 1
+        case .w29: break
+        }
+        let frontPsi = Int(clamp(Double(roundHalfUp(frontTire)), 15, 40))
+        let rearPsi = Int(clamp(Double(roundHalfUp(rearTire)), 15, 40))
+        let tirePsi = isFork ? frontPsi : rearPsi
+        settings.append(Setting(label: "Tire pressure", value: "\(tirePsi) psi \(isFork ? "front" : "rear")",
+                                detail: "Estimate for tubeless \(bk.wheel.title) \(bk.tireWidth.title) tires\(bk.inserts ? " with inserts" : "")\(bk.eBike ? " on an e-bike" : ""). \(isFork ? "Rear" : "Front"): \(isFork ? rearPsi : frontPsi) psi. Lower = more grip; add 1–2 psi if you feel rim strikes."))
+
+        // ---- service -------------------------------------------------------------
+        let hours = isFork ? bk.forkHours : bk.shockHours
+        var serviceDue = false
+        if hours > 0 {
+            let interval: Double, full: Double, schedule: String
+            if brand == "Fox" || brand == "Marzocchi" {
+                interval = 125; full = 125; schedule = "\(brand): full service every 125 h or once a year"
+            } else if brand == "RockShox" {
+                interval = 50; full = 200
+                schedule = "RockShox: \(isFork ? "lower-leg" : "air-can") service every 50 h, damper and spring every 200 h"
+            } else {
+                interval = 100; full = 100; schedule = "Typical interval about 100 h — check \(possessive(brand)) schedule"
+            }
+            settings.append(Setting(label: "Service", value: "\(num(hours)) h since service", detail: "\(schedule)."))
+            if hours >= interval {
+                serviceDue = true
+                let what = hours >= full ? "a full service" : "a \(isFork ? "lower-leg" : "air-can") service"
+                warnings.append("\(m.name) is due \(what): \(num(hours)) h since the last one. Old oil and dry seals make damping feel slow and harsh.")
+            }
         }
 
         // ---- fit & warnings -----------------------------------------------------
@@ -363,6 +543,9 @@ public enum SuspensionEngine {
         if style == .park && (categoryRank[m.category] ?? 0) < 2 {
             warnings.append("Bike park riding usually calls for an enduro or DH-rated product.")
         }
+        if ride.temperatureF <= 32 {
+            warnings.append("Below freezing: fork and shock oil thickens, so everything feels slower and firmer until it warms up.")
+        }
 
         // ---- source & tips --------------------------------------------------------
         var quality = m.quality
@@ -376,10 +559,21 @@ public enum SuspensionEngine {
         } else {
             tips.append("No published \(brand) setup chart was found for this model — all values are calculated estimates.")
         }
+        var today: [String] = []
+        if ride.terrain != .mixed { today.append(ride.terrain.title.lowercased()) }
+        if ride.condition == .wet { today.append("wet") }
+        if ride.temperatureF != pumpTempF { today.append("\(num(ride.temperatureF))°F") }
+        if ride.pack != .none { today.append(ride.pack.title.lowercased()) }
+        if ride.feel != .balanced { today.append("\(ride.feel.title.lowercased()) feel") }
+        if ride.priority != .balanced { today.append("\(ride.priority.title.lowercased()) priority") }
+        if bk.eBike { today.append("e-bike") }
+        if !today.isEmpty { tips.append("Adjusted for: \(today.joined(separator: ", ")).") }
         if pressureFromChart {
-            tips.append("Chart read at your body weight: \(roundHalfUp(riderLb)) lb. Riding with a heavy pack? Enter your weight with gear.")
+            tips.append("Chart read at \(roundHalfUp(chartLb)) lb"
+                        + (packLb > 0 ? " (your \(roundHalfUp(riderLb)) lb + \(num(packLb)) lb \(ride.pack.title.lowercased()))." : " — your body weight."))
         } else {
-            tips.append("Estimates use your weight with gear: \(roundHalfUp(systemLb)) lb (\(roundHalfUp(rider.weightKg)) kg rider + \(Int(gearKg)) kg gear).")
+            tips.append("Estimates use your weight with gear: \(roundHalfUp(systemLb)) lb (\(roundHalfUp(rider.weightKg)) kg rider + \(Int(gearKg)) kg gear"
+                        + (packLb > 0 ? " + \(num(packLb)) lb pack" : "") + (bk.eBike ? " + \(num(eBikeExtraLb)) lb e-bike" : "") + ").")
         }
         if m.spring == .air { tips.append("Cycle the suspension 10× after inflating, then re-check sag.") }
         tips.append("Change one setting at a time, 2 clicks at a time, on the same test loop.")
@@ -388,9 +582,10 @@ public enum SuspensionEngine {
         return Recommendation(headlineLabel: headline.0, headlineValue: headline.1, headlineUnit: headline.2,
                               settings: settings, tips: tips, warnings: warnings,
                               isAir: m.spring == .air, springValue: springValue,
-                              maxPsi: m.spring == .air ? m.maxPsi : nil,
+                              maxPsi: m.spring == .air ? ((bk.eBike ? mfg?.ebikeMaxPsi : nil) ?? m.maxPsi) : nil,
                               sagPercent: sagPct, sagMm: sagMm, sagMin: sagMin, sagMax: sagMax,
                               tokens: tokens, tokenMax: tokenMax, clicks: clicks,
-                              quality: quality, sourceTitle: mfg?.sourceTitle, sourceURL: mfg?.source)
+                              quality: quality, sourceTitle: mfg?.sourceTitle, sourceURL: mfg?.source,
+                              trailPsi: trailPsi, tirePsi: tirePsi, serviceDue: serviceDue)
     }
 }

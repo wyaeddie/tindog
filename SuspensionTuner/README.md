@@ -72,4 +72,24 @@ Anything a maker doesn't publish is calculated and labelled **Estimate** in the 
 - **Models without a chart** (DVO, Cane Creek, Manitou, EXT, Formula, PUSH, SR Suntour, X-Fusion, RockShox shocks, RockShox 35) use the older formula: per-model pressure ratio × weight with gear × front/rear split × sag factor, with style-based sag (fork 20/22/23%, shock 28/30/31%) and damping that firms up with weight and riding style.
 - Manufacturer charts don't change with riding style, so for those models the style only changes the advice.
 
+### Other factors
+Set per bike (bike editor) or per ride (Garage → Today's conditions). With everything at its default the numbers are exactly the maker's chart.
+
+| Factor | What it changes |
+|---|---|
+| E-bike | FOX 36 / 38 / Podium and Marzocchi Z2 use the maker's E-Bike+ pressure and spacer charts; other charted forks +10 psi (SRAM's rule for RockShox), +1 spacer, rebound 1 click slower |
+| Pack (hip / day / big) | Chart read at body weight + 5 / 12 / 20 lb |
+| Feel (firm / balanced / plush) | Sag at the firm end / middle / plush end of the maker's range; pressure scaled by √(middle sag ÷ target sag) |
+| Temperature | Air follows absolute temperature: pump more indoors for a cold trail (shows both numbers); below 40°F rebound 1 click faster |
+| Terrain | Rocky: rebound and HSC 1 click faster/softer. Flow/jumps: rebound, LSC and HSC 1 click slower/firmer, +1 spacer |
+| Wet | Rebound 1 slower, LSC 1 softer, tires 1 psi lower |
+| Riding (relaxed / aggressive) | LSC and HSC 1 softer / 1 firmer (+1 spacer when aggressive) |
+| Body position over the front | Fork pressure +4% |
+| Climb / descend priority | LSC 1 firmer / softer, lockout advice |
+| Frame maker's rear sag | Replaces the shock maker's range for sag, body-weight psi and coil rate |
+| Wheels, tire width, inserts | Tire pressure estimate (0.11 × weight with gear + 3.5 psi rear, front 3 lower; −2 for 2.5–2.6″, −2 for inserts, +1 for 27.5″, +3 for e-bikes) |
+| Hours since service | FOX / Marzocchi 125 h; RockShox 50 h lowers or air can, 200 h damper; others ~100 h — a warning when due |
+
+Every adjusted click says why, e.g. "Adjusted 1 click faster from 6 for rocky terrain".
+
 Always check the max-pressure label on the product.
