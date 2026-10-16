@@ -65,6 +65,8 @@ See `apple/release/APP_STORE.md` — listing text, privacy answers, screenshot s
 
 Website image: `python3 tools/web_screenshot.py shot1.png shot2.png -o suspension-tuner.png` turns two
 Simulator screenshots into one transparent PNG with phone frames.
+Then `python3 tools/update_website_image.py --site "/Volumes/MyDrive/Whole Stack Solutions" --image suspension-tuner.png --apply`
+swaps it into the Projects page (dry run without `--apply`; old files are backed up).
 
 ## Tests
 Both engines are pinned to the same golden values:
