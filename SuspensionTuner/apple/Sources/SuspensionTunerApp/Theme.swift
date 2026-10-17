@@ -196,10 +196,16 @@ struct CarbonBackground: View {
 extension View {
     /// Frosted glass card; pass `glow` to tint the edge (the selected end, Pro, …).
     func glassCard(_ radius: CGFloat = 20, glow: Color? = nil) -> some View {
-        background(
-            LinearGradient(colors: [Theme.glassTop, Theme.glassBottom], startPoint: .top, endPoint: .bottom)
-                .overlay { if let glow { RadialGradient(colors: [glow.opacity(0.10), .clear], center: .center, startRadius: 0, endRadius: 220) } },
-            in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+        background {
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                .fill(LinearGradient(colors: [Theme.glassTop, Theme.glassBottom], startPoint: .top, endPoint: .bottom))
+                .overlay {
+                    if let glow {
+                        RoundedRectangle(cornerRadius: radius, style: .continuous)
+                            .fill(RadialGradient(colors: [glow.opacity(0.10), .clear], center: .center, startRadius: 0, endRadius: 220))
+                    }
+                }
+        }
         .overlay(RoundedRectangle(cornerRadius: radius, style: .continuous)
             .stroke(glow.map { $0.opacity(0.4) } ?? Theme.stroke))
     }
