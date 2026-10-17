@@ -53,7 +53,12 @@ APP=$(find "$BUILD/Build/Products" -maxdepth 2 -name "SuspensionTuner.app" -path
 
 say "Opening the simulator"
 xcrun simctl boot "$UDID" 2>/dev/null || true
-open -a Simulator
+# Xcode 26 and earlier ship Simulator.app; Xcode 27 replaced it with Device Hub.
+if ! open -a Simulator 2>/dev/null; then
+    HUB=$(find "$(xcode-select -p)/../.." -maxdepth 5 -name "DeviceHub.app" 2>/dev/null | head -1)
+    if [ -n "$HUB" ]; then open "$HUB"; else open -a "Device Hub" 2>/dev/null || open -a DeviceHub 2>/dev/null || \
+        echo "Open Xcode → Window → Devices and Simulators to see the simulator screen."; fi
+fi
 xcrun simctl bootstatus "$UDID" -b >/dev/null 2>&1 || true
 
 say "Installing and launching"
