@@ -23,7 +23,6 @@ public enum RidingStyle: String, Codable, CaseIterable, Identifiable {
     /// For tight chip rows
     public var shortTitle: String {
         switch self {
-        case .park: return "Park"
         case .dh: return "DH"
         default: return title
         }

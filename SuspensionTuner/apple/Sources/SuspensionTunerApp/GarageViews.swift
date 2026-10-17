@@ -350,7 +350,7 @@ struct RideStylePicker: View {
         case .xc: return "stopwatch.fill"
         case .trail: return "tree.fill"
         case .enduro: return "mountain.2.fill"
-        case .park: return "cablecar.fill"
+        case .park: return "figure.outdoor.cycle"
         case .dh: return "flame.fill"
         }
     }
