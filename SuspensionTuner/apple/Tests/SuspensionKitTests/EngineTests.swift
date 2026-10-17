@@ -57,7 +57,7 @@ final class EngineTests: XCTestCase {
         let r = SuspensionEngine.calculate(model: model("cane-creek-kitsuma-coil"), rider: rider(.park, 170, 65))
         XCTAssertEqual(r.headlineValue, "450")
         XCTAssertEqual(r.headlineUnit, "lb/in")
-        XCTAssertEqual(r.quality, .estimate)
+        XCTAssertEqual(r.quality, .partial)            // Cane Creek publishes sag (25–35%), not a spring chart
     }
 
     func testOutsideChartWarns() {
@@ -68,9 +68,10 @@ final class EngineTests: XCTestCase {
     }
 
     func testPressureCappedAtMax() {
-        let r = SuspensionEngine.calculate(model: model("dvo-onyx-sc-d1"),
-            rider: RiderInput(weightKg: 180, heightCm: 200, frameSize: .XL, style: .trail, travelMm: 170))
-        XCTAssertEqual(r.headlineValue, "140")
+        let r = SuspensionEngine.calculate(model: model("ohlins-rxc34-m1"),     // no published chart → estimate
+            rider: RiderInput(weightKg: 180, heightCm: 200, frameSize: .XL, style: .trail, travelMm: 110))
+        XCTAssertEqual(r.headlineValue, "170")
+        XCTAssertEqual(r.quality, .estimate)
         XCTAssertTrue(r.warnings.contains { $0.contains("exceeds") })
     }
 
@@ -160,7 +161,7 @@ final class EngineTests: XCTestCase {
     }
 
     func testXCAndDownhillStyles() {
-        XCTAssertEqual(SuspensionEngine.calculate(model: model("dvo-onyx-sc-d1"), rider: rider(.dh, 170)).sagPercent, 25)
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("ext-aria"), rider: rider(.dh, 150, 57.5)).sagPercent, 33)
         XCTAssertFalse(SuspensionEngine.calculate(model: model("rockshox-sid-sl-ultimate"), rider: rider(.xc, 100))
             .warnings.contains { $0.contains("XC product") })
         XCTAssertTrue(SuspensionEngine.calculate(model: model("rockshox-sid-sl-ultimate"), rider: rider(.dh, 100))
@@ -173,6 +174,16 @@ final class EngineTests: XCTestCase {
         XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-float-x2-factory"), rider: r).value("Volume spacers"), "2 tokens")
         r.bike.frameProgression = .progressive
         XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-float-x2-factory"), rider: r).value("Volume spacers"), "0 tokens")
+    }
+
+    func testNewBrandCharts() {
+        let mez = SuspensionEngine.calculate(model: model("manitou-mezzer-pro"), rider: rider(.enduro, 170))
+        XCTAssertEqual(mez.headlineValue, "62")
+        XCTAssertEqual(mez.value("IRT chamber"), "94 psi")
+        XCTAssertEqual(mez.value("Rebound"), "6–7 clicks out")
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("cane-creek-helm-mkii-air"), rider: rider(.enduro, 160)).headlineValue, "65")
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("formula-selva-s"), rider: rider(.enduro, 170)).headlineValue, "79")
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("rockshox-super-deluxe-ultimate-air"), rider: rider(.enduro, 150, 60)).headlineValue, "196")
     }
 
     func testXCForkInParkWarns() {

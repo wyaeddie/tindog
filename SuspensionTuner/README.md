@@ -73,10 +73,20 @@ Each model in `catalog.json` can carry an `mfg` block copied from the maker's ow
 | RockShox Pike, Lyrik, ZEB, BoXXer, SID, SID SL, Recon Gold | SRAM 2025 front suspension specifications: pressure bands by weight and travel (interpolated within the band), stock/max Bottomless Tokens, max psi. Charger 3 LSC/HSC start in the middle (SRAM setup guide) |
 | Marzocchi Bomber Z1, Z2, 58, Air, CR | Marzocchi owner's manuals: pressure and rebound by row, body-weight psi for the Bomber Air |
 | Öhlins RXF36 m.2, RXF38 m.2, DH38 | Öhlins manuals: main and ramp-up chamber pressure by kg, sag range (partial) |
+| DVO Sapphire / Diamond / Onyx SC D1, Topaz T3 Air, Jade X | DVO set-up guides: pressure by weight band, rebound clicks by psi, sag |
+| Cane Creek Helm MKII, Kitsuma Air/Coil, DB Air IL | Cane Creek manuals: starting pressure as % of body weight, sag, max psi |
+| Manitou Mattoc Pro, Mezzer Pro, Dorado Pro, Mara Pro | Hayes/Manitou set-up guides: main + IRT pressure by weight and travel, rebound, sag |
+| SR Suntour Durolux 38, Auron 35, Zeron 35, TriAir | SR Suntour manuals: pressure by rider kg, sag by travel, spacers |
+| Formula Belva, Selva S, Mod | Formula manuals: pressure by weight, MOD sag and rebound |
+| EXT Era v2, Storia V3 | EXT quick manuals: + / ++ chamber pressures and clicks by weight, Storia starting clicks |
+| X-Fusion Trace 36, O2 Pro RCX | X-Fusion pressure chart and setup guide |
+| PUSH ElevenSix, Öhlins TTX Air / TTX22m, RockShox rear shocks | Official sag ranges and starting rules (RockShox: psi = total weight with gear) |
+
+Still estimates (no official chart found): Öhlins RXC34 m.1, Öhlins TTX Flow, EXT Aria (EXT charts it by equivalent spring rate, not rider weight).
 
 Anything a maker doesn't publish is calculated and labelled **Estimate** in the app (a badge at the top of each result shows Manufacturer chart / Partly manufacturer / Estimate and links to the guide):
 - **Coil spring rate** is always calculated, because it depends on the frame's leverage: weight with 5 kg gear × rear load × leverage ÷ (sag × stroke), rounded to 25 lb/in.
-- **Models without a chart** (DVO, Cane Creek, Manitou, EXT, Formula, PUSH, SR Suntour, X-Fusion, RockShox shocks, RockShox 35) use the older formula: per-model pressure ratio × weight with gear × front/rear split × sag factor, with style-based sag (fork 20/22/23%, shock 28/30/31%) and damping that firms up with weight and riding style.
+- **Models without a chart** (Öhlins RXC34, TTX Flow, EXT Aria) and anything a maker doesn't publish (often damping clicks) use the older formula: per-model pressure ratio × weight with gear × front/rear split × sag factor, with style-based sag (fork 20/22/23%, shock 28/30/31%) and damping that firms up with weight and riding style.
 - Manufacturer charts don't change with riding style, so for those models the style only changes the advice.
 
 ### Other factors

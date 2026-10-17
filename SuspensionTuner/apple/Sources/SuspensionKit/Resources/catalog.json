@@ -2513,7 +2513,7 @@
    "stroke": null,
    "damper": "Motion Control RL",
    "psiRatio": 0.5,
-   "maxPsi": 150,
+   "maxPsi": 163,
    "tokens": {
     "default": 1,
     "max": 3
@@ -2528,7 +2528,105 @@
    "climb": "Lockout lever",
    "note": "",
    "url": "https://www.sram.com/en/rockshox/series/35",
-   "mfg": null
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2023-front-suspension-oil-air-coil-token-specifications-english.pdf",
+    "sourceTitle": "SRAM 2023 front suspension specifications — 35 Gold RL",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        75
+       ],
+       [
+        140,
+        85
+       ],
+       [
+        160,
+        95
+       ],
+       [
+        180,
+        105
+       ],
+       [
+        200,
+        115
+       ],
+       [
+        220,
+        125
+       ]
+      ],
+      "travel": [
+       100,
+       120
+      ]
+     },
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        55
+       ],
+       [
+        140,
+        65
+       ],
+       [
+        160,
+        75
+       ],
+       [
+        180,
+        85
+       ],
+       [
+        200,
+        95
+       ],
+       [
+        220,
+        105
+       ]
+      ],
+      "travel": [
+       130,
+       160
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 120,
+      "installed": 1,
+      "max": 2
+     },
+     {
+      "travel": 130,
+      "installed": 0,
+      "max": 2
+     },
+     {
+      "travel": 140,
+      "installed": 0,
+      "max": 2
+     },
+     {
+      "travel": 160,
+      "installed": 0,
+      "max": 2
+     }
+    ],
+    "sag": [
+     20,
+     30
+    ]
+   }
   },
   {
    "id": "rockshox-recon-gold-rl",
@@ -2692,9 +2790,9 @@
    "note": "Three-chamber air spring: set main, then ramp-up chamber.",
    "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks",
    "mfg": {
-    "quality": "partial",
-    "source": "https://www.ohlins.com/storage/F215D6696D2C9FB948011A69BF9E7FC25CA74A3752EE43B9BBE48C95551E3858/275f5a21f13d4a0c840351a2ba8a0929/pdf/media/76327360c153475fba699581b7331237/OM_07258-04_MI_RXF34_RXF36.pdf",
-    "sourceTitle": "Öhlins RXF34/RXF36 owner's manual",
+    "quality": "manufacturer",
+    "source": "https://www.ohlins.com/storage/548A98090FDA9236730D4C832474A95B0BC169689B71C64D205F44BA3CB5ABE5/4def7de90bca493cb2a999f99d34bdbf/pdf/media/fe3f1b241587489f98caf3f73ccd9139/07258-07_7_OM_MI_RXF36_m.2_AirCoil_TTX18.pdf",
+    "sourceTitle": "Öhlins RXF36 m.2 owner's manual",
     "sag": [
      10,
      15
@@ -2705,35 +2803,35 @@
       "rows": [
        [
         110,
-        80
+        70
        ],
        [
         132,
-        90
+        80
        ],
        [
         154,
-        100
+        90
        ],
        [
         176,
-        110
+        100
        ],
        [
         198,
-        120
+        110
        ],
        [
         220,
-        130
+        120
        ],
        [
         243,
-        140
+        130
        ],
        [
         265,
-        150
+        140
        ]
       ]
      }
@@ -2776,6 +2874,41 @@
        ]
       ]
      }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        15
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        15
+       ]
+      ]
+     },
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        3
+       ]
+      ]
+     }
     ]
    }
   },
@@ -2808,7 +2941,7 @@
    "url": "https://www.ohlins.com/en-us/mountain-bike/front-forks",
    "mfg": {
     "quality": "partial",
-    "source": null,
+    "source": "https://www.ohlins.eu/download/db/Ohlins_Europe_owners-manual-oehlins-mtb-front--00003536.pdf",
     "sourceTitle": "Öhlins RXF38 m.2 owner's manual",
     "sag": [
      10,
@@ -3486,7 +3619,7 @@
    "stroke": null,
    "damper": "Twin Tube",
    "psiRatio": 0.46,
-   "maxPsi": 140,
+   "maxPsi": 150,
    "tokens": {
     "default": 2,
     "max": 5
@@ -3501,7 +3634,18 @@
    "climb": null,
    "note": "",
    "url": "https://www.canecreek.com/products/helm-mkii-air-29-tan",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://cdn.shopify.com/s/files/1/0579/5987/4639/files/HelmMKII_UserManual_04_03_2025.pdf",
+    "sourceTitle": "Cane Creek Helm MKII instruction manual",
+    "sag": [
+     15,
+     25
+    ],
+    "pressureRule": "bodyWeight",
+    "pressureFactor": 0.35,
+    "ruleText": "start at 30–40% of your body weight (lb) in psi"
+   }
   },
   {
    "id": "dvo-sapphire-d1",
@@ -3518,7 +3662,7 @@
    "stroke": null,
    "damper": "D1 Diamond damper",
    "psiRatio": 0.52,
-   "maxPsi": 140,
+   "maxPsi": 150,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3533,7 +3677,84 @@
    "climb": null,
    "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://tech.dvosuspension.com/wp-content/uploads/2020/09/DVO-Set-Up-Guide-2020-v4.pdf",
+    "sourceTitle": "DVO Fork Set Up Guide 2020 — Sapphire 34 D1",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        65.0
+       ],
+       [
+        140,
+        80
+       ],
+       [
+        160,
+        90
+       ],
+       [
+        180,
+        100
+       ],
+       [
+        200,
+        110
+       ],
+       [
+        220,
+        120
+       ],
+       [
+        240,
+        130
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        18,
+        22
+       ],
+       [
+        95,
+        14,
+        18
+       ],
+       [
+        105,
+        10,
+        14
+       ],
+       [
+        115,
+        6,
+        10
+       ],
+       [
+        125,
+        2,
+        6
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "dvo-diamond-d1",
@@ -3550,7 +3771,7 @@
    "stroke": null,
    "damper": "D1 Diamond damper",
    "psiRatio": 0.48,
-   "maxPsi": 140,
+   "maxPsi": 170,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3565,7 +3786,84 @@
    "climb": null,
    "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://tech.dvosuspension.com/wp-content/uploads/2020/09/DVO-Set-Up-Guide-2020-v4.pdf",
+    "sourceTitle": "DVO Fork Set Up Guide 2020 — Diamond D1",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        90
+       ],
+       [
+        140,
+        105
+       ],
+       [
+        160,
+        120
+       ],
+       [
+        180,
+        125
+       ],
+       [
+        200,
+        130
+       ],
+       [
+        220,
+        135
+       ],
+       [
+        240,
+        140
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        18,
+        22
+       ],
+       [
+        110,
+        14,
+        18
+       ],
+       [
+        120,
+        10,
+        14
+       ],
+       [
+        130,
+        6,
+        10
+       ],
+       [
+        140,
+        2,
+        6
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "dvo-onyx-sc-d1",
@@ -3582,7 +3880,7 @@
    "stroke": null,
    "damper": "D1 Onyx damper",
    "psiRatio": 0.45,
-   "maxPsi": 140,
+   "maxPsi": 130,
    "tokens": {
     "default": 2,
     "max": 5
@@ -3597,7 +3895,84 @@
    "climb": null,
    "note": "Set the OTT (off-the-top) dial last to tune small-bump feel.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://tech.dvosuspension.com/wp-content/uploads/2020/09/DVO-Set-Up-Guide-2020-v4.pdf",
+    "sourceTitle": "DVO Fork Set Up Guide 2020 — Onyx SC D1",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        62.5
+       ],
+       [
+        140,
+        72.5
+       ],
+       [
+        160,
+        77.5
+       ],
+       [
+        180,
+        82.5
+       ],
+       [
+        200,
+        87.5
+       ],
+       [
+        220,
+        92.5
+       ],
+       [
+        240,
+        97.5
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "psi",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        18,
+        22
+       ],
+       [
+        75,
+        14,
+        18
+       ],
+       [
+        80,
+        10,
+        14
+       ],
+       [
+        85,
+        6,
+        10
+       ],
+       [
+        95,
+        2,
+        6
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "formula-belva",
@@ -3614,7 +3989,7 @@
    "stroke": null,
    "damper": "CTS",
    "psiRatio": 0.5,
-   "maxPsi": 140,
+   "maxPsi": 85,
    "tokens": null,
    "adjusters": {
     "rebound": 14,
@@ -3626,7 +4001,30 @@
    "climb": null,
    "note": "Progression via Neopos inserts and swappable CTS valves.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.rideformula.com/wp-content/uploads/2024/03/Manuale-Utente-Belva-ENG.pdf",
+    "sourceTitle": "Formula Belva user manual",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        110,
+        50
+       ],
+       [
+        155,
+        65
+       ],
+       [
+        200,
+        80
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "formula-selva-s",
@@ -3643,7 +4041,7 @@
    "stroke": null,
    "damper": "CTS",
    "psiRatio": 0.46,
-   "maxPsi": 140,
+   "maxPsi": 125,
    "tokens": null,
    "adjusters": {
     "rebound": 14,
@@ -3655,7 +4053,50 @@
    "climb": null,
    "note": "Progression via Neopos inserts and swappable CTS valves.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.rideformula.com/wp-content/uploads/2018/10/Manuale_SELVA_S_GB.pdf",
+    "sourceTitle": "Formula Selva S manual",
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        110,
+        45
+       ],
+       [
+        125,
+        55
+       ],
+       [
+        150,
+        65
+       ],
+       [
+        175,
+        75
+       ],
+       [
+        200,
+        85
+       ],
+       [
+        225,
+        95
+       ],
+       [
+        250,
+        105
+       ],
+       [
+        275,
+        115
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "manitou-mattoc-pro",
@@ -3672,7 +4113,7 @@
    "stroke": null,
    "damper": "MC2",
    "psiRatio": 0.48,
-   "maxPsi": 140,
+   "maxPsi": 120,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3687,7 +4128,123 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://hayesbicycle.zendesk.com/hc/article_attachments/14639548710935",
+    "sourceTitle": "Manitou Mattoc Pro set-up guide (Gen 3)",
+    "sag": [
+     20,
+     25
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        38
+       ],
+       [
+        140,
+        48
+       ],
+       [
+        160,
+        56
+       ],
+       [
+        180,
+        66
+       ],
+       [
+        200,
+        74
+       ],
+       [
+        220,
+        84
+       ],
+       [
+        240,
+        97
+       ]
+      ]
+     }
+    ],
+    "ramp": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        51
+       ],
+       [
+        140,
+        65
+       ],
+       [
+        160,
+        78
+       ],
+       [
+        180,
+        88
+       ],
+       [
+        200,
+        107
+       ],
+       [
+        220,
+        123
+       ],
+       [
+        240,
+        138
+       ]
+      ]
+     }
+    ],
+    "rampLabel": "IRT chamber",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        14
+       ],
+       [
+        130,
+        12
+       ],
+       [
+        150,
+        10
+       ],
+       [
+        170,
+        8
+       ],
+       [
+        190,
+        6
+       ],
+       [
+        210,
+        4
+       ],
+       [
+        230,
+        2
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "manitou-mezzer-pro",
@@ -3704,7 +4261,7 @@
    "stroke": null,
    "damper": "Dorado Air / MC2",
    "psiRatio": 0.46,
-   "maxPsi": 140,
+   "maxPsi": 120,
    "tokens": {
     "default": 2,
     "max": 5
@@ -3719,7 +4276,286 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://hayesbicycle.zendesk.com/hc/article_attachments/43742231652503",
+    "sourceTitle": "Manitou Mezzer G2 Pro set-up guide",
+    "sag": [
+     20,
+     25
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        38
+       ],
+       [
+        140,
+        47
+       ],
+       [
+        160,
+        55
+       ],
+       [
+        180,
+        64
+       ],
+       [
+        200,
+        73
+       ],
+       [
+        220,
+        82
+       ],
+       [
+        240,
+        91
+       ]
+      ],
+      "travel": [
+       160,
+       160
+      ]
+     },
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        37
+       ],
+       [
+        140,
+        45
+       ],
+       [
+        160,
+        54
+       ],
+       [
+        180,
+        62
+       ],
+       [
+        200,
+        71
+       ],
+       [
+        220,
+        80
+       ],
+       [
+        240,
+        88
+       ]
+      ],
+      "travel": [
+       170,
+       170
+      ]
+     },
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        35
+       ],
+       [
+        140,
+        44
+       ],
+       [
+        160,
+        52
+       ],
+       [
+        180,
+        61
+       ],
+       [
+        200,
+        69
+       ],
+       [
+        220,
+        77
+       ],
+       [
+        240,
+        86
+       ]
+      ],
+      "travel": [
+       180,
+       180
+      ]
+     }
+    ],
+    "ramp": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        57
+       ],
+       [
+        140,
+        70
+       ],
+       [
+        160,
+        83
+       ],
+       [
+        180,
+        96
+       ],
+       [
+        200,
+        109
+       ],
+       [
+        220,
+        122
+       ],
+       [
+        240,
+        135
+       ]
+      ],
+      "travel": [
+       160,
+       160
+      ]
+     },
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        55
+       ],
+       [
+        140,
+        68
+       ],
+       [
+        160,
+        81
+       ],
+       [
+        180,
+        94
+       ],
+       [
+        200,
+        107
+       ],
+       [
+        220,
+        120
+       ],
+       [
+        240,
+        133
+       ]
+      ],
+      "travel": [
+       170,
+       170
+      ]
+     },
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        53
+       ],
+       [
+        140,
+        66
+       ],
+       [
+        160,
+        79
+       ],
+       [
+        180,
+        92
+       ],
+       [
+        200,
+        105
+       ],
+       [
+        220,
+        118
+       ],
+       [
+        240,
+        131
+       ]
+      ],
+      "travel": [
+       180,
+       180
+      ]
+     }
+    ],
+    "rampLabel": "IRT chamber",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        9,
+        10
+       ],
+       [
+        140,
+        8,
+        9
+       ],
+       [
+        160,
+        7,
+        8
+       ],
+       [
+        180,
+        6,
+        7
+       ],
+       [
+        200,
+        4,
+        5
+       ],
+       [
+        220,
+        3,
+        4
+       ],
+       [
+        240,
+        2,
+        3
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "manitou-dorado-pro",
@@ -3736,7 +4572,7 @@
    "stroke": null,
    "damper": "MC2",
    "psiRatio": 0.45,
-   "maxPsi": 140,
+   "maxPsi": 120,
    "tokens": {
     "default": 1,
     "max": 3
@@ -3751,7 +4587,92 @@
    "climb": null,
    "note": "Inverted dual crown.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://hayesbicycle.zendesk.com/hc/article_attachments/4404709083799",
+    "sourceTitle": "Manitou Dorado Pro set-up guide (MY22, mid-progressive)",
+    "sag": [
+     20,
+     30
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        45
+       ],
+       [
+        140,
+        50
+       ],
+       [
+        160,
+        55
+       ],
+       [
+        180,
+        60
+       ],
+       [
+        200,
+        65
+       ],
+       [
+        220,
+        75
+       ]
+      ]
+     }
+    ],
+    "ramp": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        120,
+        70
+       ],
+       [
+        140,
+        77
+       ],
+       [
+        160,
+        84
+       ],
+       [
+        180,
+        91
+       ],
+       [
+        200,
+        98
+       ],
+       [
+        220,
+        110
+       ]
+      ]
+     }
+    ],
+    "rampLabel": "IRT chamber",
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        6,
+        10
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "ext-era-v2",
@@ -3768,7 +4689,7 @@
    "stroke": null,
    "damper": "HSC/LSC cartridge",
    "psiRatio": 0.46,
-   "maxPsi": 140,
+   "maxPsi": 200,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3783,7 +4704,165 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://extremeshox.com/wp-content/uploads/2023/08/quick-manual-Era-v2_20x30.pdf",
+    "sourceTitle": "EXT Era V2 quick manual",
+    "sag": [
+     15,
+     20
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        132,
+        45
+       ],
+       [
+        154,
+        55
+       ],
+       [
+        176,
+        65
+       ],
+       [
+        198,
+        75
+       ],
+       [
+        220,
+        85
+       ]
+      ]
+     }
+    ],
+    "ramp": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        132,
+        70
+       ],
+       [
+        154,
+        85
+       ],
+       [
+        176,
+        100
+       ],
+       [
+        198,
+        115
+       ],
+       [
+        220,
+        130
+       ]
+      ]
+     }
+    ],
+    "rampLabel": "++ chamber",
+    "damping": [
+     {
+      "key": "hsc",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ],
+       [
+        132,
+        9
+       ],
+       [
+        154,
+        8
+       ],
+       [
+        176,
+        7
+       ],
+       [
+        198,
+        6
+       ],
+       [
+        220,
+        5
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        10
+       ],
+       [
+        132,
+        9
+       ],
+       [
+        154,
+        8
+       ],
+       [
+        176,
+        7
+       ],
+       [
+        198,
+        6
+       ],
+       [
+        220,
+        5
+       ]
+      ]
+     },
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        18
+       ],
+       [
+        132,
+        16
+       ],
+       [
+        154,
+        14
+       ],
+       [
+        176,
+        12
+       ],
+       [
+        198,
+        10
+       ],
+       [
+        220,
+        8
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "sr-suntour-auron-35",
@@ -3800,7 +4879,7 @@
    "stroke": null,
    "damper": "R2C2",
    "psiRatio": 0.48,
-   "maxPsi": 150,
+   "maxPsi": 120,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3815,7 +4894,59 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.srsuntour.com/fileadmin/user_upload/Downloads/Consumer/Bike/Owners%20manuals/General_Fork_Manual/EN_MY22_SUS_fork_user_manual-20210820.pdf",
+    "sourceTitle": "SR Suntour MY22 fork manual — Auron35",
+    "sag": [
+     20,
+     25
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        121,
+        50
+       ],
+       [
+        143,
+        60
+       ],
+       [
+        165,
+        70
+       ],
+       [
+        187,
+        85
+       ],
+       [
+        209,
+        105
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 160,
+      "installed": 7,
+      "max": 10
+     },
+     {
+      "travel": 150,
+      "installed": 8,
+      "max": 10
+     },
+     {
+      "travel": 140,
+      "installed": 9,
+      "max": 10
+     }
+    ]
+   }
   },
   {
    "id": "sr-suntour-zeron-35",
@@ -3832,7 +4963,7 @@
    "stroke": null,
    "damper": "R2C2",
    "psiRatio": 0.48,
-   "maxPsi": 150,
+   "maxPsi": 120,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3847,7 +4978,59 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.srsuntour.com/fileadmin/user_upload/Downloads/Consumer/Bike/Owners%20manuals/General_Fork_Manual/EN_MY22_SUS_fork_user_manual-20210820.pdf",
+    "sourceTitle": "SR Suntour MY22 fork manual — Zeron35",
+    "sag": [
+     20,
+     25
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        121,
+        50
+       ],
+       [
+        143,
+        60
+       ],
+       [
+        165,
+        70
+       ],
+       [
+        187,
+        85
+       ],
+       [
+        209,
+        105
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 150,
+      "installed": 3,
+      "max": 6
+     },
+     {
+      "travel": 140,
+      "installed": 3,
+      "max": 6
+     },
+     {
+      "travel": 130,
+      "installed": 3,
+      "max": 6
+     }
+    ]
+   }
   },
   {
    "id": "sr-suntour-durolux-38",
@@ -3864,7 +5047,7 @@
    "stroke": null,
    "damper": "R2C2",
    "psiRatio": 0.45,
-   "maxPsi": 150,
+   "maxPsi": 105,
    "tokens": {
     "default": 2,
     "max": 5
@@ -3879,7 +5062,59 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.srsuntour.com/fileadmin/user_upload/Downloads/Consumer/Bike/Owners%20manuals/General_Fork_Manual/EN_MY22_SUS_fork_user_manual-20210820.pdf",
+    "sourceTitle": "SR Suntour MY22 fork manual — Durolux38",
+    "sag": [
+     25,
+     30
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        121,
+        40
+       ],
+       [
+        143,
+        50
+       ],
+       [
+        165,
+        60
+       ],
+       [
+        187,
+        70
+       ],
+       [
+        209,
+        85
+       ]
+      ]
+     }
+    ],
+    "tokens": [
+     {
+      "travel": 180,
+      "installed": 2,
+      "max": 6
+     },
+     {
+      "travel": 170,
+      "installed": 3,
+      "max": 6
+     },
+     {
+      "travel": 160,
+      "installed": 4,
+      "max": 6
+     }
+    ]
+   }
   },
   {
    "id": "x-fusion-trace-36",
@@ -3896,7 +5131,7 @@
    "stroke": null,
    "damper": "RL2",
    "psiRatio": 0.48,
-   "maxPsi": 140,
+   "maxPsi": 120,
    "tokens": {
     "default": 1,
     "max": 4
@@ -3911,7 +5146,83 @@
    "climb": "Lockout lever",
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://www.xfusionshox.com/upload/files/Air%20%26%20Coil%20Spring%20Rate-v2.pdf",
+    "sourceTitle": "X-Fusion fork pressure and spring rate chart (36 mm)",
+    "sag": [
+     25,
+     30
+    ],
+    "pressure": [
+     {
+      "type": "linear",
+      "rows": [
+       [
+        100,
+        45
+       ],
+       [
+        110,
+        47.5
+       ],
+       [
+        120,
+        50
+       ],
+       [
+        130,
+        52.5
+       ],
+       [
+        140,
+        55
+       ],
+       [
+        150,
+        57.5
+       ],
+       [
+        160,
+        60
+       ],
+       [
+        170,
+        65
+       ],
+       [
+        180,
+        70
+       ],
+       [
+        190,
+        75
+       ],
+       [
+        200,
+        80
+       ],
+       [
+        220,
+        85
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        8
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "fox-float-sl-factory",
@@ -4740,7 +6051,17 @@
    "climb": "Remote lockout (Open / Lock)",
    "note": "",
    "url": "https://www.sram.com/en/rockshox/series/sidluxe",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB",
+    "sourceTitle": "RockShox suspension user manual",
+    "sag": [
+     20,
+     30
+    ],
+    "pressureRule": "bodyWeightWithGear",
+    "ruleText": "start at your total weight with gear (lb) in psi"
+   }
   },
   {
    "id": "rockshox-deluxe-ultimate",
@@ -4776,7 +6097,17 @@
    "climb": "Threshold lever (Open / Pedal)",
    "note": "",
    "url": "https://www.sram.com/en/rockshox/series/deluxe",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB",
+    "sourceTitle": "RockShox suspension user manual",
+    "sag": [
+     25,
+     35
+    ],
+    "pressureRule": "bodyWeightWithGear",
+    "ruleText": "start at your total weight with gear (lb) in psi"
+   }
   },
   {
    "id": "rockshox-super-deluxe-ultimate-air",
@@ -4812,7 +6143,17 @@
    "climb": "Threshold lever (Open / Pedal)",
    "note": "MBR: the most coil-like air shock.",
    "url": "https://www.sram.com/en/rockshox/series/super-deluxe",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB",
+    "sourceTitle": "RockShox suspension user manual",
+    "sag": [
+     25,
+     35
+    ],
+    "pressureRule": "bodyWeightWithGear",
+    "ruleText": "start at your total weight with gear (lb) in psi"
+   }
   },
   {
    "id": "rockshox-super-deluxe-ultimate-coil",
@@ -4845,7 +6186,15 @@
    "climb": "Threshold lever (Open / Pedal)",
    "note": "",
    "url": "https://www.sram.com/en/rockshox/series/super-deluxe",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB",
+    "sourceTitle": "RockShox suspension user manual",
+    "sag": [
+     25,
+     35
+    ]
+   }
   },
   {
    "id": "rockshox-vivid-ultimate-air",
@@ -4881,7 +6230,29 @@
    "climb": "Threshold lever (Open / Pedal)",
    "note": "",
    "url": "https://www.sram.com/en/rockshox/series/vivid",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB",
+    "sourceTitle": "RockShox suspension user manual",
+    "sag": [
+     25,
+     35
+    ],
+    "pressureRule": "bodyWeightWithGear",
+    "ruleText": "start at your total weight with gear (lb) in psi",
+    "damping": [
+     {
+      "key": "lsc",
+      "by": "middle",
+      "from": "open"
+     },
+     {
+      "key": "hsc",
+      "by": "middle",
+      "from": "open"
+     }
+    ]
+   }
   },
   {
    "id": "rockshox-vivid-ultimate-coil",
@@ -4914,7 +6285,15 @@
    "climb": null,
    "note": "",
    "url": "https://www.sram.com/en/rockshox/series/vivid",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB",
+    "sourceTitle": "RockShox suspension user manual",
+    "sag": [
+     25,
+     35
+    ]
+   }
   },
   {
    "id": "ohlins-ttx-air",
@@ -4935,7 +6314,7 @@
    },
    "damper": "TTX",
    "psiRatio": 0.95,
-   "maxPsi": 350,
+   "maxPsi": 300,
    "tokens": {
     "default": 1,
     "max": 4
@@ -4950,7 +6329,18 @@
    "climb": "Climb lever (Open / Climb)",
    "note": "",
    "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.ohlins.eu/download/db/Ohlins_Europe_owners-manual-oehlins-mtb-ttx--00004276.pdf",
+    "sourceTitle": "Öhlins TTX Air m.2 owner's manual",
+    "sag": [
+     25,
+     35
+    ],
+    "pressureRule": "fixed",
+    "pressureStart": 170,
+    "ruleText": "start at 170 psi"
+   }
   },
   {
    "id": "ohlins-ttx-flow",
@@ -5016,7 +6406,15 @@
    "climb": "Climb lever (Open / Climb)",
    "note": "",
    "url": "https://www.ohlins.com/en-us/mountain-bike/rear-shocks",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.ohlins.eu/download/db/Ohlins_Europe_owners-manual-oehlins-mtb-ttx22m--00002998.pdf",
+    "sourceTitle": "Öhlins TTX22M owner's manual",
+    "sag": [
+     25,
+     35
+    ]
+   }
   },
   {
    "id": "marzocchi-bomber-air",
@@ -5172,7 +6570,7 @@
    },
    "damper": "Twin Tube",
    "psiRatio": 0.98,
-   "maxPsi": 350,
+   "maxPsi": 300,
    "tokens": {
     "default": 1,
     "max": 4
@@ -5187,7 +6585,18 @@
    "climb": "Climb Switch",
    "note": "",
    "url": "https://www.canecreek.com/products/kitsuma-g2-air",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://cdn.shopify.com/s/files/1/0579/5987/4639/files/Kitsuma_Manual_2025_04_01.pdf",
+    "sourceTitle": "Cane Creek Kitsuma manual",
+    "sag": [
+     25,
+     35
+    ],
+    "pressureRule": "bodyWeight",
+    "pressureFactor": 0.875,
+    "ruleText": "start at 75–100% of your body weight (lb) in psi"
+   }
   },
   {
    "id": "cane-creek-kitsuma-coil",
@@ -5220,7 +6629,15 @@
    "climb": "Climb Switch",
    "note": "MBR's top coil pick (9/10).",
    "url": "https://www.canecreek.com/products/kitsuma-coil",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://cdn.shopify.com/s/files/1/0579/5987/4639/files/Kitsuma_Manual_2025_04_01.pdf",
+    "sourceTitle": "Cane Creek Kitsuma manual",
+    "sag": [
+     25,
+     35
+    ]
+   }
   },
   {
    "id": "cane-creek-db-air-il",
@@ -5256,7 +6673,18 @@
    "climb": "Climb Switch",
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://cdn.shopify.com/s/files/1/0579/5987/4639/files/DB_IL_G2_Manual_2025_04_01.pdf",
+    "sourceTitle": "Cane Creek DB Air IL G2 manual",
+    "sag": [
+     25,
+     35
+    ],
+    "pressureRule": "bodyWeight",
+    "pressureFactor": 1.2,
+    "ruleText": "start at 120% of your body weight (lb) in psi"
+   }
   },
   {
    "id": "dvo-topaz-t3-air",
@@ -5292,7 +6720,94 @@
    "climb": "3-mode LSC lever",
    "note": "Also set the bladder pressure (DVO chart).",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "manufacturer",
+    "source": "https://tech.dvosuspension.com/wp-content/uploads/2020/10/DVO-Set-Up-Guide-shock-2020.pdf",
+    "sourceTitle": "DVO Topaz Air set-up guide",
+    "sag": [
+     20,
+     30
+    ],
+    "pressure": [
+     {
+      "type": "steps",
+      "rows": [
+       [
+        120,
+        145
+       ],
+       [
+        140,
+        157.5
+       ],
+       [
+        160,
+        170
+       ],
+       [
+        180,
+        182.5
+       ],
+       [
+        200,
+        200
+       ],
+       [
+        220,
+        220
+       ],
+       [
+        240,
+        240
+       ]
+      ]
+     }
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "weight",
+      "from": "closed",
+      "rows": [
+       [
+        120,
+        8,
+        9
+       ],
+       [
+        140,
+        6,
+        7
+       ],
+       [
+        160,
+        5,
+        6
+       ],
+       [
+        180,
+        4,
+        5
+       ],
+       [
+        200,
+        3,
+        4
+       ],
+       [
+        220,
+        2,
+        3
+       ],
+       [
+        240,
+        1,
+        2
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "dvo-jade-x",
@@ -5325,14 +6840,22 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://tech.dvosuspension.com/wp-content/uploads/2019/09/Jade-X-Set-Up-Guide-2.pdf",
+    "sourceTitle": "DVO Jade X set-up guide",
+    "sag": [
+     25,
+     30
+    ]
+   }
   },
   {
    "id": "formula-mod",
    "brand": "Formula",
    "name": "Mod",
    "kind": "shock",
-   "spring": "air",
+   "spring": "coil",
    "category": "trail",
    "travel": {
     "min": 110,
@@ -5345,8 +6868,8 @@
     "default": 57.5
    },
    "damper": "CTS",
-   "psiRatio": 1.0,
-   "maxPsi": 300,
+   "psiRatio": null,
+   "maxPsi": null,
    "tokens": null,
    "adjusters": {
     "rebound": 14,
@@ -5358,14 +6881,35 @@
    "climb": "Lockout lever",
    "note": "Progression via Neopos inserts.",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.rideformula.com/wp-content/uploads/2020/09/MOD-Owner-Manual.pdf",
+    "sourceTitle": "Formula MOD owner manual",
+    "sag": [
+     30,
+     30
+    ],
+    "damping": [
+     {
+      "key": "rebound",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "manitou-mara-pro",
    "brand": "Manitou",
    "name": "Mara Pro",
    "kind": "shock",
-   "spring": "coil",
+   "spring": "air",
    "category": "enduro",
    "travel": {
     "min": 120,
@@ -5378,9 +6922,12 @@
     "default": 62.5
    },
    "damper": "Mara Pro",
-   "psiRatio": null,
-   "maxPsi": null,
-   "tokens": null,
+   "psiRatio": 1.0,
+   "maxPsi": 350,
+   "tokens": {
+    "default": 1,
+    "max": 4
+   },
    "adjusters": {
     "rebound": 12,
     "lsc": 12,
@@ -5391,7 +6938,15 @@
    "climb": null,
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://hayesbicycle.zendesk.com/hc/article_attachments/28476110600727",
+    "sourceTitle": "Manitou Mara Pro set-up guide",
+    "sag": [
+     25,
+     30
+    ]
+   }
   },
   {
    "id": "ext-aria",
@@ -5460,7 +7015,46 @@
    "climb": "Climb lever",
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://extremeshox.com/wp-content/uploads/2023/08/Storia_V3-S_Quick_Manual_1.1.pdf",
+    "sourceTitle": "EXT Storia V3-S quick manual",
+    "damping": [
+     {
+      "key": "hsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "key": "lsc",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "key": "rebound",
+      "by": "fixed",
+      "from": "closed",
+      "rows": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "push-industries-elevensix",
@@ -5493,7 +7087,15 @@
    "climb": "Mode lever (Climb / Descend)",
    "note": "Custom-valved for your weight — PUSH tunes it to your order.",
    "url": "https://pushindustries.com/products/elevensix",
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://cdn.shopify.com/s/files/1/0519/4441/files/11.6_Manual.pdf",
+    "sourceTitle": "PUSH ElevenSix manual",
+    "sag": [
+     25,
+     33
+    ]
+   }
   },
   {
    "id": "sr-suntour-triair",
@@ -5529,7 +7131,15 @@
    "climb": "3-position lever (Open / Medium / Firm)",
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.srsuntour.com/fileadmin/user_upload/Downloads/Consumer/Bike/Owners%20manuals/MY_26_Rear_Shock_Manuals/MY26_General_Rear_Shock_Manual_English_20250417.pdf",
+    "sourceTitle": "SR Suntour MY26 rear shock manual",
+    "sag": [
+     25,
+     30
+    ]
+   }
   },
   {
    "id": "x-fusion-o2-pro-rcx",
@@ -5565,7 +7175,18 @@
    "climb": "Lockout lever",
    "note": "",
    "url": null,
-   "mfg": null
+   "mfg": {
+    "quality": "partial",
+    "source": "https://www.xfusionshox.com/upload/files/2012O2Setupguide1.pdf",
+    "sourceTitle": "X-Fusion O2 setup guide",
+    "sag": [
+     20,
+     25
+    ],
+    "pressureRule": "bodyWeight",
+    "pressureFactor": 0.8,
+    "ruleText": "start at 80% of your body weight (lb) in psi"
+   }
   }
  ],
  "brandSites": {

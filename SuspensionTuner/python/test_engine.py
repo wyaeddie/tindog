@@ -60,7 +60,7 @@ class EngineTests(unittest.TestCase):
     def test_kitsuma_coil_estimate(self):
         rec = calculate(MODELS["cane-creek-kitsuma-coil"],
                         RiderInput(**RIDER, style="park", travel_mm=170, stroke_mm=65))
-        self.assertEqual((rec.headline_value, rec.headline_unit, rec.quality), ("450", "lb/in", "estimate"))
+        self.assertEqual((rec.headline_value, rec.headline_unit, rec.quality), ("450", "lb/in", "partial"))  # Cane Creek sag 25–35%
 
     def test_outside_chart_warns(self):
         rec = calculate(MODELS["fox-38-factory"],
@@ -69,9 +69,9 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(any("outside Fox's chart" in w for w in rec.warnings))
 
     def test_pressure_capped_at_max(self):
-        rec = calculate(MODELS["dvo-onyx-sc-d1"],
-                        RiderInput(weight_kg=180, height_cm=200, frame_size="XL", style="trail", travel_mm=170))
-        self.assertEqual(rec.headline_value, "140")
+        rec = calculate(MODELS["ohlins-rxc34-m1"],          # no published chart → estimate, capped at 170
+                        RiderInput(weight_kg=180, height_cm=200, frame_size="XL", style="trail", travel_mm=110))
+        self.assertEqual((rec.headline_value, rec.quality), ("170", "estimate"))
         self.assertTrue(any("exceeds" in w for w in rec.warnings))
 
     # ---- ride, rider and bike factors (same values as EngineTests.swift)
@@ -128,7 +128,7 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(rec.service_due)
 
     def test_xc_and_downhill_styles(self):
-        self.assertEqual(calculate(MODELS["dvo-onyx-sc-d1"], RiderInput(**RIDER, style="dh", travel_mm=170)).sag_percent, 25)
+        self.assertEqual(calculate(MODELS["ext-aria"], RiderInput(**RIDER, style="dh", travel_mm=150, stroke_mm=57.5)).sag_percent, 33)
         sid = MODELS["rockshox-sid-sl-ultimate"]
         self.assertFalse(any("XC product" in w for w in calculate(sid, RiderInput(**RIDER, style="xc", travel_mm=100)).warnings))
         self.assertTrue(any("Downhill riding" in w for w in calculate(sid, RiderInput(**RIDER, style="dh", travel_mm=100)).warnings))
@@ -138,6 +138,17 @@ class EngineTests(unittest.TestCase):
         kw = dict(**RIDER, style="trail", travel_mm=160, stroke_mm=62.5)
         self.assertEqual(values(calculate(x2, RiderInput(**kw, frame_progression="linear")))["Volume spacers"], "2 tokens")
         self.assertEqual(values(calculate(x2, RiderInput(**kw, frame_progression="progressive")))["Volume spacers"], "0 tokens")
+
+    def test_new_brand_charts(self):
+        mez = calculate(MODELS["manitou-mezzer-pro"], RiderInput(**RIDER, style="enduro", travel_mm=170))
+        v = values(mez)
+        self.assertEqual((mez.headline_value, v["IRT chamber"], v["Rebound"]), ("62", "94 psi", "6–7 clicks out"))
+        helm = calculate(MODELS["cane-creek-helm-mkii-air"], RiderInput(**RIDER, style="enduro", travel_mm=160))
+        self.assertEqual(helm.headline_value, "65")             # 35% of 185 lb
+        selva = calculate(MODELS["formula-selva-s"], RiderInput(**RIDER, style="enduro", travel_mm=170))
+        self.assertEqual(selva.headline_value, "79")            # 175 lb → 75, 200 lb → 85
+        rs = calculate(MODELS["rockshox-super-deluxe-ultimate-air"], RiderInput(**RIDER, style="enduro", travel_mm=150, stroke_mm=60))
+        self.assertEqual(rs.headline_value, "196")              # RockShox: weight with gear
 
     def test_xc_fork_in_park_warns(self):
         rec = calculate(MODELS["rockshox-sid-sl-ultimate"], RiderInput(**RIDER, style="park", travel_mm=100))

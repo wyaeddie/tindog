@@ -260,10 +260,15 @@ public enum SuspensionEngine {
                                     + (t.type == "linear" ? "the chart was extended in a straight line." : "the nearest row was used.")
                                     + " Set sag carefully.")
                 }
-            } else if mfg?.pressureRule == "bodyWeight" {
-                psi = chartLb
+            } else if let rule = mfg?.pressureRule, ["bodyWeight", "bodyWeightWithGear", "fixed"].contains(rule) {
+                let factor = mfg?.pressureFactor ?? 1
+                switch rule {
+                case "fixed": psi = mfg?.pressureStart ?? 0
+                case "bodyWeightWithGear": psi = (chartLb + gearKg * lbPerKg) * factor
+                default: psi = chartLb * factor
+                }
                 pressureFromChart = true
-                detail = "\(brand): start at your body weight in lb."
+                detail = "\(brand): \(mfg?.ruleText ?? "start at your body weight in lb")."
             } else {
                 if isFork {
                     psi = (m.psiRatio ?? 0) * systemLb * (frontBias / 0.40) * (20 / Double(sagPct)).squareRoot()
@@ -314,7 +319,7 @@ public enum SuspensionEngine {
             settings.append(Setting(label: "Air pressure", value: "\(pump) psi", detail: "\(detail) Max \(maxPsi) psi."))
             if let t = table(mfg?.ramp, travel: rider.travelMm) {
                 let r = roundHalfUp(lookup(t.type, t.rows, chartLb).value)
-                settings.append(Setting(label: "Ramp-up chamber", value: "\(r) psi",
+                settings.append(Setting(label: mfg?.rampLabel ?? "Ramp-up chamber", value: "\(r) psi",
                                         detail: "\(brand) chart. More = more progressive (less bottom-out)."))
             }
         } else {

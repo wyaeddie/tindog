@@ -289,10 +289,17 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
                                 + ("the chart was extended in a straight line." if t["type"] == "linear"
                                    else "the nearest row was used.")
                                 + " Set sag carefully.")
-        elif mfg and mfg.get("pressureRule") == "bodyWeight":
-            psi = chart_lb
+        elif mfg and mfg.get("pressureRule") in ("bodyWeight", "bodyWeightWithGear", "fixed"):
+            rule = mfg["pressureRule"]
+            factor = mfg.get("pressureFactor") or 1
+            if rule == "fixed":
+                psi = mfg.get("pressureStart") or 0
+            elif rule == "bodyWeightWithGear":
+                psi = (chart_lb + GEAR_KG * LB_PER_KG) * factor
+            else:
+                psi = chart_lb * factor
             pressure_from_chart = True
-            detail = f"{brand}: start at your body weight in lb."
+            detail = f"{brand}: {mfg.get('ruleText') or 'start at your body weight in lb'}."
         else:
             if is_fork:
                 psi = model["psiRatio"] * system_lb * (front_bias / 0.40) * math.sqrt(20 / sag_pct)
@@ -340,7 +347,7 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         rt = _table(mfg and mfg.get("ramp"), rider.travel_mm)
         if rt:
             r = _round_half_up(_lookup(rt["type"], rt["rows"], chart_lb)["value"])
-            settings.append(Setting("Ramp-up chamber", f"{r} psi",
+            settings.append(Setting(mfg.get("rampLabel") or "Ramp-up chamber", f"{r} psi",
                                     f"{brand} chart. More = more progressive (less bottom-out)."))
     else:
         stroke = rider.stroke_mm

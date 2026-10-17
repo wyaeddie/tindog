@@ -108,10 +108,16 @@ public struct ManufacturerData: Codable, Hashable {
     /// Recommended sag range in % [min, max]
     public let sag: [Double]?
     public let pressure: [ChartTable]?
-    /// "bodyWeight": start psi = rider weight in lb, then set sag
+    /// "bodyWeight": start psi = rider weight in lb × pressureFactor; "bodyWeightWithGear": the same with
+    /// riding gear included; "fixed": start at pressureStart psi. Then set sag.
     public let pressureRule: String?
-    /// Öhlins ramp-up chamber
+    public let pressureFactor: Double?
+    public let pressureStart: Double?
+    /// The maker's wording of the rule, e.g. "start at 30–40% of your body weight (lb) in psi"
+    public let ruleText: String?
+    /// Second air chamber (Öhlins ramp-up, Manitou IRT, EXT ++)
     public let ramp: [ChartTable]?
+    public let rampLabel: String?
     public let tokens: [TokenRow]?
     public let damping: [DampingRule]?
     /// FOX "E-Bike+" / Marzocchi e-bike charts
