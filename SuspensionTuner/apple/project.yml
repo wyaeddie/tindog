@@ -21,6 +21,12 @@ targets:
     dependencies:
       - package: SuspensionTuner
         product: SuspensionKit
+      - target: SuspensionTunerWidget     # home-screen widget, embedded in the app
+    entitlements:
+      path: AppResources/SuspensionTuner.entitlements
+      properties:
+        # Shared folder so the widget can read the garage
+        com.apple.security.application-groups: [group.solutions.wholestack.suspensiontuner]
     settings:
       base:
         # Set explicitly so the app always has an ID; without one iOS kills it at launch
@@ -41,3 +47,33 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         # iPad must support all orientations (App Store requirement for multitasking)
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+
+  SuspensionTunerWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Sources/SuspensionTunerWidget
+    dependencies:
+      - package: SuspensionTuner
+        product: SuspensionKit
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    entitlements:
+      path: Sources/SuspensionTunerWidget/SuspensionTunerWidget.entitlements
+      properties:
+        com.apple.security.application-groups: [group.solutions.wholestack.suspensiontuner]
+    info:
+      path: Sources/SuspensionTunerWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Suspension Tuner
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: solutions.wholestack.suspensiontuner.widget
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SKIP_INSTALL: YES

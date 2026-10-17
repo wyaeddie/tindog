@@ -56,6 +56,13 @@ cd apple && swift test
 cd python && python3 -m unittest test_engine.py
 ```
 
+## Trailside tools
+- **Feels off? (symptom troubleshooter)** — pick what the fork or shock is doing (harsh, bottoming, diving, kicking, packing down, bobbing…) and get fixes worked out against *your* current clicks, best first; apply them to the dials or log them to History.
+- **Sag check** — guided O-ring routine with a hold-still countdown, then type the mm you measured to get your sag % and the pressure (or spring) to try next.
+- **Coil spring sizes** — the nearest stock springs with the sag each gives, and the spring size to buy (e.g. 450 × 2.5″).
+- **Pre-ride check** — today's pressures, sag, tires, axles, brakes, headset, dropper, drivetrain and kit; ticks reset daily.
+- **Home-screen widget** — small, medium and lock-screen widgets show the selected bike's pump numbers. The app and widget share the garage through the App Group `group.solutions.wholestack.suspensiontuner` (Xcode sets it up when you pick your Team under Signing & Capabilities).
+
 ## Where the numbers come from
 Each model in `catalog.json` can carry an `mfg` block copied from the maker's own setup guide. The app reads it the way you would read the chart, using your body weight:
 

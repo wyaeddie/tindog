@@ -203,3 +203,23 @@ public extension Recommendation {
         return out
     }
 }
+
+/// The garage file shared between the app and its home-screen widget (App Group container).
+public enum SharedGarage {
+    public static let appGroup = "group.solutions.wholestack.suspensiontuner"
+
+    /// nil when the App Group isn't available (e.g. unsigned builds) — the app then keeps its own copy.
+    public static var fileURL: URL? {
+        #if canImport(Darwin)
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)?
+            .appendingPathComponent("garage.json")
+        #else
+        return nil
+        #endif
+    }
+
+    public static func load() -> GarageData? {
+        guard let url = fileURL, let raw = try? Data(contentsOf: url) else { return nil }
+        return try? GarageData.decode(raw)
+    }
+}

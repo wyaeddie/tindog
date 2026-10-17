@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 import SuspensionKit
+import WidgetKit
 
 enum AppTab: Hashable {
     case garage, tune, history, settings
@@ -26,18 +27,27 @@ final class GarageStore {
         }
     }
 
+    /// The App Group file (shared with the home-screen widget), or the app's own folder if the group isn't set up.
+    /// Garages saved by earlier versions are moved into the group the first time.
     static var defaultURL: URL {
         let base = (try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                                  appropriateFor: nil, create: true))
             ?? FileManager.default.temporaryDirectory
         let dir = base.appendingPathComponent("SuspensionTuner", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        return dir.appendingPathComponent("garage.json")
+        let legacy = dir.appendingPathComponent("garage.json")
+        guard let shared = SharedGarage.fileURL else { return legacy }
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: shared.path), fm.fileExists(atPath: legacy.path) {
+            try? fm.copyItem(at: legacy, to: shared)
+        }
+        return shared
     }
 
     private func save() {
         do {
             try data.encoded().write(to: fileURL, options: .atomic)
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             print("Suspension Tuner: could not save garage — \(error)")
         }

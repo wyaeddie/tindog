@@ -113,6 +113,7 @@ struct GarageHomeView: View {
     @Bindable var store: GarageStore
     @State private var editing: Bike?
     @State private var confirmDelete: Bike?
+    @State private var checklistBike: Bike?
 
     /// Time-of-day hype line.
     private var greeting: String {
@@ -161,6 +162,8 @@ struct GarageHomeView: View {
                     BikeHeroCard(store: store, bike: bike,
                                  onEdit: { editing = bike },
                                  onDelete: { confirmDelete = bike })
+                    ToolButton(title: "Pre-ride check", subtitle: "Pressures, sag, bolts, brakes — 60 seconds",
+                               icon: "checklist", color: Theme.go) { checklistBike = bike }
                 }
 
                 TrustNote()
@@ -188,6 +191,9 @@ struct GarageHomeView: View {
         }
         .sheet(item: $editing) { bike in
             BikeEditorView(store: store, bike: bike)
+        }
+        .sheet(item: $checklistBike) { bike in
+            ChecklistView(store: store, bike: bike)
         }
         .confirmationDialog("Delete \(confirmDelete?.name ?? "bike")?",
                             isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),

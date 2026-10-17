@@ -80,6 +80,8 @@ struct TuneEndView: View {
     @State private var note = ""
     @State private var savedFlash = false
     @State private var showNotes = false
+    @State private var showTroubleshooter = false
+    @State private var showSagHelper = false
 
     private var ran: RanSetup { bike.ran(end) }
     private var color: Color { end == .fork ? Theme.accent : Theme.gold }
@@ -117,7 +119,21 @@ struct TuneEndView: View {
                          detail: "Air loses pressure as it cools (\(Int(bike.ride.temperatureF))°F today). Pumping at the trailhead? Set \(trail) psi.")
             }
 
+            if !rec.isAir, let stroke = bike.shock?.strokeMm, end == .shock {
+                CoilSpringCard(rec: rec, strokeMm: stroke)
+            }
+
             SagCheckCard(rec: rec, end: end)
+
+            // Trailside tools
+            HStack(spacing: 8) {
+                ToolButton(title: "Check my sag", subtitle: "Guided + calculator", icon: "ruler.fill", color: Theme.go) {
+                    showSagHelper = true
+                }
+                ToolButton(title: "Feels off?", subtitle: "Fix by symptom", icon: "stethoscope", color: Theme.accent) {
+                    showTroubleshooter = true
+                }
+            }
 
             // Damping
             if !rec.clicks.isEmpty || rec.tokens != nil {
@@ -206,6 +222,13 @@ struct TuneEndView: View {
                 .foregroundStyle(.black)
                 .sensoryFeedback(.success, trigger: savedFlash)
             }
+        }
+        .sheet(isPresented: $showTroubleshooter) {
+            TroubleshooterView(store: store, bikeID: bike.id, end: end, model: model, rec: rec)
+        }
+        .sheet(isPresented: $showSagHelper) {
+            SagHelperView(store: store, bikeID: bike.id, end: end, rec: rec,
+                          lengthMm: end == .fork ? (bike.fork?.travelMm ?? 0) : (bike.shock?.strokeMm ?? 0))
         }
         .alert("Save this setup", isPresented: $askingNote) {
             TextField("Note (optional) — e.g. felt harsh on roots", text: $note)
