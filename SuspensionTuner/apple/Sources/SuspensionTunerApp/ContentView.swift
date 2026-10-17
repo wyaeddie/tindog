@@ -28,7 +28,7 @@ struct ContentView: View {
                 }
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.text)
         .tint(Theme.accent)
     }
 }
@@ -248,7 +248,7 @@ struct ResultsView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Button { if let specs { openURL(specs) } } label: {
                             let brand = Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
-                            let name = Text(model.name).foregroundStyle(.white)
+                            let name = Text(model.name).foregroundStyle(Theme.text)
                             let link = Text(Image(systemName: "arrow.up.right.square"))
                                 .font(.system(size: isCompact ? 15 : 16, weight: .semibold))
                                 .foregroundStyle(Theme.muted)
@@ -461,7 +461,7 @@ struct NotesCard: View {
             ForEach(tips, id: \.self) { tip in
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Image(systemName: "checkmark.circle.fill").foregroundStyle(Theme.go).font(.caption)
-                    Text(tip).font(.callout).foregroundStyle(.white.opacity(0.85))
+                    Text(tip).font(.callout).foregroundStyle(Theme.text.opacity(0.85))
                 }
             }
             Text(disclaimer).font(.caption).foregroundStyle(Theme.muted).padding(.top, 4)

@@ -55,9 +55,8 @@ struct ToolSheet<Content: View>: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() }.fontWeight(.bold) }
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.text)
         .tint(Theme.accent)
-        .preferredColorScheme(.dark)
     }
 }
 
@@ -97,7 +96,7 @@ struct TroubleshooterView: View {
                         }
                         .padding(10)
                         .frame(maxWidth: .infinity, minHeight: 54, alignment: .leading)
-                        .foregroundStyle(on ? .black : .white)
+                        .foregroundStyle(on ? Color.black : Theme.text)
                         .background(on ? Theme.accent : Theme.card, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(on ? Theme.accent : Theme.stroke))
                         .contentShape(Rectangle())
@@ -328,7 +327,7 @@ struct CoilSpringCard: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
-                    .foregroundStyle(o.isRecommended ? .black : .white)
+                    .foregroundStyle(o.isRecommended ? Color.black : Theme.text)
                     .background(o.isRecommended ? Theme.gold : Theme.card2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
             }

@@ -9,7 +9,7 @@ enum AppInfo {
     static let year = "2026"
     static let summary = "Suspension Tuner dials in your fork and rear shock from each manufacturer's own setup charts "
         + "and specifications: air pressure or spring rate, sag, volume spacers, rebound, compression and lockout — "
-        + "then fine-tunes them for your riding style and today's conditions."
+        + "then fine-tunes them for your riding style and riding conditions."
     static var version: String {
         let info = Bundle.main.infoDictionary
         let short = info?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -71,9 +71,8 @@ struct AboutView: View {
         }
         .padding(24)
         .frame(maxWidth: 420)
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.text)
         .background(Theme.panel)
-        .preferredColorScheme(.dark)
     }
 
     private func aboutRow(_ label: String, _ value: String) -> some View {

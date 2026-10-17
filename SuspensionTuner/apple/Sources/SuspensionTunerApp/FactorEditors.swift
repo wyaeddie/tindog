@@ -67,11 +67,13 @@ struct RideConditionsCard: View {
                 HStack(spacing: 10) {
                     VStack(alignment: .leading, spacing: 3) {
                         HStack(spacing: 6) {
-                            Image(systemName: "cloud.sun.fill").foregroundStyle(Theme.sky)
-                            Text("Today's conditions").font(.subheadline.weight(.bold))
+                            Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill").foregroundStyle(Theme.sky)
+                            Text("Riding conditions").font(.subheadline.weight(.bold))
                             ProTag()
                         }
-                        Text("Terrain, weather, temperature, pack and feel").font(.caption).foregroundStyle(Theme.muted)
+                        Text("Dial in deeper: terrain, weather, temperature, pack and feel tune the maker's numbers for today's ride.")
+                            .font(.caption).foregroundStyle(Theme.muted)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "lock.fill").font(.footnote).foregroundStyle(Theme.muted)
@@ -94,8 +96,8 @@ struct RideConditionsCard: View {
         } label: {
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
-                    Image(systemName: "cloud.sun.fill").foregroundStyle(Theme.sky)
-                    Text("Today's conditions").font(.subheadline.weight(.bold))
+                    Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill").foregroundStyle(Theme.sky)
+                    Text("Riding conditions").font(.subheadline.weight(.bold))
                 }
                 Text(rideSummary(ride)).font(.caption).foregroundStyle(Theme.muted).lineLimit(1)
             }

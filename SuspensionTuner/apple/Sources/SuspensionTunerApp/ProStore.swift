@@ -4,8 +4,8 @@ import WidgetKit
 import SuspensionKit
 
 /// Suspension Tuner Pro: a one-time, non-consumable in-app purchase (StoreKit 2).
-/// Free: one bike, the manufacturer setup, sag check, pre-ride check, quick calculator.
-/// Pro: unlimited bikes, today's conditions, troubleshooter, History logging, share & print, widget.
+/// Free: one bike, the manufacturer setup, pre-ride check, quick calculator.
+/// Pro: riding conditions, sag-check helper, troubleshooter, unlimited bikes, History logging, share & print, widget.
 @MainActor
 @Observable
 final class ProStore {
@@ -103,13 +103,16 @@ final class ProStore {
 struct PaywallView: View {
     @Environment(ProStore.self) private var pro
     @Environment(\.dismiss) private var dismiss
-    /// What the rider tapped, e.g. "Today's conditions"
+    /// What the rider tapped, e.g. "Riding conditions"
     var feature: String? = nil
 
-    private let perks: [(String, String, String)] = [
-        ("bicycle", "Unlimited bikes", "Save every bike in your quiver, each with its own drawing."),
-        ("cloud.sun.fill", "Today's conditions", "Terrain, wet or dry, temperature, pack and feel fine-tune the maker's numbers."),
-        ("stethoscope", "Symptom troubleshooter", "Harsh, bottoming, diving, kicking? Fixes worked out from your clicks."),
+    /// The tuning tools come first — they're why riders upgrade.
+    static let perks: [(String, String, String)] = [
+        ("point.topleft.down.to.point.bottomright.curvepath.fill", "Riding conditions",
+         "Terrain, wet or dry, temperature, pack weight and firm-or-plush feel dial the maker's numbers in for today's ride."),
+        ("ruler.fill", "Sag-check helper", "Guided O-ring check with a countdown, then the exact psi or spring to fix your sag."),
+        ("stethoscope", "Symptom troubleshooter", "Harsh, bottoming, diving, kicking? Fixes worked out from your own clicks."),
+        ("bicycle", "Unlimited bikes", "Every bike in your quiver, each with its own drawing."),
         ("clock.arrow.circlepath", "Ride log", "Save what you ran with notes and compare later."),
         ("square.and.arrow.up", "Share & print", "Setup cards for your crew or the workshop."),
         ("apps.iphone", "Home-screen widget", "Today's pump numbers without opening the app."),
@@ -122,11 +125,11 @@ struct PaywallView: View {
                 VStack(spacing: 6) {
                     Text("Suspension Tuner Pro").font(.system(size: 26, weight: .heavy))
                         .foregroundStyle(Theme.titleGradient)
-                    Text(feature.map { "\($0) is part of Pro." } ?? "Dial in every bike, every ride.")
+                    Text(feature.map { "\($0) is part of Pro." } ?? "Dial it in deeper — every bike, every ride.")
                         .font(.callout.weight(.semibold)).foregroundStyle(Theme.muted)
                 }
                 VStack(alignment: .leading, spacing: 12) {
-                    ForEach(perks, id: \.1) { icon, title, detail in
+                    ForEach(Self.perks, id: \.1) { icon, title, detail in
                         HStack(alignment: .top, spacing: 12) {
                             Image(systemName: icon).font(.system(size: 16, weight: .bold))
                                 .foregroundStyle(Theme.accent)
@@ -173,7 +176,7 @@ struct PaywallView: View {
                     Text(message).font(.footnote).foregroundStyle(Theme.warnText)
                         .multilineTextAlignment(.center)
                 }
-                Text("Free forever: your first bike, the manufacturer setup, sag check and pre-ride check.")
+                Text("Free forever: your first bike, the manufacturer setup and the pre-ride check.")
                     .font(.caption2).foregroundStyle(Theme.muted).multilineTextAlignment(.center)
             }
             .padding(22)
@@ -181,11 +184,61 @@ struct PaywallView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Theme.panel.ignoresSafeArea())
-        .foregroundStyle(.white)
-        .preferredColorScheme(.dark)
+        .foregroundStyle(Theme.text)
         .presentationDragIndicator(.visible)
         .onAppear { pro.message = nil }
     }
+}
+
+/// Garage card for free riders: what Pro adds to the maker's baseline.
+struct ProPromoCard: View {
+    @Environment(ProStore.self) private var pro
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: "bolt.fill").foregroundStyle(Theme.accent)
+                    Text("Dial it in deeper").font(.headline.weight(.heavy))
+                    ProTag()
+                    Spacer()
+                }
+                Text("The maker's chart is your baseline. Pro tunes it for the ride you're actually doing.")
+                    .font(.caption).foregroundStyle(Theme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                ForEach(ProPerks.top, id: \.1) { icon, title, detail in
+                    HStack(alignment: .top, spacing: 10) {
+                        Image(systemName: icon).font(.system(size: 13, weight: .bold)).foregroundStyle(Theme.accent)
+                            .frame(width: 26, height: 26)
+                            .background(Theme.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(title).font(.subheadline.weight(.bold))
+                            Text(detail).font(.caption2).foregroundStyle(Theme.muted)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                }
+                Text(pro.priceText.isEmpty ? "Unlock Pro" : "Unlock Pro · \(pro.priceText) once")
+                    .font(.subheadline.weight(.heavy)).foregroundStyle(.black)
+                    .frame(maxWidth: .infinity).padding(.vertical, 11)
+                    .background(Theme.accent, in: Capsule())
+            }
+            .padding(16)
+            .background(
+                LinearGradient(colors: [Theme.accent.opacity(0.16), Theme.card], startPoint: .topLeading, endPoint: .bottomTrailing),
+                in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Theme.accent.opacity(0.45)))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// The three tuning tools shown on the promo card.
+enum ProPerks {
+    static let top = Array(PaywallView.perks.prefix(3))
 }
 
 /// Small "PRO" tag next to locked features.

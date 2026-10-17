@@ -57,10 +57,10 @@ cd python && python3 -m unittest test_engine.py
 ```
 
 ## Free and Pro
-Free: one bike, the manufacturer setup, sag check, pre-ride check and quick calculator.
+Free: one bike, the manufacturer setup, pre-ride check and quick calculator. Light, dark or automatic theme (Settings → Appearance).
 **Suspension Tuner Pro** (one-time in-app purchase `solutions.wholestack.suspensiontuner.pro`, StoreKit 2 in
-`ProStore.swift`) unlocks unlimited bikes, today's conditions, the troubleshooter, Save to History, share & print
-and the widget. Xcode runs use `apple/StoreKit/Products.storekit` so you can test the purchase for free; set up
+`ProStore.swift`) unlocks riding conditions, the sag-check helper, the troubleshooter, unlimited bikes, Save to History,
+share & print and the widget. Xcode runs use `apple/StoreKit/Products.storekit` so you can test the purchase for free; set up
 the real product as described in `apple/release/APP_STORE.md`.
 
 ## Trailside tools
@@ -97,7 +97,7 @@ Anything a maker doesn't publish is calculated and labelled **Estimate** in the 
 - Manufacturer charts don't change with riding style, so for those models the style only changes the advice.
 
 ### Other factors
-Set per bike (bike editor) or per ride (Garage → Today's conditions). With everything at its default the numbers are exactly the maker's chart.
+Set per bike (bike editor) or per ride (Garage → Riding conditions). With everything at its default the numbers are exactly the maker's chart.
 
 | Factor | What it changes |
 |---|---|

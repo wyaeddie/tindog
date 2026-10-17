@@ -48,9 +48,9 @@ An iPhone app (it also runs on iPad).
    - Product ID: `solutions.wholestack.suspensiontuner.pro` (must match exactly — it's in `ProStore.swift`)
 2. Price: pick a tier (suggested **$7.99**). Turn on **Family Sharing**.
 3. Localization: display name `Suspension Tuner Pro`, description
-   `Unlimited bikes, today's conditions, troubleshooter, ride log, share & print and the widget.`
+   `Riding conditions, sag check, troubleshooter, unlimited bikes, ride log, share & print and the widget.`
 4. Review information: a screenshot of the paywall (Garage → + with one bike saved) and the note
-   `Tap + on the Garage with one bike saved, or Today's conditions, to see the purchase.`
+   `Tap + on the Garage with one bike saved, or Riding conditions, to see the purchase.`
 5. When you submit the app version, tick the in-app purchase under **In-App Purchases and Subscriptions**
    so both are reviewed together.
 6. Agreements, Tax and Banking must be complete (the Paid Apps agreement) before purchases work.
@@ -64,7 +64,7 @@ sandbox (also free).
 
 | Free | Pro |
 |---|---|
-| One bike, manufacturer-chart setup, sag check, pre-ride check, quick calculator | Unlimited bikes, today's conditions, symptom troubleshooter, Save to History, share & print, home-screen widget |
+| One bike, manufacturer-chart setup, pre-ride check, quick calculator, light / dark / automatic theme | Riding conditions, sag-check helper, symptom troubleshooter, unlimited bikes, Save to History, share & print, home-screen widget |
 
 ## Listing text
 
@@ -110,7 +110,7 @@ SHARE AND PRINT
 Send a setup card to a friend or print it for the workshop.
 
 FREE AND PRO
-Your first bike, the manufacturer setup, sag check and pre-ride check are free. Suspension Tuner Pro is a one-time unlock — no subscription — for unlimited bikes, today's conditions, the symptom troubleshooter, the ride log, share & print and the home-screen widget.
+Your first bike, the manufacturer setup and the pre-ride check are free. Suspension Tuner Pro is a one-time unlock — no subscription — that dials it in deeper: riding conditions (terrain, weather, temperature, pack and feel), the guided sag-check helper and the symptom troubleshooter, plus unlimited bikes, the ride log, share & print and the home-screen widget.
 
 Works on iPhone and iPad. No account, no ads, no tracking — your data stays on your device.
 

@@ -167,9 +167,8 @@ struct BikeEditorView: View {
                 }
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.text)
         .tint(Theme.accent)
-        .preferredColorScheme(.dark)
     }
 
     private func save() {

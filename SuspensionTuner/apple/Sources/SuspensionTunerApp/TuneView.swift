@@ -56,7 +56,7 @@ struct TuneView: View {
                     Text(bike.name).font(.system(size: 28, weight: .heavy))
                     Image(systemName: "chevron.down").font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.muted)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.text)
             }
             .buttonStyle(.plain)
             .menuIndicator(.hidden)
@@ -129,8 +129,9 @@ struct TuneEndView: View {
 
             // Trailside tools
             HStack(spacing: 8) {
-                ToolButton(title: "Check my sag", subtitle: "Guided + calculator", icon: "ruler.fill", color: Theme.go) {
-                    showSagHelper = true
+                ToolButton(title: "Check my sag", subtitle: pro.isPro ? "Guided + calculator" : "Guided + calculator · Pro",
+                           icon: "ruler.fill", color: Theme.go) {
+                    if pro.isPro { showSagHelper = true } else { paywallFeature = "The sag-check helper" }
                 }
                 ToolButton(title: "Feels off?", subtitle: pro.isPro ? "Fix by symptom" : "Fix by symptom · Pro",
                            icon: "stethoscope", color: Theme.accent) {
@@ -251,7 +252,7 @@ struct TuneEndView: View {
                 BrandBadge(brand: model.brand, size: 46)
                 VStack(alignment: .leading, spacing: 4) {
                     let brand = Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
-                    let name = Text(model.name).foregroundStyle(.white)
+                    let name = Text(model.name).foregroundStyle(Theme.text)
                     let link = Text(Image(systemName: "arrow.up.right.square")).foregroundStyle(Theme.muted)
                     Text("\(brand) \(name) \(link)").font(.system(size: 20, weight: .heavy)).lineLimit(2)
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -325,7 +326,7 @@ struct PressureDial: View {
                     .shadow(color: color.opacity(0.5), radius: 8)
                 // Recommended marker
                 Circle()
-                    .fill(.white)
+                    .fill(Theme.text)
                     .frame(width: 8, height: 8)
                     .offset(x: radius * CGFloat(cos(recAngle)), y: radius * CGFloat(sin(recAngle)))
                 Circle()
@@ -450,7 +451,7 @@ struct FaderView: View {
                     Capsule().fill(Theme.card2).frame(width: 8)
                     Capsule().fill(color).frame(width: 8, height: max(8, h * fraction(value)))
                     // recommended tick
-                    Capsule().fill(.white.opacity(0.55)).frame(width: 18, height: 2)
+                    Capsule().fill(Theme.text.opacity(0.45)).frame(width: 18, height: 2)
                         .offset(y: -(h - 2) * fraction(setting.value))
                     RoundedRectangle(cornerRadius: 5, style: .continuous)
                         .fill(.white)
@@ -473,7 +474,7 @@ struct FaderView: View {
             Text("\(value)")
                 .font(.system(size: 17, weight: .heavy, design: .rounded))
                 .contentTransition(.numericText(value: Double(value)))
-                .foregroundStyle(changed ? color : .white)
+                .foregroundStyle(changed ? color : Theme.text)
             Text("\(setting.short) · \(setting.direction)").font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.muted)
                 .lineLimit(1).minimumScaleFactor(0.8)
         }
@@ -517,7 +518,7 @@ struct TokenStack: View {
             .frame(height: 96, alignment: .bottom)
             Text("\(value)")
                 .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .foregroundStyle(value != recommended ? Theme.amber : .white)
+                .foregroundStyle(value != recommended ? Theme.amber : Theme.text)
             Text("Tokens").font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.muted)
         }
         .padding(.vertical, 10).padding(.horizontal, 4)

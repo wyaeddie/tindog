@@ -1,28 +1,43 @@
 import SwiftUI
 import UIKit
 
+/// Light / Dark / Automatic, chosen in Settings.
+enum Appearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+    var id: String { rawValue }
+    var title: String { self == .system ? "Automatic" : rawValue.capitalized }
+    var scheme: ColorScheme? { self == .light ? .light : self == .dark ? .dark : nil }
+}
+
+/// Every colour adapts to light and dark mode. Accents get a deeper shade in light mode so text stays readable on white.
 enum Theme {
     // Inputs
     static let accent = Color(hex: 0xFF7A1A)
-    static let gold = Color(hex: 0xFACC15)
-    static let teal = Color(hex: 0x2DD4BF)
-    static let violet = Color(hex: 0xA78BFA)
-    static let sky = Color(hex: 0x38BDF8)
-    static let amber = Color(hex: 0xFBBF24)
+    static let gold = Color(light: 0xCA8A04, dark: 0xFACC15)
+    static let teal = Color(light: 0x0F766E, dark: 0x2DD4BF)
+    static let violet = Color(light: 0x7C3AED, dark: 0xA78BFA)
+    static let sky = Color(light: 0x0284C7, dark: 0x38BDF8)
+    static let amber = Color(light: 0xB45309, dark: 0xFBBF24)
     // Output
-    static let go = Color(hex: 0x22C55E)
+    static let go = Color(light: 0x16A34A, dark: 0x22C55E)
     static let goBright = Color(hex: 0x16A34A)
     static let goDeep = Color(hex: 0x065F46)
     // Surfaces
-    static let background = Color(hex: 0x0D0F13)
-    static let panel = Color(hex: 0x15181E)
-    static let card = Color(hex: 0x1A1E25)
-    static let card2 = Color(hex: 0x20252E)
-    static let stroke = Color(hex: 0x262B34)
-    static let control = Color(hex: 0x1E222A)
-    static let muted = Color(hex: 0x8A919C)
-    static let warnBG = Color(hex: 0x2A2112)
-    static let warnText = Color(hex: 0xF5C26B)
+    static let background = Color(light: 0xF2F3F6, dark: 0x0D0F13)
+    static let panel = Color(light: 0xFFFFFF, dark: 0x15181E)
+    static let card = Color(light: 0xFFFFFF, dark: 0x1A1E25)
+    static let card2 = Color(light: 0xE9EBEF, dark: 0x20252E)
+    static let stroke = Color(light: 0xE0E3E8, dark: 0x262B34)
+    static let control = Color(light: 0xF1F2F5, dark: 0x1E222A)
+    static let muted = Color(light: 0x6B7280, dark: 0x8A919C)
+    static let warnBG = Color(light: 0xFFF4E0, dark: 0x2A2112)
+    static let warnText = Color(light: 0x9A5B00, dark: 0xF5C26B)
+    /// Main text and icons
+    static let text = Color(light: 0x111418, dark: 0xFFFFFF)
+    // Garage bike card
+    static let heroTop = Color(light: 0xFFFFFF, dark: 0x1E232C)
+    static let heroBottom = Color(light: 0xF1F3F6, dark: 0x14171D)
+    static let heroStroke = Color(light: 0xE0E3E8, dark: 0x2A303A)
 
     static let titleGradient = LinearGradient(colors: [accent, gold], startPoint: .leading, endPoint: .trailing)
 
@@ -40,6 +55,15 @@ enum Theme {
 }
 
 extension Color {
+    /// A colour that switches with light / dark mode.
+    init(light: UInt32, dark: UInt32) {
+        self.init(UIColor { traits in
+            let hex = traits.userInterfaceStyle == .dark ? dark : light
+            return UIColor(red: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255,
+                           blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+        })
+    }
+
     init(hex: UInt32) {
         self.init(red: Double((hex >> 16) & 0xFF) / 255,
                   green: Double((hex >> 8) & 0xFF) / 255,
@@ -170,7 +194,7 @@ struct ChipButton: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, compact ? 7 : 9)
             .padding(.horizontal, 8)
-            .foregroundStyle(selected ? Color.black : Color.white.opacity(0.85))
+            .foregroundStyle(selected ? Color.black : Theme.text.opacity(0.85))
             .background(selected ? Theme.accent : Theme.control,
                         in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)

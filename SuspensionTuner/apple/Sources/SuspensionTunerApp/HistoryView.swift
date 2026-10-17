@@ -62,7 +62,7 @@ struct HistoryRow: View {
                 }
             }
             if !entry.note.isEmpty {
-                Text("“\(entry.note)”").font(.callout).italic().foregroundStyle(.white.opacity(0.85))
+                Text("“\(entry.note)”").font(.callout).italic().foregroundStyle(Theme.text.opacity(0.85))
             }
             if expanded {
                 VStack(alignment: .leading, spacing: 2) {
@@ -129,6 +129,7 @@ struct SettingsView: View {
     @State private var confirmErase = false
     @State private var aboutShown = false
     @State private var showPaywall = false
+    @AppStorage("appearance") private var appearance: Appearance = .system
     @Environment(ProStore.self) private var pro
 
     var body: some View {
@@ -143,7 +144,7 @@ struct SettingsView: View {
                     } else {
                         Button { showPaywall = true } label: {
                             SettingsRow(icon: "bolt.fill", color: Theme.accent, title: "Unlock Pro",
-                                        subtitle: "Unlimited bikes, conditions, troubleshooter, log, widget")
+                                        subtitle: "Riding conditions, sag check, troubleshooter, unlimited bikes")
                         }
                         .buttonStyle(.plain)
                     }
@@ -153,6 +154,12 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(pro.busy)
+                }
+
+                SettingsGroup(title: "Appearance") {
+                    SegmentedRow(options: Appearance.allCases, selection: $appearance, title: \.title)
+                    Text("Automatic follows your iPhone's light / dark setting.")
+                        .font(.caption).foregroundStyle(Theme.muted)
                 }
 
                 SettingsGroup(title: "Units") {
@@ -232,7 +239,7 @@ struct SettingsRow: View {
                 .frame(width: 32, height: 32)
                 .background(color, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
             VStack(alignment: .leading, spacing: 1) {
-                Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(.white)
+                Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.text)
                 Text(subtitle).font(.caption).foregroundStyle(Theme.muted)
             }
             Spacer()

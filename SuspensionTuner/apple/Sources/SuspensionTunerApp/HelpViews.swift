@@ -31,10 +31,9 @@ struct HelpButton<Content: View>: View {
                 .frame(width: 330, alignment: .leading)
             }
             .frame(idealHeight: 460, maxHeight: 520)
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.text)
             .background(Theme.panel)
             .presentationCompactAdaptation(.popover)
-            .preferredColorScheme(.dark)
         }
     }
 }
@@ -55,7 +54,7 @@ struct HelpItem: View {
                 .background(color.opacity(0.15), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.subheadline.weight(.bold))
-                Text(text).font(.caption).foregroundStyle(.white.opacity(0.75))
+                Text(text).font(.caption).foregroundStyle(Theme.text.opacity(0.75))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -134,7 +133,7 @@ struct DampingHelp: View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Abbreviations").font(.caption.weight(.bold)).foregroundStyle(Theme.muted)
             Text("Reb rebound · LSR / HSR low- / high-speed rebound · LSC / HSC low- / high-speed compression")
-                .font(.caption).foregroundStyle(.white.opacity(0.75))
+                .font(.caption).foregroundStyle(Theme.text.opacity(0.75))
                 .fixedSize(horizontal: false, vertical: true)
             Text("Tip: change one dial at a time, 2 clicks at a time, and ride the same section to compare.")
                 .font(.caption).foregroundStyle(Theme.go)

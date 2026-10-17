@@ -4,6 +4,7 @@ import SuspensionKit
 /// App root: Garage · Tune · History · Settings
 struct RootView: View {
     @State private var store = GarageStore()
+    @AppStorage("appearance") private var appearance: Appearance = .system
 
     var body: some View {
         TabView(selection: $store.tab) {
@@ -21,8 +22,8 @@ struct RootView: View {
                 .tag(AppTab.settings)
         }
         .tint(Theme.accent)
-        .foregroundStyle(.white)
-        .preferredColorScheme(.dark)
+        .foregroundStyle(Theme.text)
+        .preferredColorScheme(appearance.scheme)
     }
 }
 
@@ -78,8 +79,8 @@ struct TrustNote: View {
                 .foregroundStyle(Theme.go)
             VStack(alignment: .leading, spacing: 4) {
                 Text("Built on the manufacturers' numbers").font(.subheadline.weight(.heavy))
-                Text("Air pressure, sag, volume spacers and damping clicks come straight from each maker's official setup charts and specifications for your weight. For more in-depth tuning, set your riding style and today's conditions — terrain, weather, pack and feel fine-tune that baseline.")
-                    .font(.caption).foregroundStyle(.white.opacity(0.75))
+                Text("Air pressure, sag, volume spacers and damping clicks come straight from each maker's official setup charts and specifications for your weight. For more in-depth tuning, set your riding style and riding conditions — terrain, weather, pack and feel fine-tune that baseline.")
+                    .font(.caption).foregroundStyle(Theme.text.opacity(0.75))
                     .fixedSize(horizontal: false, vertical: true)
                 Text("The rare model with no published chart is clearly marked as an estimate.")
                     .font(.caption2).foregroundStyle(Theme.muted)
@@ -98,8 +99,8 @@ struct GarageHelp: View {
     var body: some View {
         HelpItem(icon: "1.circle.fill", color: Theme.accent, title: "Pick your riding style",
                  text: "XC, Trail, Enduro, Bike Park or Downhill — what you're riding today.")
-        HelpItem(icon: "2.circle.fill", color: Theme.accent, title: "Set today's conditions",
-                 text: "Tap Today's conditions: terrain, wet or dry, temperature, pack, firm or plush feel, and whether you care more about climbing or descending.")
+        HelpItem(icon: "2.circle.fill", color: Theme.accent, title: "Set riding conditions",
+                 text: "Tap Riding conditions (Pro): terrain, wet or dry, temperature, pack, firm or plush feel, and whether you care more about climbing or descending.")
         HelpItem(icon: "3.circle.fill", color: Theme.accent, title: "Set up your bike",
                  text: "Tap + (or ••• → Edit bike): your weight and height, frame size, fork and shock models, travel, e-bike, tires and the frame's recommended sag.")
         HelpItem(icon: "4.circle.fill", color: Theme.accent, title: "Dial it in",
@@ -115,6 +116,7 @@ struct GarageHomeView: View {
     @State private var confirmDelete: Bike?
     @State private var checklistBike: Bike?
     @State private var paywallFeature: String?
+    @State private var showPaywall = false
     @Environment(ProStore.self) private var pro
 
     /// The first bike is free; more bikes are Pro.
@@ -162,11 +164,11 @@ struct GarageHomeView: View {
                     StepHeader(number: 1, title: "Today's ride", subtitle: "Riding style and conditions")
                     RideStylePicker(selection: bike.style) { store.setStyle($0, for: bike.id) }
                     RideConditionsCard(ride: bike.ride, locked: !pro.isPro,
-                                       onLocked: { paywallFeature = "Today's conditions" }) { store.setRide($0, for: bike.id) }
+                                       onLocked: { paywallFeature = "Riding conditions" }) { store.setRide($0, for: bike.id) }
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    StepHeader(number: 2, title: "Your bike", subtitle: "Tap rear or front to dial it in")
+                    StepHeader(number: 2, title: "Your bike", subtitle: "Tap F or R to dial it in · tap the bike to bounce it")
                     BikeHeroCard(store: store, bike: bike,
                                  onEdit: { editing = bike },
                                  onDelete: { confirmDelete = bike })
@@ -175,6 +177,10 @@ struct GarageHomeView: View {
                 }
 
                 TrustNote()
+
+                if !pro.isPro {
+                    ProPromoCard { paywallFeature = nil; showPaywall = true }
+                }
 
                 let others = store.bikes.filter { $0.id != bike.id }
                 if !others.isEmpty {
@@ -204,6 +210,7 @@ struct GarageHomeView: View {
             ChecklistView(store: store, bike: bike)
         }
         .paywall($paywallFeature)
+        .sheet(isPresented: $showPaywall) { PaywallView() }
         .confirmationDialog("Delete \(confirmDelete?.name ?? "bike")?",
                             isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),
                             titleVisibility: .visible) {
@@ -261,7 +268,10 @@ struct BikeHeroCard: View {
                 .accessibilityLabel("Bike options")
             }
 
-            BikeIllustration(hasFork: bike.fork != nil, hasShock: bike.shock != nil, variant: store.variant(for: bike))
+            InteractiveBike(hasFork: bike.fork != nil, hasShock: bike.shock != nil, variant: store.variant(for: bike)) { end in
+                store.tuneEnd = end
+                store.tab = .tune
+            }
                 .frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 2)
@@ -275,12 +285,12 @@ struct BikeHeroCard: View {
         .padding(16)
         .background {
             ZStack {
-                LinearGradient(colors: [Color(hex: 0x1E232C), Color(hex: 0x14171D)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(colors: [Theme.heroTop, Theme.heroBottom], startPoint: .topLeading, endPoint: .bottomTrailing)
                 RadialGradient(colors: [Theme.accent.opacity(0.32), .clear], center: .topTrailing, startRadius: 0, endRadius: 260)
             }
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         }
-        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).stroke(Color(hex: 0x2A303A)))
+        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).stroke(Theme.heroStroke))
     }
 }
 

@@ -64,9 +64,9 @@ final class GarageStore {
         set { data.useKilograms = newValue; save() }
     }
 
-    /// Which of the three bike drawings this bike uses (by its place in the garage; the 4th reuses the 1st).
+    /// Which of the six bike drawings this bike uses (by its place in the garage; the 7th reuses the 1st).
     func variant(for bike: Bike) -> Int {
-        (data.bikes.firstIndex { $0.id == bike.id } ?? 0) % 3
+        (data.bikes.firstIndex { $0.id == bike.id } ?? 0) % BikeIllustration.count
     }
 
     func model(_ bike: Bike, _ end: ComponentKind) -> SuspensionModel? { catalog.model(for: bike, end: end) }
