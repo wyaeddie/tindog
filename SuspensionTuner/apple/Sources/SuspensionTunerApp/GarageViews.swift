@@ -234,7 +234,7 @@ struct BikeHeroCard: View {
     private var subtitle: String {
         var parts = ["Size \(bike.rider.frameSize.rawValue)"]
         if let f = bike.fork { parts.append("F: \(Int(f.travelMm)) mm") }
-        if let r = bike.shock { parts.append("R: \(Int(r.travelMm)) mm") }
+        if bike.isHardtail { parts.append("Hardtail") } else if let r = bike.shock { parts.append("R: \(Int(r.travelMm)) mm") }
         parts.append(store.weightText(lb: bike.rider.weightLb))
         if bike.setup.eBike { parts.append("E-bike") }
         return parts.joined(separator: " · ")
@@ -269,7 +269,7 @@ struct BikeHeroCard: View {
             }
 
             InteractiveBike(hasFork: bike.fork != nil, hasShock: bike.shock != nil, variant: store.variant(for: bike),
-                            styleTrigger: bike.style) { end in
+                            hardtail: bike.isHardtail, paint: bike.color, styleTrigger: bike.style) { end in
                 store.tuneEnd = end
                 store.tab = .tune
             }
@@ -282,7 +282,11 @@ struct BikeHeroCard: View {
 
             // Rear on the left, front on the right — the same way round as the bike drawing.
             HStack(spacing: 10) {
-                EndSummaryCard(store: store, bike: bike, end: .shock, onAdd: onEdit)
+                if bike.isHardtail {
+                    HardtailCard()
+                } else {
+                    EndSummaryCard(store: store, bike: bike, end: .shock, onAdd: onEdit)
+                }
                 EndSummaryCard(store: store, bike: bike, end: .fork, onAdd: onEdit)
             }
         }
@@ -361,6 +365,22 @@ struct EndSummaryCard: View {
     }
 }
 
+/// Stands in for the rear card on a hardtail.
+struct HardtailCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("REAR · HARDTAIL").font(.carbon(12, .semibold)).tracking(2).foregroundStyle(Theme.muted)
+            Text("RIGID").font(.carbon(36, .bold, compressed: true)).foregroundStyle(Theme.muted)
+            Text("NO SHOCK TO SET").font(.mono(10.5)).foregroundStyle(Theme.faint)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .glassCard(20)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Hardtail, no rear shock to set up")
+    }
+}
+
 /// XC / Trail / Enduro / Park / DH tiles. Changing it re-tunes both ends.
 struct RideStylePicker: View {
     let selection: RidingStyle
@@ -404,7 +424,8 @@ struct BikeRow: View {
         let rec = store.recommendation(bike, mainEnd)
         HStack(spacing: 12) {
             BikeIllustration(hasFork: bike.fork != nil, hasShock: bike.shock != nil,
-                             variant: store.variant(for: bike), showBadges: false)
+                             variant: store.variant(for: bike), hardtail: bike.isHardtail, paint: bike.color,
+                             showBadges: false)
                 .frame(width: 84, height: 44)
                 .padding(.vertical, 2)
                 .background(Theme.card2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))

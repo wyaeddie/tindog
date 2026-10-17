@@ -64,6 +64,7 @@ share & print and the widget. Xcode runs use `apple/StoreKit/Products.storekit` 
 the real product as described in `apple/release/APP_STORE.md`.
 
 ## Trailside tools
+- **Hardtail or full suspension + frame colour** — set in Add/Edit bike. Hardtails lock out the rear-shock setup and get their own hardtail drawing; the colour you pick (12 factory-style paints) is the colour of your bike everywhere in the app.
 - **Step by step** — under the damping sliders on Tune, the same setup written out in plain words (pump to X psi, fit N spacers, turn the red knob fully clockwise then count N clicks out…) for riders who would rather read than read charts. Uses what you have set on the sliders.
 - **Feels off? (symptom troubleshooter)** — pick what the fork or shock is doing (harsh, bottoming, diving, kicking, packing down, bobbing…) and get fixes worked out against *your* current clicks, best first; apply them to the dials or log them to History.
 - **Sag check** — guided O-ring routine with a hold-still countdown, then type the mm you measured to get your sag % and the pressure (or spring) to try next.

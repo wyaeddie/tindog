@@ -60,6 +60,44 @@ public struct RanSetup: Codable, Hashable {
     public var isEmpty: Bool { springValue == nil && tokens == nil && clicks.isEmpty }
 }
 
+/// Full suspension or hardtail (no rear shock).
+public enum FrameType: String, Codable, CaseIterable, Identifiable {
+    case fullSuspension, hardtail
+    public var id: String { rawValue }
+    public var title: String { self == .hardtail ? "Hardtail" : "Full suspension" }
+}
+
+/// Frame paint, from the usual range of factory colours.
+public enum BikeColor: String, Codable, CaseIterable, Identifiable {
+    case black, raw, white, red, orange, yellow, lime, green, teal, blue, purple, pink
+    public var id: String { rawValue }
+
+    public var title: String {
+        switch self {
+        case .raw: return "Raw silver"
+        default: return rawValue.capitalized
+        }
+    }
+
+    /// Highlight, body and shadow shades for drawing the frame.
+    public var shades: (light: UInt32, mid: UInt32, dark: UInt32) {
+        switch self {
+        case .black: return (0x6B7280, 0x2A2D33, 0x0E0F12)
+        case .raw: return (0xF4F6F8, 0xC3C9D2, 0x8A929E)
+        case .white: return (0xFFFFFF, 0xEDEFF2, 0xBFC4CC)
+        case .red: return (0xFECACA, 0xEF4444, 0x991B1B)
+        case .orange: return (0xFED7AA, 0xF97316, 0x9A3412)
+        case .yellow: return (0xFEF08A, 0xFACC15, 0xA16207)
+        case .lime: return (0xD9F99D, 0x84CC16, 0x3F6212)
+        case .green: return (0xBBF7D0, 0x22C55E, 0x166534)
+        case .teal: return (0xA7F3E9, 0x2DD4BF, 0x0F766E)
+        case .blue: return (0xBAE6FD, 0x3B82F6, 0x1E3A8A)
+        case .purple: return (0xE4DBFF, 0xA78BFA, 0x6D28D9)
+        case .pink: return (0xFBCFE8, 0xEC4899, 0x9D174D)
+        }
+    }
+}
+
 public struct Bike: Codable, Identifiable, Hashable {
     public var id: UUID
     public var name: String
@@ -71,14 +109,18 @@ public struct Bike: Codable, Identifiable, Hashable {
     public var shockRan: RanSetup
     public var setup: BikeSetup
     public var ride: RideConditions
+    public var frameType: FrameType
+    /// Frame paint; nil = the drawing's own colour
+    public var color: BikeColor?
 
     public init(id: UUID = UUID(), name: String, rider: RiderProfile, style: RidingStyle = .trail,
                 fork: SuspensionSlot? = nil, shock: SuspensionSlot? = nil,
                 forkRan: RanSetup = RanSetup(), shockRan: RanSetup = RanSetup(),
-                setup: BikeSetup = BikeSetup(), ride: RideConditions = RideConditions()) {
+                setup: BikeSetup = BikeSetup(), ride: RideConditions = RideConditions(),
+                frameType: FrameType = .fullSuspension, color: BikeColor? = nil) {
         self.id = id; self.name = name; self.rider = rider; self.style = style
         self.fork = fork; self.shock = shock; self.forkRan = forkRan; self.shockRan = shockRan
-        self.setup = setup; self.ride = ride
+        self.setup = setup; self.ride = ride; self.frameType = frameType; self.color = color
     }
 
     public init(from decoder: Decoder) throws {
@@ -93,7 +135,13 @@ public struct Bike: Codable, Identifiable, Hashable {
         shockRan = try c.decodeIfPresent(RanSetup.self, forKey: .shockRan) ?? RanSetup()
         setup = try c.decodeIfPresent(BikeSetup.self, forKey: .setup) ?? BikeSetup()
         ride = try c.decodeIfPresent(RideConditions.self, forKey: .ride) ?? RideConditions()
+        // Bikes saved before frame type existed: a fork and no shock is a hardtail.
+        frameType = try c.decodeIfPresent(FrameType.self, forKey: .frameType)
+            ?? (shock == nil && fork != nil ? .hardtail : .fullSuspension)
+        color = try? c.decodeIfPresent(BikeColor.self, forKey: .color)
     }
+
+    public var isHardtail: Bool { frameType == .hardtail }
 
     /// The ends this bike has, front first.
     public var ends: [ComponentKind] {

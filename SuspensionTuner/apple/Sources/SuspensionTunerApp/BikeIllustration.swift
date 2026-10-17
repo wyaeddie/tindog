@@ -1,9 +1,10 @@
 import SwiftUI
 import SuspensionKit
 
-/// Full-suspension bike drawn natively (Canvas) with the fork (F) and shock (R) highlighted.
-/// Six looks — enduro, trail, downhill, XC race, e-MTB and freeride — so every saved bike is easy to
-/// tell apart; `variant` picks one and wraps after six. Animatable: `compression` (0…1) squats the
+/// Mountain bike drawn natively (Canvas) with the fork (F) and shock (R) highlighted.
+/// Six full-suspension looks — enduro, trail, downhill, XC race, e-MTB and freeride — so every saved bike
+/// is easy to tell apart (`variant` picks one and wraps after six), plus a hardtail. `paint` recolours the
+/// frame with the rider's chosen colour. Animatable: `compression` (0…1) squats the
 /// bike into its travel and `spin` turns the wheels, so taps can make it bounce.
 /// Coordinates are in a 340 × 176 design space and scaled to fit.
 struct BikeIllustration: View, Animatable {
@@ -12,6 +13,10 @@ struct BikeIllustration: View, Animatable {
     /// Dims the other end when one is focused (e.g. on the Tune screen).
     var focus: ComponentKind? = nil
     var variant = 0
+    /// Rigid rear end: no shock or linkage, seat stays run straight to the seat tube
+    var hardtail = false
+    /// Frame colour chosen by the rider (nil = the look's own colour)
+    var paint: BikeColor? = nil
     /// Hide the F / R badges (small thumbnails)
     var showBadges = true
     /// 0 = at rest, 1 = deep in the travel
@@ -38,7 +43,8 @@ struct BikeIllustration: View, Animatable {
         }
         .aspectRatio(Self.designSize.width / Self.designSize.height, contentMode: .fit)
         .accessibilityElement()
-        .accessibilityLabel("\(Self.geometry(variant).name) mountain bike with the fork and rear shock highlighted")
+        .accessibilityLabel(hardtail ? "\(paint.map { $0.title + " " } ?? "")hardtail mountain bike with the fork highlighted"
+                                     : "\(paint.map { $0.title + " " } ?? "")\(Self.geometry(variant).name) mountain bike with the fork and rear shock highlighted")
     }
 
     /// Where the F and R badges sit, in design coordinates (for tap targets laid over the drawing).
@@ -84,6 +90,14 @@ struct BikeIllustration: View, Animatable {
     }
 
     static func geometry(_ variant: Int) -> Geometry { all[((variant % count) + count) % count] }
+
+    /// Trail hardtail: slack front, short stays meeting the seat tube, no linkage.
+    static let hardtailGeometry =
+        Geometry(name: "Hardtail", frameColors: [0xF4F6F8, 0xC3C9D2, 0x8A929E], accent: 0xFF7A1A, tube: 0.92,
+                 seatTubeTop: (133, 40), topTube: ((136, 52), (224, 44)), headTube: ((222, 36), (232, 72)),
+                 downTubeEnd: (229, 68), seatStayTop: (137, 56), rocker: [], shock: ((0, 0), (0, 0)),
+                 shockStyle: .air, shockInside: false, seatPostTop: (128, 18),
+                 rBadge: (0, 0), rPointer: ((0, 0), (0, 0)), dualCrown: false, eBike: false)
 
     static let all: [Geometry] = [
         Geometry(name: "Enduro", frameColors: [0xF4F6F8, 0xC3C9D2, 0x8A929E], accent: 0xFF7A1A, tube: 1,
@@ -193,9 +207,17 @@ struct BikeIllustration: View, Animatable {
     // MARK: Draw
 
     private func draw(in ctx: inout GraphicsContext) {
-        let g = Self.geometry(variant)
+        let g = hardtail ? Self.hardtailGeometry : Self.geometry(variant)
         let dark = scheme == .dark
-        let frameStops = dark ? g.frameColors : [g.frameColors[1], g.frameColors[1], g.frameColors[2]]
+        let colors = paint.map { [$0.shades.light, $0.shades.mid, $0.shades.dark] } ?? g.frameColors
+        let frameStops = dark ? colors : [colors[1], colors[1], colors[2]]
+        // Keep the decals visible on bright paint
+        let accent: UInt32
+        if let paint {
+            accent = [BikeColor.yellow, .orange, .lime, .white].contains(paint) ? 0x1F242C : 0xF4F6F8
+        } else {
+            accent = g.accent
+        }
         let frame = GraphicsContext.Shading.linearGradient(
             Gradient(colors: frameStops.map { Color(hex: $0) }),
             startPoint: CGPoint(x: 110, y: 20), endPoint: CGPoint(x: 240, y: 130))
@@ -215,8 +237,8 @@ struct BikeIllustration: View, Animatable {
         wheel(&ctx, rear.0, rear.1, caliperAngle: -0.9)
         wheel(&ctx, front.0, front.1, caliperAngle: -2.3)
 
-        // Everything attached to the frame moves down with `drop`
-        func f(_ p: Pt) -> Pt { (p.0, p.1 + drop) }
+        // Everything attached to the frame moves down with `drop`; a hardtail pivots on the rear axle instead
+        func f(_ p: Pt) -> Pt { (p.0, p.1 + (hardtail ? drop * max(0, (p.0 - rear.0) / 200) : drop)) }
         let bb: Pt = f((152, 122))
 
         // Cassette + derailleur
@@ -242,18 +264,18 @@ struct BikeIllustration: View, Animatable {
                 tube(&ctx, bb, f(g.downTubeEnd), frame, 17)
                 let a = f((bb.0 + 14, bb.1 - 10)), b = f((g.downTubeEnd.0 - 12, g.downTubeEnd.1 + 9))
                 stroke(&ctx, path([a, b]), c(0x1F242C), 8)
-                stroke(&ctx, path([a, b]), .color(Color(hex: g.accent).opacity(0.85)), 2.2)
+                stroke(&ctx, path([a, b]), .color(Color(hex: accent).opacity(0.85)), 2.2)
             } else {
                 tube(&ctx, bb, f(g.downTubeEnd), frame, 11 * t)
                 // Decal stripe on the down tube
                 let a = f((bb.0 + 26, bb.1 - 18)), b = f((bb.0 + 46, bb.1 - 32))
-                stroke(&ctx, path([a, b]), .color(Color(hex: g.accent).opacity(0.9)), 2.4 * t)
+                stroke(&ctx, path([a, b]), .color(Color(hex: accent).opacity(0.9)), 2.4 * t)
             }
             tube(&ctx, f(g.topTube.0), f(g.topTube.1), frame, 7.5 * t)
             tube(&ctx, f(g.headTube.0), f(g.headTube.1), frame, 11)
             // Head badge
             let hb = f(((g.headTube.0.0 + g.headTube.1.0) / 2, (g.headTube.0.1 + g.headTube.1.1) / 2))
-            ctx.fill(circle(hb.0, hb.1, 2.6), with: .color(Color(hex: g.accent)))
+            ctx.fill(circle(hb.0, hb.1, 2.6), with: .color(Color(hex: accent)))
             // Cables from the head tube into the frame
             var cable = Path()
             cable.move(to: CGPoint(x: f(g.headTube.0).0 + 2, y: f(g.headTube.0).1 - 6))
@@ -262,21 +284,25 @@ struct BikeIllustration: View, Animatable {
             stroke(&ctx, cable, c(0x111318), 1.1)
         }
 
-        if !g.shockInside { drawShock(&ctx, g, f, shockAlpha) }
-        // Rocker link
-        var rocker = path(g.rocker.map(f))
-        rocker.closeSubpath()
-        frontTriangle(&ctx)
-        if g.shockInside { drawShock(&ctx, g, f, shockAlpha) }
-        ctx.fill(rocker, with: c(0x2A3039))
-        stroke(&ctx, rocker, frame, 3.2)
-        for p in g.rocker.map(f) { ctx.fill(circle(p.0, p.1, 1.6), with: c(0xC3C9D2)) }
+        if hardtail {
+            frontTriangle(&ctx)
+        } else {
+            if !g.shockInside { drawShock(&ctx, g, f, shockAlpha) }
+            // Rocker link
+            var rocker = path(g.rocker.map(f))
+            rocker.closeSubpath()
+            frontTriangle(&ctx)
+            if g.shockInside { drawShock(&ctx, g, f, shockAlpha) }
+            ctx.fill(rocker, with: c(0x2A3039))
+            stroke(&ctx, rocker, frame, 3.2)
+            for p in g.rocker.map(f) { ctx.fill(circle(p.0, p.1, 1.6), with: c(0xC3C9D2)) }
+        }
 
         // E-bike motor
         if g.eBike {
             ctx.fill(Path(roundedRect: CGRect(x: bb.0 - 16, y: bb.1 - 14, width: 30, height: 24), cornerRadius: 7), with: c(0x1F242C))
             stroke(&ctx, Path(roundedRect: CGRect(x: bb.0 - 16, y: bb.1 - 14, width: 30, height: 24), cornerRadius: 7),
-                   .color(Color(hex: g.accent).opacity(0.7)), 1.2)
+                   .color(Color(hex: accent).opacity(0.7)), 1.2)
         }
 
         // Fork: lowers stay on the axle, stanchions slide into them as the bike compresses
@@ -314,7 +340,7 @@ struct BikeIllustration: View, Animatable {
         stroke(&ctx, path([f(g.seatTubeTop), f(g.seatPostTop)]), c(0x1F242C), 6)
         let stem = f(g.seatTubeTop)
         stroke(&ctx, path([(stem.0 - 0.8, stem.1 - 3), (stem.0 - 3.8, stem.1 - 15)]), c(0x9AA1AC), 3)
-        stroke(&ctx, path([(stem.0 + 3.5, stem.1 + 1), (stem.0 - 3.5, stem.1 - 1)]), .color(Color(hex: g.accent)), 2.4)
+        stroke(&ctx, path([(stem.0 + 3.5, stem.1 + 1), (stem.0 - 3.5, stem.1 - 1)]), .color(Color(hex: accent)), 2.4)
         let sp = f(g.seatPostTop)
         var saddle = Path()
         saddle.move(to: CGPoint(x: sp.0 - 19, y: sp.1 - 2))
@@ -341,7 +367,7 @@ struct BikeIllustration: View, Animatable {
             stroke(&fb, path([(276, 60), (252, 84 + drop * 0.5)]), .color(Theme.accent), 1.5, dash: [2, 2])
             badge(&fb, "F", at: CGPoint(x: 286, y: 54), color: Theme.accent)
         }
-        if hasShock {
+        if hasShock && !hardtail {
             var rb = ctx
             rb.opacity = shockAlpha
             stroke(&rb, path([g.rPointer.0, f(g.rPointer.1)]), .color(Color(hex: 0xFACC15)), 1.5, dash: [2, 2])
@@ -351,7 +377,7 @@ struct BikeIllustration: View, Animatable {
 
     /// Rear shock: body + spring (coil or air can), optional piggyback reservoir, eyelets.
     private func drawShock(_ ctx: inout GraphicsContext, _ g: Geometry, _ f: (Pt) -> Pt, _ alpha: Double) {
-        guard hasShock else { return }
+        guard hasShock, !hardtail else { return }
         var s = ctx
         s.opacity = alpha
         let a = f(g.shock.0)
@@ -401,6 +427,8 @@ struct InteractiveBike: View {
     let hasFork: Bool
     let hasShock: Bool
     let variant: Int
+    var hardtail = false
+    var paint: BikeColor? = nil
     /// Bounces the bike whenever the riding style changes, so the re-tune is visible
     var styleTrigger: RidingStyle? = nil
     let onSelectEnd: (ComponentKind) -> Void
@@ -410,7 +438,7 @@ struct InteractiveBike: View {
     @State private var taps = 0
 
     var body: some View {
-        BikeIllustration(hasFork: hasFork, hasShock: hasShock, variant: variant,
+        BikeIllustration(hasFork: hasFork, hasShock: hasShock, variant: variant, hardtail: hardtail, paint: paint,
                          compression: compression, spin: spin)
             .contentShape(Rectangle())
             .onTapGesture { bounce() }
@@ -418,7 +446,7 @@ struct InteractiveBike: View {
                 GeometryReader { geo in
                     let centers = BikeIllustration.badgeCenters(variant: variant)
                     if hasFork { badgeButton(.fork, at: BikeIllustration.point(centers.front, in: geo.size)) }
-                    if hasShock { badgeButton(.shock, at: BikeIllustration.point(centers.rear, in: geo.size)) }
+                    if hasShock && !hardtail { badgeButton(.shock, at: BikeIllustration.point(centers.rear, in: geo.size)) }
                 }
             }
             .sensoryFeedback(.impact(weight: .medium), trigger: taps)

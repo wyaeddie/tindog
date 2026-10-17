@@ -40,6 +40,10 @@ struct BikeEditorView: View {
     @State private var skill: Skill
     @State private var position: RidingPosition
     @State private var setup: BikeSetup
+    @State private var frameType: FrameType
+    @State private var paint: BikeColor
+    /// Which drawing this bike gets (new bikes take the next one in the rack)
+    private let variant: Int
 
     init(store: GarageStore, bike: Bike) {
         let isNewBike = !store.bikes.contains { $0.id == bike.id }
@@ -59,7 +63,13 @@ struct BikeEditorView: View {
         _skill = State(initialValue: bike.rider.skill)
         _position = State(initialValue: bike.rider.position)
         _setup = State(initialValue: bike.setup)
+        _frameType = State(initialValue: bike.frameType)
+        let variant = isNewBike ? store.bikes.count % BikeIllustration.count : store.variant(for: bike)
+        self.variant = variant
+        _paint = State(initialValue: bike.color ?? BikeColor.defaultFor(variant: variant))
     }
+
+    private var hardtail: Bool { frameType == .hardtail }
 
     private var weightLb: Double? {
         guard let v = Double(weightText.replacingOccurrences(of: ",", with: ".")) else { return nil }
@@ -77,9 +87,9 @@ struct BikeEditorView: View {
         if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return "Give the bike a name." }
         guard let lb = weightLb, (66...396).contains(lb) else { return "Enter the rider's weight." }
         guard let h = heightIn, (48...90).contains(h) else { return "Enter the rider's height in feet and inches." }
-        if !fork.enabled && !shock.enabled { return "Add a fork or a rear shock." }
+        if hardtail && !fork.enabled { return "Add a fork — it's the only suspension on a hardtail." }
         if fork.enabled && fork.modelID == nil { return "Choose a fork model, or switch the fork off." }
-        if shock.enabled && shock.modelID == nil { return "Choose a shock model, or switch it off for a hardtail." }
+        if !hardtail && shock.modelID == nil { return "Choose a rear shock model, or pick Hardtail." }
         return nil
     }
 
@@ -120,12 +130,38 @@ struct BikeEditorView: View {
                     Panel {
                         VStack(alignment: .leading, spacing: 12) {
                             SectionLabel(text: "Bike details", color: Theme.teal)
+                            BikeIllustration(hasFork: fork.enabled, hasShock: !hardtail, variant: variant,
+                                             hardtail: hardtail, paint: paint, showBadges: false)
+                                .frame(maxWidth: 320)
+                                .frame(maxWidth: .infinity)
+                                .animation(.snappy, value: paint)
+                            FactorRow(title: "Frame", options: FrameType.allCases, selection: $frameType.animation(.snappy),
+                                      label: \.title)
+                            BikeColorPicker(selection: $paint)
                             BikeSetupEditor(setup: $setup)
                         }
                     }
                     PartEditor(title: "Front · Fork", kind: .fork, draft: $fork, catalog: store.catalog, color: Theme.accent)
-                    PartEditor(title: "Rear · Shock", kind: .shock, draft: $shock, catalog: store.catalog, color: Theme.gold)
-                    if shock.enabled {
+                    if hardtail {
+                        Panel {
+                            HStack(spacing: 10) {
+                                Image(systemName: "lock.fill").foregroundStyle(Theme.muted)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    SectionLabel(text: "Rear · Shock", color: Theme.muted)
+                                    Text("Hardtail — no rear shock to set up. Switch Frame to Full suspension to add one.")
+                                        .font(.caption).foregroundStyle(Theme.muted)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                                Spacer(minLength: 0)
+                            }
+                        }
+                        .opacity(0.7)
+                        .accessibilityElement(children: .combine)
+                    } else {
+                        PartEditor(title: "Rear · Shock", kind: .shock, draft: $shock, catalog: store.catalog,
+                                   color: Theme.gold, canSwitchOff: false)
+                    }
+                    if !hardtail {
                         Panel {
                             VStack(alignment: .leading, spacing: 14) {
                                 FrameSagEditor(frameRearSag: $setup.frameRearSag)
@@ -133,12 +169,12 @@ struct BikeEditorView: View {
                             }
                         }
                     }
-                    if fork.enabled || shock.enabled {
+                    if fork.enabled || !hardtail {
                         Panel {
                             VStack(alignment: .leading, spacing: 10) {
                                 SectionLabel(text: "Hours since last service", color: Theme.warnText)
                                 if fork.enabled { ServiceHoursField(title: "Fork", hours: $setup.forkHours) }
-                                if shock.enabled { ServiceHoursField(title: "Shock", hours: $setup.shockHours) }
+                                if !hardtail { ServiceHoursField(title: "Shock", hours: $setup.shockHours) }
                                 Text("Leave at 0 if you don't know. You'll get a reminder when a service is due.")
                                     .font(.caption).foregroundStyle(Theme.muted)
                             }
@@ -181,8 +217,12 @@ struct BikeEditorView: View {
         cleaned.shockHours = max(0, cleaned.shockHours)
         bike.setup = cleaned
         bike.style = style
+        bike.frameType = frameType
+        bike.color = paint
         let newFork = fork.slot
-        let newShock = shock.slot
+        var shockDraft = shock
+        shockDraft.enabled = !hardtail
+        let newShock = shockDraft.slot
         // A different model means the recorded "ran" clicks no longer apply.
         if newFork?.modelID != bike.fork?.modelID { bike.forkRan = RanSetup() }
         if newShock?.modelID != bike.shock?.modelID { bike.shockRan = RanSetup() }
@@ -200,16 +240,22 @@ struct PartEditor: View {
     @Binding var draft: PartDraft
     let catalog: Catalog
     let color: Color
+    /// The fork can be switched off (rigid); a full-suspension bike always has a shock.
+    var canSwitchOff = true
 
     var body: some View {
         Panel {
             VStack(alignment: .leading, spacing: 12) {
-                Toggle(isOn: $draft.enabled.animation(.snappy)) {
+                if canSwitchOff {
+                    Toggle(isOn: $draft.enabled.animation(.snappy)) {
+                        SectionLabel(text: title, color: color)
+                    }
+                    .tint(color)
+                } else {
                     SectionLabel(text: title, color: color)
                 }
-                .tint(color)
 
-                if draft.enabled {
+                if draft.enabled || !canSwitchOff {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
                         ForEach(catalog.brands(for: kind), id: \.self) { brand in
                             ChipButton(title: brand, selected: draft.brand == brand, compact: true,
@@ -242,7 +288,7 @@ struct PartEditor: View {
                         }
                     }
                 } else {
-                    Text(kind == .fork ? "Rigid fork" : "Hardtail — no rear shock")
+                    Text(kind == .fork ? "Rigid fork" : "No rear shock")
                         .font(.caption).foregroundStyle(Theme.muted)
                 }
             }
@@ -255,5 +301,54 @@ struct PartEditor: View {
             draft.travel = m.travel.default
             draft.stroke = m.stroke?.default ?? 0
         }
+    }
+}
+
+/// Frame colour swatches.
+struct BikeColorPicker: View {
+    @Binding var selection: BikeColor
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("COLOUR").font(.carbon(12, .semibold)).tracking(1.6).foregroundStyle(Theme.muted)
+                Spacer()
+                Text(selection.title.uppercased()).font(.carbon(12, .bold)).tracking(1.2)
+            }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6), spacing: 10) {
+                ForEach(BikeColor.allCases) { color in
+                    let on = color == selection
+                    Button { withAnimation(.snappy) { selection = color } } label: {
+                        Circle()
+                            .fill(LinearGradient(colors: [Color(hex: color.shades.light), Color(hex: color.shades.mid), Color(hex: color.shades.dark)],
+                                                 startPoint: .topLeading, endPoint: .bottomTrailing))
+                            .frame(width: 34, height: 34)
+                            .overlay(Circle().stroke(Theme.stroke))
+                            .overlay {
+                                if on {
+                                    Image(systemName: "checkmark").font(.system(size: 13, weight: .black))
+                                        .foregroundStyle([BikeColor.white, .yellow, .lime, .raw].contains(color) ? Color.black : .white)
+                                }
+                            }
+                            .padding(3)
+                            .overlay(Circle().stroke(on ? Theme.accent : .clear, lineWidth: 2))
+                            .frame(maxWidth: .infinity)
+                            .contentShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(color.title)
+                    .accessibilityAddTraits(on ? .isSelected : [])
+                }
+            }
+        }
+        .sensoryFeedback(.selection, trigger: selection)
+    }
+}
+
+extension BikeColor {
+    /// The colour each drawing comes in, so an unpainted bike keeps its look.
+    static func defaultFor(variant: Int) -> BikeColor {
+        let looks: [BikeColor] = [.raw, .teal, .purple, .red, .black, .blue]
+        return looks[((variant % looks.count) + looks.count) % looks.count]
     }
 }

@@ -81,4 +81,23 @@ final class GarageTests: XCTestCase {
         XCTAssertEqual(GarageData(bikes: [bike], selectedBikeID: UUID()).selectedBike?.id, bike.id)
         XCTAssertNil(GarageData().selectedBike)
     }
+
+    func testFrameTypeAndColorRoundTripAndOldBikesInferHardtail() throws {
+        let rider = RiderProfile(weightLb: 180, heightIn: 70, frameSize: .M)
+        let ht = Bike(name: "HT", rider: rider, fork: SuspensionSlot(modelID: "fox-34-factory", travelMm: 130),
+                      frameType: .hardtail, color: .lime)
+        let back = try GarageData.decode(GarageData(bikes: [ht]).encoded()).bikes[0]
+        XCTAssertEqual(back.frameType, .hardtail)
+        XCTAssertEqual(back.color, .lime)
+        XCTAssertTrue(back.isHardtail)
+
+        // Saved by an older version: no frameType or color keys
+        var json = try JSONSerialization.jsonObject(with: GarageData(bikes: [ht]).encoded()) as! [String: Any]
+        var bikes = json["bikes"] as! [[String: Any]]
+        bikes[0].removeValue(forKey: "frameType"); bikes[0].removeValue(forKey: "color")
+        json["bikes"] = bikes
+        let old = try GarageData.decode(JSONSerialization.data(withJSONObject: json)).bikes[0]
+        XCTAssertEqual(old.frameType, .hardtail)                         // fork, no shock
+        XCTAssertNil(old.color)
+    }
 }
