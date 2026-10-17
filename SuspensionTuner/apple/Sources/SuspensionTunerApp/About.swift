@@ -84,3 +84,58 @@ struct AboutView: View {
         .font(.callout)
     }
 }
+
+/// Settings → Disclaimer
+struct DisclaimerView: View {
+    private let sections: [(String, String, String)] = [
+        ("exclamationmark.shield.fill", "Starting points, not guarantees",
+         "Suspension Tuner's recommendations come from manufacturers' published setup charts and specifications where available, and from calculated estimates where they aren't (clearly marked in the app). They are starting points for setting up your suspension. They are not a substitute for your product's owner's manual, the manufacturer's instructions, or a qualified bicycle mechanic."),
+        ("gauge.with.dots.needle.67percent", "Never exceed the product's limits",
+         "Always follow the maximum air pressure, maximum volume spacer count, spring rate and preload limits printed on your fork or shock or in its manual. If anything in the app differs from your product's own documentation, follow the documentation."),
+        ("ruler.fill", "Check before you ride",
+         "Check sag and every setting yourself, confirm the bike works correctly, and test changes gradually in a safe, controlled area before riding hard. Manufacturer data can change between model years and versions, so confirm it matches your exact product."),
+        ("wrench.and.screwdriver.fill", "Service and repairs",
+         "Service intervals shown are general guidance. Have suspension serviced and repaired by a qualified technician, following the manufacturer's procedures."),
+        ("figure.outdoor.cycle", "Ride at your own risk",
+         "Mountain biking is a dangerous activity that can lead to serious injury or death. You are responsible for your bike, your equipment and how you ride. To the fullest extent permitted by law, \(AppInfo.company) is not liable for any injury, loss or damage arising from the use of this app or its recommendations."),
+        ("c.circle.fill", "Trademarks",
+         "Brand and model names are trademarks of their respective owners. Suspension Tuner is not affiliated with, sponsored by or endorsed by any suspension manufacturer."),
+    ]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Disclaimer").font(.system(size: 32, weight: .heavy))
+                Text("Please read before using Suspension Tuner's recommendations.")
+                    .font(.callout).foregroundStyle(Theme.muted)
+                ForEach(sections, id: \.1) { icon, title, text in
+                    HStack(alignment: .top, spacing: 12) {
+                        Image(systemName: icon).font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Theme.accent)
+                            .frame(width: 30, height: 30)
+                            .background(Theme.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(title).font(.subheadline.weight(.heavy))
+                            Text(text).font(.callout).foregroundStyle(Theme.text.opacity(0.8))
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .padding(14)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+                }
+                Text("© \(AppInfo.year) \(AppInfo.company). All rights reserved.")
+                    .font(.caption).foregroundStyle(Theme.muted)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 4)
+            }
+            .padding(18)
+            .frame(maxWidth: 680)
+            .frame(maxWidth: .infinity)
+        }
+        .background(Theme.background.ignoresSafeArea())
+        .navigationTitle("Disclaimer")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}

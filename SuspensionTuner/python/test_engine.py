@@ -15,7 +15,7 @@ def values(rec):
 class EngineTests(unittest.TestCase):
     # These golden values are duplicated in EngineTests.swift to keep both engines in lockstep.
     def test_fox36_reads_fox_chart(self):
-        rec = calculate(MODELS["fox-36-factory"], RiderInput(**RIDER, style="enduro", travel_mm=150))
+        rec = calculate(MODELS["fox-36-factory"], RiderInput(**RIDER, style="trail", travel_mm=150))   # trail = maker's baseline
         v = values(rec)
         self.assertEqual(rec.headline_value, "89")      # 84 kg = 185 lb → 180–190 lb row
         self.assertEqual(rec.quality, "manufacturer")
@@ -55,7 +55,7 @@ class EngineTests(unittest.TestCase):
     def test_dhx2_coil_rate_and_rate_table(self):
         rec = calculate(MODELS["fox-dhx2-factory"], RiderInput(**RIDER, style="park", travel_mm=160, stroke_mm=62.5))
         self.assertEqual(rec.headline_value, "475")
-        self.assertEqual(values(rec)["Low-speed rebound"], "8 clicks out")
+        self.assertEqual(values(rec)["Low-speed rebound"], "7 clicks out")   # chart 8, 1 slower for bike park
 
     def test_kitsuma_coil_estimate(self):
         rec = calculate(MODELS["cane-creek-kitsuma-coil"],
@@ -102,7 +102,7 @@ class EngineTests(unittest.TestCase):
         self.assertEqual((rec.trail_psi, rec.headline_value), (89, "95"))
 
     def test_terrain_and_skill_nudge_clicks(self):
-        v = values(self._fox36(terrain="rough"))
+        v = values(calculate(MODELS["fox-36-factory"], RiderInput(**RIDER, style="trail", travel_mm=150, terrain="rough")))
         self.assertEqual(v["Low-speed rebound"], "7 clicks out")
         self.assertEqual(v["High-speed compression"], "6 clicks out")
         v = values(self._fox36(skill="aggressive"))
@@ -126,6 +126,21 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(rec.service_due)
         rec = calculate(MODELS["rockshox-lyrik-ultimate"], RiderInput(**RIDER, style="enduro", travel_mm=150, service_hours=60))
         self.assertTrue(rec.service_due)
+
+    def test_riding_style_adjusts_maker_baseline(self):
+        def fox(style):
+            r = calculate(MODELS["fox-36-factory"], RiderInput(**RIDER, style=style, travel_mm=150))
+            return r, values(r)
+        r, v = fox("enduro")
+        self.assertEqual((r.headline_value, v["High-speed compression"]), ("89", "4 clicks out"))
+        r, v = fox("park")
+        self.assertEqual((v["High-speed compression"], v["Low-speed compression"], v["Low-speed rebound"], r.tokens),
+                         ("3 clicks out", "9 clicks out", "5 clicks out", 3))
+        r, v = fox("dh")
+        self.assertEqual((r.sag_percent, r.headline_value, v["High-speed compression"], v["Low-speed rebound"], r.tokens),
+                         (20, "83", "3 clicks out", "7 clicks out", 3))
+        r, v = fox("xc")
+        self.assertEqual((r.sag_percent, r.headline_value, v["Low-speed compression"]), (15, "96", "9 clicks out"))
 
     def test_xc_and_downhill_styles(self):
         self.assertEqual(calculate(MODELS["ext-aria"], RiderInput(**RIDER, style="dh", travel_mm=150, stroke_mm=57.5)).sag_percent, 33)

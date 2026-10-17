@@ -94,7 +94,17 @@ Still estimates (no official chart found): Öhlins RXC34 m.1, Öhlins TTX Flow, 
 Anything a maker doesn't publish is calculated and labelled **Estimate** in the app (a badge at the top of each result shows Manufacturer chart / Partly manufacturer / Estimate and links to the guide):
 - **Coil spring rate** is always calculated, because it depends on the frame's leverage: weight with 5 kg gear × rear load × leverage ÷ (sag × stroke), rounded to 25 lb/in.
 - **Models without a chart** (Öhlins RXC34, TTX Flow, EXT Aria) and anything a maker doesn't publish (often damping clicks) use the older formula: per-model pressure ratio × weight with gear × front/rear split × sag factor, with style-based sag (fork 20/22/23%, shock 28/30/31%) and damping that firms up with weight and riding style.
-- Manufacturer charts don't change with riding style, so for those models the style only changes the advice.
+- **Riding style on top of the maker's numbers.** Trail is the maker's baseline as is. The other styles adjust it, and each change is listed on its setting:
+
+  | Style | Adjustment |
+  |---|---|
+  | XC | Firm end of the sag range (a few psi more), LSC 1 firmer |
+  | Trail | None — maker's baseline |
+  | Enduro | HSC 1 firmer |
+  | Bike Park | HSC 2 firmer, LSC 1 firmer, rebound 1 slower, +1 volume spacer |
+  | Downhill | Plush end of the sag range (a few psi less), HSC 2 firmer, rebound 1 faster, +1 volume spacer |
+
+  A firm or plush feel in Riding conditions overrides the style's sag position. Estimated models already include style in their formula.
 
 ### Other factors
 Set per bike (bike editor) or per ride (Garage → Riding conditions). With everything at its default the numbers are exactly the maker's chart.

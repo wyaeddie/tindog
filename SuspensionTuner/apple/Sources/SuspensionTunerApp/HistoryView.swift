@@ -190,6 +190,16 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
                 }
 
+                SettingsGroup(title: "Legal") {
+                    NavigationLink {
+                        DisclaimerView()
+                    } label: {
+                        SettingsRow(icon: "exclamationmark.shield.fill", color: Theme.warnText, title: "Disclaimer",
+                                    subtitle: "Starting points, product limits and riding at your own risk")
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 SettingsGroup(title: "Data") {
                     Button(role: .destructive) { confirmErase = true } label: {
                         SettingsRow(icon: "trash.fill", color: .red, title: "Erase all bikes and history",

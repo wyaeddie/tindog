@@ -98,7 +98,7 @@ struct TrustNote: View {
 struct GarageHelp: View {
     var body: some View {
         HelpItem(icon: "1.circle.fill", color: Theme.accent, title: "Pick your riding style",
-                 text: "XC, Trail, Enduro, Bike Park or Downhill — what you're riding today.")
+                 text: "XC, Trail, Enduro, Bike Park or Downhill. Trail uses the maker's numbers as is; the others fine-tune sag, compression, rebound and spacers for that kind of riding.")
         HelpItem(icon: "2.circle.fill", color: Theme.accent, title: "Set riding conditions",
                  text: "Tap Riding conditions (Pro): terrain, wet or dry, temperature, pack, firm or plush feel, and whether you care more about climbing or descending.")
         HelpItem(icon: "3.circle.fill", color: Theme.accent, title: "Set up your bike",
@@ -141,7 +141,7 @@ struct GarageHomeView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(greeting).font(.subheadline.weight(.bold)).foregroundStyle(Theme.accent)
                     HStack(spacing: 4) {
-                        Text("My Garage").font(.system(size: 32, weight: .heavy))
+                        Text("My Bike Rack").font(.system(size: 32, weight: .heavy))
                         HelpButton(title: "How to dial it in", arrowEdge: .top) { GarageHelp() }
                     }
                 }
@@ -197,7 +197,7 @@ struct GarageHomeView: View {
                     }
                 }
             } else {
-                EmptyStateCard(icon: "bicycle", title: "Build your garage",
+                EmptyStateCard(icon: "bicycle", title: "Build your bike rack",
                                message: "Add your bike once — fork, shock and rider. Then pick today's riding and get both ends dialed from the manufacturer's own charts.",
                                button: "Add bike") { editing = .blank() }
                 TrustNote()
@@ -247,9 +247,9 @@ struct BikeHeroCard: View {
                     Text(subtitle).font(.footnote).foregroundStyle(Theme.muted)
                 }
                 Spacer()
-                Label("Tuned", systemImage: "circle.fill")
-                    .labelStyle(TightLabelStyle())
-                    .font(.caption.weight(.semibold))
+                Label(bike.style.title, systemImage: bike.style.icon)
+                    .font(.caption.weight(.bold))
+                    .contentTransition(.opacity)
                     .foregroundStyle(Theme.go)
                     .padding(.horizontal, 10).padding(.vertical, 5)
                     .background(Theme.go.opacity(0.14), in: Capsule())
@@ -268,7 +268,8 @@ struct BikeHeroCard: View {
                 .accessibilityLabel("Bike options")
             }
 
-            InteractiveBike(hasFork: bike.fork != nil, hasShock: bike.shock != nil, variant: store.variant(for: bike)) { end in
+            InteractiveBike(hasFork: bike.fork != nil, hasShock: bike.shock != nil, variant: store.variant(for: bike),
+                            styleTrigger: bike.style) { end in
                 store.tuneEnd = end
                 store.tab = .tune
             }
@@ -370,15 +371,7 @@ struct RideStylePicker: View {
     let selection: RidingStyle
     let onSelect: (RidingStyle) -> Void
 
-    private func icon(_ style: RidingStyle) -> String {
-        switch style {
-        case .xc: return "stopwatch.fill"
-        case .trail: return "tree.fill"
-        case .enduro: return "mountain.2.fill"
-        case .park: return "figure.outdoor.cycle"
-        case .dh: return "flame.fill"
-        }
-    }
+    private func icon(_ style: RidingStyle) -> String { style.icon }
 
     var body: some View {
         HStack(spacing: 6) {
@@ -466,5 +459,18 @@ struct EmptyStateCard: View {
         .padding(.vertical, 36).padding(.horizontal, 20)
         .background(Theme.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).stroke(Theme.stroke))
+    }
+}
+
+extension RidingStyle {
+    /// Tile and chip icon for each riding style
+    var icon: String {
+        switch self {
+        case .xc: return "stopwatch.fill"
+        case .trail: return "tree.fill"
+        case .enduro: return "mountain.2.fill"
+        case .park: return "figure.outdoor.cycle"
+        case .dh: return "flame.fill"
+        }
     }
 }

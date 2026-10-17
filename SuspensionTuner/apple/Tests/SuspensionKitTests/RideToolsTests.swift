@@ -6,7 +6,7 @@ final class RideToolsTests: XCTestCase {
     func rec(_ id: String, travel: Double, stroke: Double = 0) -> Recommendation {
         let m = catalog.models.first { $0.id == id }!
         return SuspensionEngine.calculate(model: m, rider: RiderInput(weightKg: 84, heightCm: 180, frameSize: .L,
-                                                                     style: .enduro, travelMm: travel, strokeMm: stroke))
+                                                                     style: .trail, travelMm: travel, strokeMm: stroke))   // trail = maker's baseline
     }
 
     func testBottomingOutAddsSpacerFirst() {

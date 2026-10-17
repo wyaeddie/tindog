@@ -228,7 +228,10 @@ public enum SuspensionEngine {
             base = styleSag; lo = styleSag - 2; hi = styleSag + 2; makerMid = styleSag
             if mfg != nil { estimated.append("sag target") }
         }
-        let target = ride.feel == .firm ? lo : ride.feel == .plush ? hi : base
+        // Riding style picks where in the maker's (or frame's) range to sit; a firm/plush feel overrides it.
+        let rangeFromMaker = makerSag != nil || (!isFork && (bk.frameRearSag ?? 0) > 0)
+        let styleTarget = !rangeFromMaker ? base : style == .xc ? lo : style == .dh ? hi : base
+        let target = ride.feel == .firm ? lo : ride.feel == .plush ? hi : styleTarget
         let sagPct = roundHalfUp(target)
         let sag = Double(sagPct) / 100
         let sagMm = (isFork ? rider.travelMm : rider.strokeMm) * sag
@@ -334,7 +337,8 @@ public enum SuspensionEngine {
                                     detail: "Calculated for \(sagPct)% sag at a \(f2(leverage)):1 leverage ratio — coil rates depend on the frame, so makers don't chart them. Use 1–2 turns of preload at most."))
         }
 
-        let feelText = ride.feel == .balanced ? "" : " \(ride.feel.title) end of \(sagRangeText)."
+        let feelText = ride.feel != .balanced ? " \(ride.feel.title) end of \(sagRangeText)."
+            : styleTarget != base ? " \(style.title): \(style == .xc ? "firm" : "plush") end of \(sagRangeText)." : ""
         settings.append(Setting(label: "Sag", value: "\(sagPct)%  ·  \(f1(sagMm)) mm",
                                 detail: sagNote + (isFork ? "Measured on the stanchion." : "Measured on the shock shaft, seated in attack position.") + feelText))
 
@@ -373,6 +377,24 @@ public enum SuspensionEngine {
         }
         if bk.eBike { reb.append(Nudge(reason: "e-bike", amount: 1)) }
 
+        // Riding style on top of the maker's baseline (estimates already include style).
+        var sReb: [Nudge] = [], sLsc: [Nudge] = [], sHsc: [Nudge] = [], sTok: [Nudge] = []
+        let styleWhy = "\(style.title) riding"
+        switch style {
+        case .xc: sLsc.append(Nudge(reason: styleWhy, amount: 1))
+        case .trail: break
+        case .enduro: sHsc.append(Nudge(reason: styleWhy, amount: 1))
+        case .park:
+            sHsc.append(Nudge(reason: styleWhy, amount: 2))
+            sLsc.append(Nudge(reason: styleWhy, amount: 1))
+            sReb.append(Nudge(reason: styleWhy, amount: 1))
+            sTok.append(Nudge(reason: styleWhy, amount: 1))
+        case .dh:
+            sHsc.append(Nudge(reason: styleWhy, amount: 2))
+            sReb.append(Nudge(reason: styleWhy, amount: -1))
+            sTok.append(Nudge(reason: styleWhy, amount: 1))
+        }
+
         // ---- progression ----------------------------------------------------
         var tokens: Int? = nil
         var tokenMax: Int? = nil
@@ -388,8 +410,11 @@ public enum SuspensionEngine {
         let tokSum = tok.reduce(0) { $0 + $1.amount }
         let tokText = tok.isEmpty ? "" : " \(tokSum >= 0 ? "+" : "")\(tokSum) for \(describe(tok))."
         if let rows = (ebikeTokens ? mfg?.ebikeTokens : mfg?.tokens), !rows.isEmpty {
+            let all = tok + sTok
+            let allSum = all.reduce(0) { $0 + $1.amount }
+            let tokText = all.isEmpty ? "" : " \(allSum >= 0 ? "+" : "")\(allSum) for \(describe(all))."
             let row = rows.min { abs($0.travel - rider.travelMm) < abs($1.travel - rider.travelMm) }!
-            let n = Int(clamp(Double(row.installed + tokSum), 0, Double(row.max)))
+            let n = Int(clamp(Double(row.installed + allSum), 0, Double(row.max)))
             tokens = n; tokenMax = row.max
             settings.append(Setting(label: "Volume spacers", value: "\(n) token\(n == 1 ? "" : "s")",
                                     detail: "\(brand)\(ebikeTokens ? " E-Bike+" : "") stock for \(num(row.travel)) mm travel: \(row.installed).\(tokText) Max \(row.max). Add one if you bottom out harshly."))
@@ -418,7 +443,9 @@ public enum SuspensionEngine {
         ]
         for (key, short, label, n, why) in adjusters where n > 0 {
             let isReb = key == "rebound" || key == "lsr" || key == "hsr"
-            let nudges = isReb ? reb : key == "lsc" ? lsc : hsc
+            let mfgRule = mfg?.damping?.first(where: { $0.key == key })
+            let nudges = (isReb ? reb : key == "lsc" ? lsc : hsc)
+                + (mfgRule != nil ? (isReb ? sReb : key == "lsc" ? sLsc : sHsc) : [])
             let firm = nudges.reduce(0) { $0 + $1.amount }
             // base value(s) before today's adjustments
             var baseLo: Int, baseHi: Int?
@@ -426,7 +453,7 @@ public enum SuspensionEngine {
             var fromClosed: Bool
             var isMfg = true
             var detail: String
-            if let rule = mfg?.damping?.first(where: { $0.key == key }) {
+            if let rule = mfgRule {
                 fromClosed = rule.from == "closed"
                 if rule.by == "middle" {
                     baseLo = roundHalfUp(Double(n) / 2); baseHi = nil
@@ -572,7 +599,8 @@ public enum SuspensionEngine {
             if !estimated.isEmpty {
                 tips.append("Not in \(possessive(brand)) published chart, so estimated: \(estimated.joined(separator: ", ")).")
             }
-            tips.append("Manufacturer charts don't change with riding style. \(styleTip[style]!)")
+            tips.append(style == .trail ? "Trail uses the maker's baseline as is. \(styleTip[style]!)"
+                        : "\(style.title) adjusts the maker's baseline — each change is listed on its setting. \(styleTip[style]!)")
         } else {
             tips.append("No published \(brand) setup chart was found for this model — all values are calculated estimates.")
         }

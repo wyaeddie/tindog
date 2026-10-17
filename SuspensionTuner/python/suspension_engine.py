@@ -259,7 +259,10 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         base, lo, hi, maker_mid = style_sag, style_sag - 2, style_sag + 2, style_sag
         if mfg:
             estimated.append("sag target")
-    target = lo if rider.feel == "firm" else hi if rider.feel == "plush" else base
+    # Riding style picks where in the maker's (or frame's) range to sit; a firm/plush feel overrides it.
+    range_from_maker = maker_sag is not None or (not is_fork and bool(rider.frame_rear_sag and rider.frame_rear_sag > 0))
+    style_target = base if not range_from_maker else lo if style == "xc" else hi if style == "dh" else base
+    target = lo if rider.feel == "firm" else hi if rider.feel == "plush" else style_target
     sag_pct = _round_half_up(target)
     sag = sag_pct / 100
     sag_mm = (rider.travel_mm if is_fork else rider.stroke_mm) * sag
@@ -361,7 +364,12 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
                                 f"Calculated for {sag_pct}% sag at a {leverage:.2f}:1 leverage ratio — coil rates "
                                 "depend on the frame, so makers don't chart them. Use 1–2 turns of preload at most."))
 
-    feel_text = "" if rider.feel == "balanced" else f" {rider.feel.capitalize()} end of {sag_range_text}."
+    if rider.feel != "balanced":
+        feel_text = f" {rider.feel.capitalize()} end of {sag_range_text}."
+    elif style_target != base:
+        feel_text = f" {STYLE_LABELS[style]}: {'firm' if style == 'xc' else 'plush'} end of {sag_range_text}."
+    else:
+        feel_text = ""
     settings.append(Setting("Sag", f"{sag_pct}%  ·  {sag_mm:.1f} mm",
                             sag_note + ("Measured on the stanchion." if is_fork
                                         else "Measured on the shock shaft, seated in attack position.") + feel_text))
@@ -395,6 +403,18 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
     if rider.e_bike:
         reb.append(("e-bike", 1))
 
+    # Riding style on top of the maker's baseline (estimates already include style).
+    s_reb, s_lsc, s_hsc, s_tok = [], [], [], []
+    why_style = f"{STYLE_LABELS[style]} riding"
+    if style == "xc":
+        s_lsc.append((why_style, 1))
+    elif style == "enduro":
+        s_hsc.append((why_style, 1))
+    elif style == "park":
+        s_hsc.append((why_style, 2)); s_lsc.append((why_style, 1)); s_reb.append((why_style, 1)); s_tok.append((why_style, 1))
+    elif style == "dh":
+        s_hsc.append((why_style, 2)); s_reb.append((why_style, -1)); s_tok.append((why_style, 1))
+
     # ---- progression ------------------------------------------------------
     tokens = token_max = None
     ebike_tokens = bool(rider.e_bike and mfg and mfg.get("ebikeTokens"))
@@ -409,8 +429,11 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
     tok_text = f" {tok_sum:+d} for {_describe(tok)}." if tok else ""
     rows = mfg and (mfg.get("ebikeTokens") if ebike_tokens else mfg.get("tokens"))
     if rows:
+        all_tok = tok + s_tok
+        all_sum = sum(a for _, a in all_tok)
+        tok_text = f" {all_sum:+d} for {_describe(all_tok)}." if all_tok else ""
         row = min(rows, key=lambda r: abs(r["travel"] - rider.travel_mm))
-        n = int(_clamp(row["installed"] + tok_sum, 0, row["max"]))
+        n = int(_clamp(row["installed"] + all_sum, 0, row["max"]))
         tokens, token_max = n, row["max"]
         settings.append(Setting("Volume spacers", f"{n} token{'s' if n != 1 else ''}",
                                 f"{brand}{' E-Bike+' if ebike_tokens else ''} stock for {_num(row['travel'])} mm travel: "
@@ -445,9 +468,10 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         if not n:
             continue
         is_reb = key in ("rebound", "lsr", "hsr")
-        nudges = reb if is_reb else lsc if key == "lsc" else hsc
-        firm = sum(a for _, a in nudges)
         rule = rules.get(key)
+        nudges = (reb if is_reb else lsc if key == "lsc" else hsc) + \
+            ((s_reb if is_reb else s_lsc if key == "lsc" else s_hsc) if rule else [])
+        firm = sum(a for _, a in nudges)
         of = n
         is_mfg = True
         if rule:
@@ -590,7 +614,8 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         tips.append(f"Source: {mfg['sourceTitle']}.")
         if estimated:
             tips.append(f"Not in {_possessive(brand)} published chart, so estimated: {', '.join(estimated)}.")
-        tips.append(f"Manufacturer charts don't change with riding style. {STYLE_TIP[style]}")
+        tips.append(f"Trail uses the maker's baseline as is. {STYLE_TIP[style]}" if style == "trail"
+                    else f"{STYLE_LABELS[style]} adjusts the maker's baseline — each change is listed on its setting. {STYLE_TIP[style]}")
     else:
         tips.append(f"No published {brand} setup chart was found for this model — all values are calculated estimates.")
     today = []

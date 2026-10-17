@@ -11,7 +11,7 @@ final class EngineTests: XCTestCase {
 
     // 84 kg = 185 lb → the FOX 36 chart's 180–190 lb row
     func testFox36ReadsFoxChart() {
-        let r = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: rider(.enduro, 150))
+        let r = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: rider(.trail, 150))   // trail = maker's baseline
         XCTAssertEqual(r.headlineValue, "89")
         XCTAssertEqual(r.quality, .manufacturer)
         XCTAssertEqual(r.value("Sag"), "18%  ·  27.0 mm")
@@ -50,7 +50,7 @@ final class EngineTests: XCTestCase {
     func testDhx2CoilRateAndRateTable() {
         let r = SuspensionEngine.calculate(model: model("fox-dhx2-factory"), rider: rider(.park, 160, 62.5))
         XCTAssertEqual(r.headlineValue, "475")
-        XCTAssertEqual(r.value("Low-speed rebound"), "8 clicks out")
+        XCTAssertEqual(r.value("Low-speed rebound"), "7 clicks out")   // chart 8, 1 slower for bike park
     }
 
     func testKitsumaCoilEstimate() {
@@ -117,7 +117,7 @@ final class EngineTests: XCTestCase {
     }
 
     func testTerrainAndSkillNudgeClicks() {
-        var r = rider(.enduro, 150)
+        var r = rider(.trail, 150)
         r.ride.terrain = .rough
         var rec = SuspensionEngine.calculate(model: model("fox-36-factory"), rider: r)
         XCTAssertEqual(rec.value("Low-speed rebound"), "7 clicks out")       // 1 faster
@@ -158,6 +158,24 @@ final class EngineTests: XCTestCase {
         XCTAssertTrue(rec.serviceDue)
         r.bike.forkHours = 60
         XCTAssertTrue(SuspensionEngine.calculate(model: model("rockshox-lyrik-ultimate"), rider: r).serviceDue)  // 50 h lowers
+    }
+
+    func testRidingStyleAdjustsMakerBaseline() {
+        func fox(_ s: RidingStyle) -> Recommendation {
+            SuspensionEngine.calculate(model: model("fox-36-factory"), rider: rider(s, 150))
+        }
+        XCTAssertEqual(fox(.enduro).value("High-speed compression"), "4 clicks out")
+        let park = fox(.park)
+        XCTAssertEqual(park.value("High-speed compression"), "3 clicks out")
+        XCTAssertEqual(park.value("Low-speed compression"), "9 clicks out")
+        XCTAssertEqual(park.value("Low-speed rebound"), "5 clicks out")
+        XCTAssertEqual(park.tokens, 3)
+        let dh = fox(.dh)
+        XCTAssertEqual([dh.sagPercent, Int(dh.headlineValue)!], [20, 83])
+        XCTAssertEqual(dh.value("Low-speed rebound"), "7 clicks out")
+        let xc = fox(.xc)
+        XCTAssertEqual([xc.sagPercent, Int(xc.headlineValue)!], [15, 96])
+        XCTAssertEqual(xc.value("Low-speed compression"), "9 clicks out")
     }
 
     func testXCAndDownhillStyles() {

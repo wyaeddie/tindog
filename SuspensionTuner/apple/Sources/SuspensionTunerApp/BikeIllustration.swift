@@ -401,6 +401,8 @@ struct InteractiveBike: View {
     let hasFork: Bool
     let hasShock: Bool
     let variant: Int
+    /// Bounces the bike whenever the riding style changes, so the re-tune is visible
+    var styleTrigger: RidingStyle? = nil
     let onSelectEnd: (ComponentKind) -> Void
 
     @State private var compression: CGFloat = 0
@@ -420,6 +422,7 @@ struct InteractiveBike: View {
                 }
             }
             .sensoryFeedback(.impact(weight: .medium), trigger: taps)
+            .onChange(of: styleTrigger) { bounce() }
             .accessibilityAction(named: "Bounce") { bounce() }
     }
 
