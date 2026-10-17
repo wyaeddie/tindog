@@ -10,7 +10,7 @@ struct FactorRow<T: Hashable>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(.caption.weight(.semibold)).foregroundStyle(Theme.muted)
+            Text(title.uppercased()).font(.carbon(12, .semibold)).tracking(1.6).foregroundStyle(Theme.muted)
             SegmentedRow(options: options, selection: $selection, title: label)
         }
     }
@@ -67,8 +67,8 @@ struct RideConditionsCard: View {
                 HStack(spacing: 10) {
                     VStack(alignment: .leading, spacing: 3) {
                         HStack(spacing: 6) {
-                            Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill").foregroundStyle(Theme.sky)
-                            Text("Riding conditions").font(.subheadline.weight(.bold))
+                            Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill").foregroundStyle(Theme.accent)
+                            Text("RIDING CONDITIONS").font(.carbon(15, .bold)).tracking(1.2)
                             ProTag()
                         }
                         Text("Dial in deeper: terrain, weather, temperature, pack and feel tune the maker's numbers for today's ride.")
@@ -79,8 +79,7 @@ struct RideConditionsCard: View {
                     Image(systemName: "lock.fill").font(.footnote).foregroundStyle(Theme.muted)
                 }
                 .padding(14)
-                .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+                .glassCard(18)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -96,16 +95,15 @@ struct RideConditionsCard: View {
         } label: {
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
-                    Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill").foregroundStyle(Theme.sky)
-                    Text("Riding conditions").font(.subheadline.weight(.bold))
+                    Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill").foregroundStyle(Theme.accent)
+                    Text("RIDING CONDITIONS").font(.carbon(15, .bold)).tracking(1.2)
                 }
                 Text(rideSummary(ride)).font(.caption).foregroundStyle(Theme.muted).lineLimit(1)
             }
         }
         .tint(Theme.muted)
         .padding(14)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+        .glassCard(18)
     }
 }
 
@@ -215,14 +213,13 @@ struct InfoCard: View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: icon).foregroundStyle(color).frame(width: 20)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.subheadline.weight(.bold))
+                Text(title.uppercased()).font(.carbon(14, .bold)).tracking(0.8)
                 Text(detail).font(.caption).foregroundStyle(Theme.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
         }
         .padding(14)
-        .background(color.opacity(0.08), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(color.opacity(0.35)))
+        .glassCard(18, glow: color)
     }
 }

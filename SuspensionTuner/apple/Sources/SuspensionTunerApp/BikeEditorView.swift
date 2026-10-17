@@ -153,7 +153,7 @@ struct BikeEditorView: View {
                 .frame(maxWidth: .infinity)
             }
             .scrollDismissesKeyboard(.interactively)
-            .background(Theme.background.ignoresSafeArea())
+            .background { CarbonBackground() }
             .navigationTitle(isNew ? "Add bike" : "Edit bike")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

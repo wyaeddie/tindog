@@ -18,15 +18,14 @@ struct ToolButton: View {
                     .frame(width: 34, height: 34)
                     .background(color.opacity(0.15), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title).font(.subheadline.weight(.bold)).lineLimit(1).minimumScaleFactor(0.85)
+                    Text(title.uppercased()).font(.carbon(15, .bold)).tracking(0.6).lineLimit(1).minimumScaleFactor(0.85)
                     Text(subtitle).font(.caption2).foregroundStyle(Theme.muted).lineLimit(1).minimumScaleFactor(0.85)
                 }
                 Spacer(minLength: 0)
             }
             .padding(10)
             .frame(maxWidth: .infinity)
-            .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+            .glassCard(16)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -48,7 +47,7 @@ struct ToolSheet<Content: View>: View {
                     .frame(maxWidth: .infinity)
             }
             .scrollDismissesKeyboard(.interactively)
-            .background(Theme.background.ignoresSafeArea())
+            .background { CarbonBackground() }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -133,8 +132,7 @@ struct TroubleshooterView: View {
                         }
                     }
                     .padding(14)
-                    .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+                    .glassCard(16)
                 }
                 if let appliedFlash {
                     Label(appliedFlash, systemImage: "checkmark.circle.fill")
@@ -215,8 +213,7 @@ struct SagHelperView: View {
                 .opacity(step == .hold ? 0.5 : 1)
             }
             .padding(16)
-            .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+            .glassCard(18)
             .sensoryFeedback(.impact(weight: .medium), trigger: countdown)
             .sensoryFeedback(.success, trigger: step == .stepOff)
 
@@ -249,8 +246,7 @@ struct SagHelperView: View {
                 }
             }
             .padding(16)
-            .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+            .glassCard(18)
         }
         .onChange(of: measuredText) { applied = false }
     }

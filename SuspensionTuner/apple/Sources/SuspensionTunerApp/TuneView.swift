@@ -8,33 +8,36 @@ struct TuneView: View {
         Page {
             if let bike = store.selectedBike, !bike.ends.isEmpty {
                 let end = bike.ends.contains(store.tuneEnd) ? store.tuneEnd : bike.ends[0]
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Tune").font(.subheadline.weight(.semibold)).foregroundStyle(Theme.muted)
-                        bikeSwitcher(bike)
-                    }
-                    Spacer()
-                }
-
-                if bike.ends.count > 1 {
-                    Picker("End", selection: Binding(get: { end }, set: { store.tuneEnd = $0 })) {
-                        ForEach(bike.ends, id: \.self) { e in
-                            Text(endTitle(bike, e)).tag(e)
+                HStack(alignment: .firstTextBaseline, spacing: 20) {
+                    ForEach(bike.ends, id: \.self) { e in
+                        let on = e == end
+                        Button { withAnimation(.snappy) { store.tuneEnd = e } } label: {
+                            VStack(spacing: 4) {
+                                Text(e == .fork ? "FRONT" : "REAR").font(.carbon(17, on ? .bold : .semibold)).tracking(2.2)
+                                Capsule().fill(on ? Theme.accent : .clear).frame(height: 2)
+                                    .shadow(color: Theme.accent.opacity(on ? 0.8 : 0), radius: 4)
+                            }
+                            .foregroundStyle(on ? Theme.accent : Theme.muted)
+                            .fixedSize()
                         }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(endTitle(bike, e))
+                        .accessibilityAddTraits(on ? .isSelected : [])
                     }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
+                    Spacer(minLength: 0)
+                    bikeSwitcher(bike)
                 }
+                .sensoryFeedback(.selection, trigger: end)
 
                 if let model = store.model(bike, end), let rec = store.recommendation(bike, end) {
                     TuneEndView(store: store, bike: bike, end: end, model: model, rec: rec)
                         .id("\(bike.id)-\(end)")
                 }
             } else {
-                Text("Tune").font(.system(size: 32, weight: .heavy))
+                Text("TUNE").font(.carbon(40, .heavy, compressed: true))
                 EmptyStateCard(icon: "dial.medium", title: "No bike to tune yet",
-                               message: "Add a bike in the Garage with its fork and/or shock, then come back here.",
-                               button: "Go to Garage") { store.tab = .garage }
+                               message: "Add a bike in My Bike Rack with its fork and/or shock, then come back here.",
+                               button: "Go to Bike Rack") { store.tab = .garage }
             }
         }
     }
@@ -52,17 +55,18 @@ struct TuneView: View {
                     Button(b.name) { withAnimation(.snappy) { store.select(b) } }
                 }
             } label: {
-                HStack(spacing: 6) {
-                    Text(bike.name).font(.system(size: 28, weight: .heavy))
-                    Image(systemName: "chevron.down").font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.muted)
+                HStack(spacing: 5) {
+                    Text(bike.name.uppercased()).font(.carbon(14, .semibold)).tracking(2.4)
+                    Image(systemName: "chevron.down").font(.system(size: 10, weight: .bold))
                 }
-                .foregroundStyle(Theme.text)
+                .foregroundStyle(Theme.muted)
             }
             .buttonStyle(.plain)
             .menuIndicator(.hidden)
             .fixedSize()
         } else {
-            Text(bike.name).font(.system(size: 28, weight: .heavy))
+            Text(bike.name.uppercased()).font(.carbon(14, .semibold)).tracking(2.4).foregroundStyle(Theme.muted)
+                .lineLimit(1)
         }
     }
 }
@@ -141,33 +145,44 @@ struct TuneEndView: View {
 
             // Damping
             if !rec.clicks.isEmpty || rec.tokens != nil {
+                Hairline()
                 HStack {
-                    SectionLabel(text: "Damping · drag to match your \(end == .fork ? "fork" : "shock")")
+                    SectionLabel(text: "Damping · drag to match")
                     HelpButton(title: "How to use the damping sliders") { DampingHelp(isFork: end == .fork) }
                     Spacer()
                     if !differences.isEmpty {
-                        Button("Reset") { withAnimation(.snappy) { store.setRan(RanSetup(), end: end, for: bike.id) } }
-                            .font(.caption.weight(.bold))
+                        Button("RESET") { withAnimation(.snappy) { store.setRan(RanSetup(), end: end, for: bike.id) } }
+                            .font(.carbon(14, .bold)).tracking(1.2)
                             .foregroundStyle(Theme.accent)
                             .buttonStyle(.plain)
                     }
                 }
-                HStack(spacing: 8) {
+                VStack(spacing: 14) {
                     ForEach(rec.clicks) { click in
-                        FaderView(setting: click,
-                                  value: ran.clicks[click.key] ?? click.value) { v in
+                        PrecisionSlider(label: click.short, value: ran.clicks[click.key] ?? click.value,
+                                        recommended: click.value, of: click.of, unit: click.direction.uppercased(),
+                                        color: click.isRebound ? Theme.sky : Theme.accent,
+                                        accessibilityName: click.label,
+                                        accessibilityDetail: "clicks \(click.countedFrom), recommended \(click.rangeText ?? "\(click.value)")") { v in
                             updateRan { r in
                                 if v == click.value { r.clicks.removeValue(forKey: click.key) } else { r.clicks[click.key] = v }
                             }
                         }
                     }
                     if let tokens = rec.tokens, let maxTokens = rec.tokenMax {
-                        TokenStack(value: ran.tokens ?? tokens, recommended: tokens, max: maxTokens) { v in
+                        PrecisionSlider(label: "TOK", value: ran.tokens ?? tokens, recommended: tokens, of: maxTokens,
+                                        unit: "/ \(maxTokens)", color: Theme.gold,
+                                        accessibilityName: "Volume spacers",
+                                        accessibilityDetail: "recommended \(tokens)") { v in
                             updateRan { $0.tokens = (v == tokens) ? nil : v }
                         }
                     }
                 }
+                .padding(.horizontal, 16).padding(.vertical, 16)
+                .glassCard(22)
             }
+
+            SetupStepsCard(steps: SetupSteps.steps(rec, isFork: end == .fork, ran: ran))
 
             // Lockout + warnings
             if let lockout = rec.settings.first(where: { $0.label == "Lockout / climb" }) {
@@ -251,14 +266,14 @@ struct TuneEndView: View {
             HStack(spacing: 12) {
                 BrandBadge(brand: model.brand, size: 46)
                 VStack(alignment: .leading, spacing: 4) {
-                    let brand = Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
-                    let name = Text(model.name).foregroundStyle(Theme.text)
-                    let link = Text(Image(systemName: "arrow.up.right.square")).foregroundStyle(Theme.muted)
-                    Text("\(brand) \(name) \(link)").font(.system(size: 20, weight: .heavy)).lineLimit(2)
+                    Text("\(model.brand) · \(model.damper)".uppercased()).font(.carbon(13, .semibold)).tracking(2.4)
+                        .foregroundStyle(Theme.muted).lineLimit(1)
+                    let name = Text(model.name.uppercased()).foregroundStyle(Theme.text)
+                    let link = Text(Image(systemName: "arrow.up.right.square")).foregroundStyle(Theme.muted).font(.system(size: 15))
+                    Text("\(name) \(link)").font(.carbon(32, .heavy, compressed: true)).lineLimit(2).minimumScaleFactor(0.7)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 6) {
                             MetaChip(text: "\(model.spring.rawValue.capitalized) spring", color: Theme.amber)
-                            MetaChip(text: model.damper, color: Theme.violet)
                             MetaChip(text: bike.style.title, color: Theme.go)
                         }
                     }
@@ -305,42 +320,48 @@ struct PressureDial: View {
     let color: Color
     let onChange: (Int) -> Void
 
-    private let size: CGFloat = 220
+    private let size: CGFloat = 232
     private func fraction(_ v: Int) -> Double { min(max(Double(v) / max(scaleMax, 1), 0), 1) }
 
     var body: some View {
-        let radius = size / 2 - 10
-        let recAngle = Angle.degrees(135 + 270 * fraction(recommended)).radians
-        HStack(spacing: 10) {
+        HStack(spacing: 6) {
             nudge("minus") { onChange(max(0, value - step)) }
             ZStack {
+                // Tick ring: lit up to the current value, white dot at the recommendation
+                Canvas { ctx, sz in
+                    let c = CGPoint(x: sz.width / 2, y: sz.height / 2)
+                    let r = sz.width / 2 - 4
+                    let lit = fraction(value)
+                    for i in 0...60 {
+                        let f = Double(i) / 60
+                        let a = Angle.degrees(135 + 270 * f).radians
+                        let major = i % 5 == 0
+                        let inner = r - (major ? 16 : 9)
+                        var p = Path()
+                        p.move(to: CGPoint(x: c.x + inner * cos(a), y: c.y + inner * sin(a)))
+                        p.addLine(to: CGPoint(x: c.x + r * cos(a), y: c.y + r * sin(a)))
+                        ctx.stroke(p, with: .color(f <= lit + 0.0001 ? color : Theme.faint.opacity(0.45)),
+                                   lineWidth: major ? 2.4 : 1.4)
+                    }
+                    let ra = Angle.degrees(135 + 270 * fraction(recommended)).radians
+                    let dot = CGRect(x: c.x + (r + 1) * cos(ra) - 4, y: c.y + (r + 1) * sin(ra) - 4, width: 8, height: 8)
+                    ctx.fill(Path(ellipseIn: dot), with: .color(Theme.text))
+                }
+                .shadow(color: color.opacity(0.45), radius: 6)
                 Circle()
-                    .trim(from: 0, to: 0.75)
-                    .stroke(Theme.card2, style: StrokeStyle(lineWidth: 14, lineCap: .round))
-                    .rotationEffect(.degrees(135))
-                Circle()
-                    .trim(from: 0, to: CGFloat(0.75 * fraction(value)))
-                    .stroke(LinearGradient(colors: [color, Theme.gold], startPoint: .bottomLeading, endPoint: .topTrailing),
-                            style: StrokeStyle(lineWidth: 14, lineCap: .round))
-                    .rotationEffect(.degrees(135))
-                    .shadow(color: color.opacity(0.5), radius: 8)
-                // Recommended marker
-                Circle()
-                    .fill(Theme.text)
-                    .frame(width: 8, height: 8)
-                    .offset(x: radius * CGFloat(cos(recAngle)), y: radius * CGFloat(sin(recAngle)))
-                Circle()
-                    .fill(Theme.card)
+                    .fill(Theme.card.opacity(0.55))
                     .overlay(Circle().stroke(Theme.stroke))
-                    .padding(36)
-                VStack(spacing: 0) {
+                    .padding(40)
+                VStack(spacing: 2) {
                     Text("\(value)")
-                        .font(.system(size: 54, weight: .heavy, design: .rounded))
+                        .font(.carbon(76, .bold, compressed: true))
+                        .shadow(color: color.opacity(0.45), radius: 16)
                         .contentTransition(.numericText(value: Double(value)))
-                    Text(unit.uppercased()).font(.caption.weight(.bold)).foregroundStyle(Theme.muted)
+                    Text(unit == "psi" ? "PSI · PUMP" : unit.uppercased())
+                        .font(.carbon(13, .semibold)).tracking(3).foregroundStyle(Theme.muted)
                     if value != recommended {
-                        Button("Rec. \(recommended)") { onChange(recommended) }
-                            .font(.caption2.weight(.bold))
+                        Button("REC. \(recommended)") { onChange(recommended) }
+                            .font(.mono(11, .bold))
                             .foregroundStyle(color)
                             .buttonStyle(.plain)
                             .padding(.top, 2)
@@ -367,10 +388,10 @@ struct PressureDial: View {
     private func nudge(_ symbol: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol)
-                .font(.system(size: 18, weight: .bold))
-                .frame(width: 46, height: 46)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(Theme.stroke))
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(Theme.muted)
+                .frame(width: 44, height: 44)
+                .overlay(Circle().stroke(Theme.stroke))
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -403,8 +424,8 @@ struct SagCheckCard: View {
             VStack(alignment: .leading, spacing: 3) {
                 SectionLabel(text: "Sag · O-ring check")
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(String(format: "%.0f mm", rec.sagMm)).font(.system(size: 26, weight: .heavy, design: .rounded))
-                    Text("· \(rec.sagPercent)%").font(.subheadline.weight(.bold)).foregroundStyle(Theme.muted)
+                    Text("\(rec.sagPercent)%").font(.carbon(30, .bold, compressed: true))
+                    Text(String(format: "%.1f MM", rec.sagMm)).font(.carbon(15, .semibold)).foregroundStyle(Theme.muted)
                     if let lo = rec.sagMin, let hi = rec.sagMax, lo != hi {
                         Text("(maker: \(lo)–\(hi)%)").font(.caption.weight(.semibold)).foregroundStyle(Theme.go)
                     }
@@ -418,8 +439,7 @@ struct SagCheckCard: View {
             Spacer(minLength: 0)
         }
         .padding(14)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+        .glassCard(18)
         .overlay(alignment: .topTrailing) {
             HelpButton(title: "How to check sag") { SagHelp(isFork: end == .fork) }
                 .padding(6)
@@ -427,70 +447,76 @@ struct SagCheckCard: View {
     }
 }
 
-// MARK: - Faders
+// MARK: - Precision sliders
 
-/// Vertical mixer-style fader for one damping adjuster. Drag (or VoiceOver swipe) to set clicks.
-struct FaderView: View {
-    let setting: ClickSetting
+/// One damping adjuster (or the spacer count) as a horizontal slider with a tick per click.
+/// Drag (or VoiceOver swipe) to set what you're running; the small mark above the track is the recommendation.
+struct PrecisionSlider: View {
+    let label: String
     let value: Int
+    let recommended: Int
+    let of: Int
+    let unit: String
+    let color: Color
+    let accessibilityName: String
+    let accessibilityDetail: String
     let onChange: (Int) -> Void
 
-    private var color: Color { setting.isRebound ? Theme.sky : Theme.violet }
-    private let trackHeight: CGFloat = 96
-
-    private func fraction(_ v: Int) -> CGFloat {
-        setting.of > 0 ? CGFloat(min(max(v, 0), setting.of)) / CGFloat(setting.of) : 0
-    }
+    private func fraction(_ v: Int) -> CGFloat { of > 0 ? CGFloat(min(max(v, 0), of)) / CGFloat(of) : 0 }
 
     var body: some View {
-        let changed = value != setting.value
-        VStack(spacing: 6) {
+        let changed = value != recommended
+        HStack(spacing: 12) {
+            Text(label).font(.carbon(15, .bold)).tracking(1.2).foregroundStyle(color)
+                .frame(width: 38, alignment: .leading)
             GeometryReader { geo in
-                let h = geo.size.height
-                ZStack(alignment: .bottom) {
-                    Capsule().fill(Theme.card2).frame(width: 8)
-                    Capsule().fill(color).frame(width: 8, height: max(8, h * fraction(value)))
-                    // recommended tick
-                    Capsule().fill(Theme.text.opacity(0.45)).frame(width: 18, height: 2)
-                        .offset(y: -(h - 2) * fraction(setting.value))
-                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .fill(.white)
-                        .frame(width: 26, height: 16)
-                        .shadow(color: .black.opacity(0.4), radius: 3, y: 1)
-                        .offset(y: -(h - 16) * fraction(value))
+                let w = geo.size.width
+                ZStack(alignment: .leading) {
+                    // A tick per click, a taller one every 4
+                    ForEach(0...max(of, 1), id: \.self) { k in
+                        Rectangle().fill(Theme.faint.opacity(k % 4 == 0 ? 0.7 : 0.4))
+                            .frame(width: 1, height: k % 4 == 0 ? 9 : 6)
+                            .offset(x: w * CGFloat(k) / CGFloat(max(of, 1)) - 0.5, y: 11)
+                    }
+                    Capsule().fill(Theme.card2).frame(height: 3)
+                    Capsule().fill(color).frame(width: max(3, w * fraction(value)), height: 3)
+                        .shadow(color: color.opacity(0.8), radius: 5)
+                    // Recommended mark
+                    Triangle().fill(Theme.text.opacity(0.7)).frame(width: 7, height: 5)
+                        .offset(x: w * fraction(recommended) - 3.5, y: -10)
+                    Circle().fill(Color(hex: 0xF2F2F0))
+                        .frame(width: 16, height: 16)
+                        .shadow(color: .black.opacity(0.5), radius: 2, y: 1)
+                        .offset(x: w * fraction(value) - 8)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(height: geo.size.height)
                 .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { g in
-                            let f = 1 - min(max(g.location.y / max(h, 1), 0), 1)
-                            let v = Int((f * CGFloat(setting.of)).rounded())
+                            let f = min(max(g.location.x / max(w, 1), 0), 1)
+                            let v = Int((f * CGFloat(of)).rounded())
                             if v != value { onChange(v) }
                         }
                 )
             }
-            .frame(height: trackHeight)
-            Text("\(value)")
-                .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .contentTransition(.numericText(value: Double(value)))
-                .foregroundStyle(changed ? color : Theme.text)
-            Text("\(setting.short) · \(setting.direction)").font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.muted)
-                .lineLimit(1).minimumScaleFactor(0.8)
+            .frame(height: 30)
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text("\(value)").font(.mono(15, .bold))
+                    .foregroundStyle(changed ? color : Theme.text)
+                    .contentTransition(.numericText(value: Double(value)))
+                Text(unit).font(.mono(9.5)).foregroundStyle(Theme.muted)
+            }
+            .frame(width: 56, alignment: .trailing)
         }
-        .padding(.vertical, 10).padding(.horizontal, 4)
-        .frame(maxWidth: .infinity)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(changed ? color.opacity(0.6) : Theme.stroke))
         .animation(.snappy(duration: 0.2), value: value)
         .sensoryFeedback(.selection, trigger: value)
-        .help("\(setting.label): \(value) clicks \(setting.countedFrom) · recommended \(setting.rangeText ?? "\(setting.value)")\(setting.isManufacturer ? " (maker's chart)" : " (estimate)") of \(setting.of)")
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(setting.label)
-        .accessibilityValue("\(value) clicks \(setting.countedFrom), recommended \(setting.rangeText ?? "\(setting.value)")")
+        .accessibilityLabel(accessibilityName)
+        .accessibilityValue("\(value), \(accessibilityDetail)")
         .accessibilityAdjustableAction { direction in
             switch direction {
-            case .increment: onChange(min(value + 1, setting.of))
+            case .increment: onChange(min(value + 1, of))
             case .decrement: onChange(max(value - 1, 0))
             @unknown default: break
             }
@@ -498,45 +524,66 @@ struct FaderView: View {
     }
 }
 
-/// Volume spacers as stacked blocks; tap a block to set the count.
-struct TokenStack: View {
-    let value: Int
-    let recommended: Int
-    let max: Int
-    let onChange: (Int) -> Void
+struct Triangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { p in
+            p.move(to: CGPoint(x: rect.minX, y: rect.minY))
+            p.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+            p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            p.closeSubpath()
+        }
+    }
+}
+
+/// The same setup written out as plain steps, for riders who'd rather read than read charts.
+struct SetupStepsCard: View {
+    let steps: [SetupStep]
+    @AppStorage("setupStepsExpanded") private var expanded = true
 
     var body: some View {
-        VStack(spacing: 6) {
-            VStack(spacing: 4) {
-                ForEach((0..<max).reversed(), id: \.self) { i in
-                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .fill(i < value ? Theme.amber : Theme.card2)
-                        .frame(width: 22, height: Swift.max(8, (96 - CGFloat(max - 1) * 4) / CGFloat(max)))
-                        .onTapGesture { onChange(i + 1 == value ? i : i + 1) }
+        VStack(alignment: .leading, spacing: 0) {
+            Button { withAnimation(.snappy) { expanded.toggle() } } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "list.number").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.accent)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("STEP BY STEP").font(.carbon(15, .bold)).tracking(1.6)
+                        Text("The same setup in plain words — no chart reading").font(.caption).foregroundStyle(Theme.muted)
+                    }
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.down").font(.system(size: 12, weight: .bold)).foregroundStyle(Theme.muted)
+                        .rotationEffect(.degrees(expanded ? 0 : -90))
                 }
+                .contentShape(Rectangle())
             }
-            .frame(height: 96, alignment: .bottom)
-            Text("\(value)")
-                .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .foregroundStyle(value != recommended ? Theme.amber : Theme.text)
-            Text("Tokens").font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.muted)
-        }
-        .padding(.vertical, 10).padding(.horizontal, 4)
-        .frame(maxWidth: .infinity)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(value != recommended ? Theme.amber.opacity(0.6) : Theme.stroke))
-        .animation(.snappy(duration: 0.2), value: value)
-        .sensoryFeedback(.selection, trigger: value)
-        .help("Volume spacers: tap a block to set · recommended \(recommended)")
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Volume spacers")
-        .accessibilityValue("\(value), recommended \(recommended)")
-        .accessibilityAdjustableAction { direction in
-            switch direction {
-            case .increment: onChange(Swift.min(value + 1, max))
-            case .decrement: onChange(Swift.max(value - 1, 0))
-            @unknown default: break
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(.isHeader)
+            .accessibilityHint(expanded ? "Hides the steps" : "Shows the steps")
+
+            if expanded {
+                VStack(alignment: .leading, spacing: 14) {
+                    ForEach(Array(steps.enumerated()), id: \.element) { i, step in
+                        HStack(alignment: .top, spacing: 12) {
+                            Text(String(format: "%02d", i + 1))
+                                .font(.mono(12, .bold)).foregroundStyle(Theme.accent)
+                                .frame(width: 26, alignment: .leading)
+                                .padding(.top, 1)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(step.title.uppercased()).font(.carbon(14, .bold)).tracking(0.8)
+                                Text(step.text).font(.callout).foregroundStyle(Theme.text.opacity(0.85))
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                    Text("Count clicks gently and never force a knob past its stop. Knob colours and spots vary by model; your owner's manual has the exact layout.")
+                        .font(.caption).foregroundStyle(Theme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.top, 14)
+                .transition(.opacity)
             }
         }
+        .padding(16)
+        .glassCard(22)
     }
 }

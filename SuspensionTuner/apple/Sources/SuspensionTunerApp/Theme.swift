@@ -22,22 +22,28 @@ enum Theme {
     static let go = Color(light: 0x16A34A, dark: 0x22C55E)
     static let goBright = Color(hex: 0x16A34A)
     static let goDeep = Color(hex: 0x065F46)
-    // Surfaces
-    static let background = Color(light: 0xF2F3F6, dark: 0x0D0F13)
-    static let panel = Color(light: 0xFFFFFF, dark: 0x15181E)
-    static let card = Color(light: 0xFFFFFF, dark: 0x1A1E25)
-    static let card2 = Color(light: 0xE9EBEF, dark: 0x20252E)
-    static let stroke = Color(light: 0xE0E3E8, dark: 0x262B34)
-    static let control = Color(light: 0xF1F2F5, dark: 0x1E222A)
-    static let muted = Color(light: 0x6B7280, dark: 0x8A919C)
+    // Surfaces — Carbon: black weave and glass in dark mode, brushed titanium in light mode
+    static let background = Color(light: 0xECEDEF, dark: 0x060607)
+    static let panel = Color(light: 0xF6F6F7, dark: 0x0E0E10)
+    static let card = Color(light: 0xFFFFFF, dark: 0x141416)
+    static let card2 = Color(light: 0xE3E4E7, dark: 0x1F2023)
+    static let stroke = Color(light: 0xD9DBDF, dark: 0x232427)
+    static let control = Color(light: 0xF1F1F3, dark: 0x18181B)
+    /// Titanium grey for secondary text
+    static let muted = Color(light: 0x646870, dark: 0xA9ADB4)
+    /// Quieter than muted: tab labels, tick marks
+    static let faint = Color(light: 0x9A9EA6, dark: 0x6E7279)
     static let warnBG = Color(light: 0xFFF4E0, dark: 0x2A2112)
     static let warnText = Color(light: 0x9A5B00, dark: 0xF5C26B)
     /// Main text and icons
-    static let text = Color(light: 0x111418, dark: 0xFFFFFF)
+    static let text = Color(light: 0x111214, dark: 0xF2F2F0)
     // Garage bike card
-    static let heroTop = Color(light: 0xFFFFFF, dark: 0x1E232C)
-    static let heroBottom = Color(light: 0xF1F3F6, dark: 0x14171D)
-    static let heroStroke = Color(light: 0xE0E3E8, dark: 0x2A303A)
+    static let heroTop = Color(light: 0xFFFFFF, dark: 0x16161A)
+    static let heroBottom = Color(light: 0xF1F2F4, dark: 0x0B0B0D)
+    static let heroStroke = Color(light: 0xD9DBDF, dark: 0x26272B)
+    /// Glass card fill (top → bottom)
+    static let glassTop = Color(light: 0xFFFFFF, dark: 0x17171A)
+    static let glassBottom = Color(light: 0xF7F7F8, dark: 0x0F0F11)
 
     static let titleGradient = LinearGradient(colors: [accent, gold], startPoint: .leading, endPoint: .trailing)
 
@@ -142,9 +148,70 @@ struct SectionLabel: View {
     var color: Color = Theme.muted
     var body: some View {
         Text(text.uppercased())
-            .font(.system(size: 11, weight: .bold))
-            .tracking(1.2)
+            .font(.carbon(13, .semibold))
+            .tracking(2.4)
             .foregroundStyle(color)
+    }
+}
+
+// MARK: - Carbon
+
+extension Font {
+    /// Tall racing type: SF Pro Condensed / Compressed.
+    static func carbon(_ size: CGFloat, _ weight: Font.Weight = .bold, compressed: Bool = false) -> Font {
+        .system(size: size, weight: weight).width(compressed ? .compressed : .condensed)
+    }
+    /// Data readouts
+    static func mono(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font {
+        .system(size: size, weight: weight, design: .monospaced)
+    }
+}
+
+/// Carbon-weave backdrop (dark) or brushed titanium (light).
+struct CarbonBackground: View {
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        Theme.background
+            .overlay {
+                Canvas { ctx, size in
+                    let a = scheme == .dark ? 0.022 : 0.035
+                    let ink = scheme == .dark ? Color.white.opacity(a) : Color.black.opacity(a)
+                    var path = Path()
+                    let step: CGFloat = 6
+                    var x: CGFloat = -size.height
+                    while x < size.width + size.height {
+                        path.move(to: CGPoint(x: x, y: 0)); path.addLine(to: CGPoint(x: x + size.height, y: size.height))
+                        path.move(to: CGPoint(x: x, y: size.height)); path.addLine(to: CGPoint(x: x + size.height, y: 0))
+                        x += step
+                    }
+                    ctx.stroke(path, with: .color(ink), lineWidth: 2)
+                }
+            }
+            .ignoresSafeArea()
+            .accessibilityHidden(true)
+    }
+}
+
+extension View {
+    /// Frosted glass card; pass `glow` to tint the edge (the selected end, Pro, …).
+    func glassCard(_ radius: CGFloat = 20, glow: Color? = nil) -> some View {
+        background(
+            LinearGradient(colors: [Theme.glassTop, Theme.glassBottom], startPoint: .top, endPoint: .bottom)
+                .overlay { if let glow { RadialGradient(colors: [glow.opacity(0.10), .clear], center: .center, startRadius: 0, endRadius: 220) } },
+            in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: radius, style: .continuous)
+            .stroke(glow.map { $0.opacity(0.4) } ?? Theme.stroke))
+    }
+}
+
+/// Thin orange rule that fades out at both ends.
+struct Hairline: View {
+    var color: Color = Theme.accent
+    var body: some View {
+        LinearGradient(colors: [.clear, color.opacity(0.7), .clear], startPoint: .leading, endPoint: .trailing)
+            .frame(height: 1)
+            .accessibilityHidden(true)
     }
 }
 
@@ -153,8 +220,7 @@ struct Panel<Content: View>: View {
     var body: some View {
         content
             .padding(22)
-            .background(Theme.panel, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+            .glassCard(18)
     }
 }
 

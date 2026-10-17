@@ -61,4 +61,29 @@ final class RideToolsTests: XCTestCase {
         XCTAssertEqual(items.first?.title, "Fork at 89 psi")
         XCTAssertEqual(items.first { $0.id == "tires" }?.title, "Tires: 22 psi front")
     }
+
+    func testSetupStepsFollowTheChartAndWhatWasRun() {
+        let r = rec("fox-36-factory", travel: 150)
+        let steps = SetupSteps.steps(r, isFork: true)
+        XCTAssertEqual(steps.first?.title, "Air pressure")
+        XCTAssertTrue(steps.first!.text.contains("\(r.springValue) psi"))
+        XCTAssertEqual(steps.last?.title, "Check sag")
+        XCTAssertEqual(steps.count, 2 + 1 + r.clicks.count)                    // pressure, spacers, each click, sag
+        let hsc = steps.first { $0.title.hasPrefix("High-speed compression") }!
+        XCTAssertTrue(hsc.text.contains("clockwise until it gently stops"))      // FOX counts out from closed
+        XCTAssertTrue(hsc.text.contains("outer, larger dial"))
+
+        let ran = RanSetup(springValue: 95, tokens: 1, clicks: ["hsc": 3])
+        let mine = SetupSteps.steps(r, isFork: true, ran: ran)
+        XCTAssertTrue(mine[0].text.contains("95 psi"))
+        XCTAssertTrue(mine[1].text.contains("fit 1 volume spacer under"))
+        XCTAssertTrue(mine.contains { $0.title == "High-speed compression · 3 out" })
+    }
+
+    func testSetupStepsCountInFromOpen() {
+        let r = rec("rockshox-lyrik-ultimate", travel: 160)
+        let lsc = SetupSteps.steps(r, isFork: true).first { $0.title.hasPrefix("Low-speed compression") }!
+        XCTAssertTrue(lsc.text.contains("fully open"))
+        XCTAssertTrue(lsc.title.hasSuffix("in"))
+    }
 }

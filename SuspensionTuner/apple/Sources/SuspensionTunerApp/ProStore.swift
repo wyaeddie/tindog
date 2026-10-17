@@ -123,7 +123,7 @@ struct PaywallView: View {
             VStack(spacing: 18) {
                 AppLogo(size: 76).padding(.top, 8)
                 VStack(spacing: 6) {
-                    Text("Suspension Tuner Pro").font(.system(size: 26, weight: .heavy))
+                    Text("SUSPENSION TUNER PRO").font(.carbon(30, .heavy, compressed: true)).tracking(1)
                         .foregroundStyle(Theme.titleGradient)
                     Text(feature.map { "\($0) is part of Pro." } ?? "Dial it in deeper — every bike, every ride.")
                         .font(.callout.weight(.semibold)).foregroundStyle(Theme.muted)
@@ -145,8 +145,7 @@ struct PaywallView: View {
                     }
                 }
                 .padding(16)
-                .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+                .glassCard(18)
 
                 if pro.isPro {
                     Label("Pro unlocked. Send it.", systemImage: "checkmark.seal.fill")
@@ -183,7 +182,7 @@ struct PaywallView: View {
             .frame(maxWidth: 520)
             .frame(maxWidth: .infinity)
         }
-        .background(Theme.panel.ignoresSafeArea())
+        .background { CarbonBackground() }
         .foregroundStyle(Theme.text)
         .presentationDragIndicator(.visible)
         .onAppear { pro.message = nil }
@@ -200,7 +199,7 @@ struct ProPromoCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
                     Image(systemName: "bolt.fill").foregroundStyle(Theme.accent)
-                    Text("Dial it in deeper").font(.headline.weight(.heavy))
+                    Text("DIAL IT IN DEEPER").font(.carbon(18, .bold)).tracking(1)
                     ProTag()
                     Spacer()
                 }
@@ -226,10 +225,7 @@ struct ProPromoCard: View {
                     .background(Theme.accent, in: Capsule())
             }
             .padding(16)
-            .background(
-                LinearGradient(colors: [Theme.accent.opacity(0.16), Theme.card], startPoint: .topLeading, endPoint: .bottomTrailing),
-                in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Theme.accent.opacity(0.45)))
+            .glassCard(20, glow: Theme.accent)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

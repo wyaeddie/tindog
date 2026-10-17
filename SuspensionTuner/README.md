@@ -64,6 +64,7 @@ share & print and the widget. Xcode runs use `apple/StoreKit/Products.storekit` 
 the real product as described in `apple/release/APP_STORE.md`.
 
 ## Trailside tools
+- **Step by step** — under the damping sliders on Tune, the same setup written out in plain words (pump to X psi, fit N spacers, turn the red knob fully clockwise then count N clicks out…) for riders who would rather read than read charts. Uses what you have set on the sliders.
 - **Feels off? (symptom troubleshooter)** — pick what the fork or shock is doing (harsh, bottoming, diving, kicking, packing down, bobbing…) and get fixes worked out against *your* current clicks, best first; apply them to the dials or log them to History.
 - **Sag check** — guided O-ring routine with a hold-still countdown, then type the mm you measured to get your sag % and the pressure (or spring) to try next.
 - **Coil spring sizes** — the nearest stock springs with the sag each gives, and the spring size to buy (e.g. 450 × 2.5″).

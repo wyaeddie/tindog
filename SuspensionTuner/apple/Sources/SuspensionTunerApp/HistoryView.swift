@@ -6,7 +6,7 @@ struct HistoryView: View {
 
     var body: some View {
         Page {
-            Text("History").font(.system(size: 32, weight: .heavy))
+            Text("HISTORY").font(.carbon(40, .heavy, compressed: true))
             if store.history.isEmpty {
                 EmptyStateCard(icon: "clock.arrow.circlepath", title: "No saved setups yet",
                                message: "On the Tune tab, tap Save to History to keep what you ran, with a note on how it felt.",
@@ -75,8 +75,7 @@ struct HistoryRow: View {
                 .font(.caption.weight(.bold)).foregroundStyle(color).buttonStyle(.plain)
         }
         .padding(14)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+        .glassCard(18)
     }
 }
 
@@ -135,7 +134,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Page {
-                Text("Settings").font(.system(size: 32, weight: .heavy))
+                Text("SETTINGS").font(.carbon(40, .heavy, compressed: true))
 
                 SettingsGroup(title: "Suspension Tuner Pro") {
                     if pro.isPro {
@@ -232,8 +231,7 @@ struct SettingsGroup<Content: View>: View {
             VStack(alignment: .leading, spacing: 12) { content }
                 .padding(14)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.stroke))
+                .glassCard(18)
         }
     }
 }

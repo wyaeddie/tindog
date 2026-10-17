@@ -1,7 +1,7 @@
 import SwiftUI
 import SuspensionKit
 
-/// App root: Garage · Tune · History · Settings
+/// App root: Rack · Tune · History · Settings
 struct RootView: View {
     @State private var store = GarageStore()
     @AppStorage("appearance") private var appearance: Appearance = .system
@@ -9,7 +9,7 @@ struct RootView: View {
     var body: some View {
         TabView(selection: $store.tab) {
             GarageHomeView(store: store)
-                .tabItem { Label("Garage", systemImage: "house.fill") }
+                .tabItem { Label("Rack", systemImage: "house.fill") }
                 .tag(AppTab.garage)
             TuneView(store: store)
                 .tabItem { Label("Tune", systemImage: "dial.medium.fill") }
@@ -27,7 +27,7 @@ struct RootView: View {
     }
 }
 
-/// Scrollable dark page with a readable max width on iPad.
+/// Scrollable carbon page with a readable max width on iPad.
 struct Page<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
@@ -39,7 +39,7 @@ struct Page<Content: View>: View {
                 .frame(maxWidth: .infinity)
         }
         .scrollDismissesKeyboard(.interactively)
-        .background(Theme.background.ignoresSafeArea())
+        .background { CarbonBackground() }
     }
 }
 
@@ -54,14 +54,14 @@ struct StepHeader: View {
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
             if let number {
-                Text("\(number)")
-                    .font(.system(size: 13, weight: .black, design: .rounded))
-                    .foregroundStyle(.black)
-                    .frame(width: 24, height: 24)
-                    .background(Theme.accent, in: Circle())
+                Text(String(format: "%02d", number))
+                    .font(.mono(12, .bold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 28, height: 24)
+                    .overlay(RoundedRectangle(cornerRadius: 6, style: .continuous).stroke(Theme.accent.opacity(0.6)))
             }
             VStack(alignment: .leading, spacing: 1) {
-                Text(title.uppercased()).font(.system(size: 12, weight: .heavy)).tracking(1.2)
+                Text(title.uppercased()).font(.carbon(14, .bold)).tracking(2.4)
                 Text(subtitle).font(.caption).foregroundStyle(Theme.muted)
             }
             Spacer(minLength: 0)
@@ -78,7 +78,7 @@ struct TrustNote: View {
                 .font(.system(size: 22))
                 .foregroundStyle(Theme.go)
             VStack(alignment: .leading, spacing: 4) {
-                Text("Built on the manufacturers' numbers").font(.subheadline.weight(.heavy))
+                Text("Built on the manufacturers' numbers".uppercased()).font(.carbon(15, .bold)).tracking(1)
                 Text("Air pressure, sag, volume spacers and damping clicks come straight from each maker's official setup charts and specifications for your weight. For more in-depth tuning, set your riding style and riding conditions — terrain, weather, pack and feel fine-tune that baseline.")
                     .font(.caption).foregroundStyle(Theme.text.opacity(0.75))
                     .fixedSize(horizontal: false, vertical: true)
@@ -89,8 +89,7 @@ struct TrustNote: View {
             Spacer(minLength: 0)
         }
         .padding(14)
-        .background(Theme.go.opacity(0.08), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Theme.go.opacity(0.35)))
+        .glassCard(18, glow: Theme.go)
     }
 }
 
@@ -139,20 +138,22 @@ struct GarageHomeView: View {
         Page {
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(greeting).font(.subheadline.weight(.bold)).foregroundStyle(Theme.accent)
+                    Text(greeting.uppercased()).font(.carbon(13, .semibold)).tracking(2.6).foregroundStyle(Theme.muted)
+                        .lineLimit(1).minimumScaleFactor(0.7)
                     HStack(spacing: 4) {
-                        Text("My Bike Rack").font(.system(size: 32, weight: .heavy))
+                        Text("MY BIKE RACK").font(.carbon(40, .heavy, compressed: true))
                         HelpButton(title: "How to dial it in", arrowEdge: .top) { GarageHelp() }
                     }
                 }
                 Spacer()
                 Button { addBike() } label: {
                     Image(systemName: "plus")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundStyle(.black)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(Theme.accent)
                         .frame(width: 42, height: 42)
-                        .background(Theme.accent, in: Circle())
-                        .shadow(color: Theme.accent.opacity(0.45), radius: 10, y: 4)
+                        .background(Theme.card.opacity(0.6), in: Circle())
+                        .overlay(Circle().stroke(Theme.accent.opacity(0.65)))
+                        .shadow(color: Theme.accent.opacity(0.4), radius: 12)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Add bike")
@@ -243,24 +244,23 @@ struct BikeHeroCard: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(bike.name).font(.system(size: 22, weight: .heavy)).lineLimit(1)
+                    Label(bike.style.title.uppercased(), systemImage: bike.style.icon)
+                        .font(.carbon(13, .semibold)).tracking(2.6)
+                        .foregroundStyle(Theme.accent)
+                        .contentTransition(.opacity)
+                    Text(bike.name.uppercased()).font(.carbon(30, .bold)).lineLimit(1).minimumScaleFactor(0.7)
                     Text(subtitle).font(.footnote).foregroundStyle(Theme.muted)
                 }
                 Spacer()
-                Label(bike.style.title, systemImage: bike.style.icon)
-                    .font(.caption.weight(.bold))
-                    .contentTransition(.opacity)
-                    .foregroundStyle(Theme.go)
-                    .padding(.horizontal, 10).padding(.vertical, 5)
-                    .background(Theme.go.opacity(0.14), in: Capsule())
-                    .overlay(Capsule().stroke(Theme.go.opacity(0.4)))
                 Menu {
                     Button("Edit bike", systemImage: "pencil", action: onEdit)
                     Button("Delete bike", systemImage: "trash", role: .destructive, action: onDelete)
                 } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                        .font(.system(size: 22))
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(Theme.muted)
+                        .frame(width: 34, height: 34)
+                        .overlay(Circle().stroke(Theme.stroke))
                 }
                 .buttonStyle(.plain)
                 .menuIndicator(.hidden)
@@ -276,6 +276,9 @@ struct BikeHeroCard: View {
                 .frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 2)
+                .background(RadialGradient(colors: [Theme.text.opacity(0.09), .clear], center: .center, startRadius: 0, endRadius: 200))
+
+            Hairline()
 
             // Rear on the left, front on the right — the same way round as the bike drawing.
             HStack(spacing: 10) {
@@ -283,15 +286,7 @@ struct BikeHeroCard: View {
                 EndSummaryCard(store: store, bike: bike, end: .fork, onAdd: onEdit)
             }
         }
-        .padding(16)
-        .background {
-            ZStack {
-                LinearGradient(colors: [Theme.heroTop, Theme.heroBottom], startPoint: .topLeading, endPoint: .bottomTrailing)
-                RadialGradient(colors: [Theme.accent.opacity(0.32), .clear], center: .topTrailing, startRadius: 0, endRadius: 260)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-        }
-        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).stroke(Theme.heroStroke))
+        .padding(.vertical, 4)
     }
 }
 
@@ -322,21 +317,21 @@ struct EndSummaryCard: View {
                 store.tuneEnd = end
                 store.tab = .tune
             } label: {
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text("\(endName) · \(model.name)".uppercased())
-                        .font(.system(size: 10.5, weight: .bold)).tracking(1)
-                        .foregroundStyle(color).lineLimit(1).minimumScaleFactor(0.8)
-                    HStack(alignment: .firstTextBaseline, spacing: 3) {
-                        Text("\(shown)").font(.system(size: 26, weight: .heavy, design: .rounded))
+                        .font(.carbon(12, .semibold)).tracking(2)
+                        .foregroundStyle(end == .fork ? Theme.accent : Theme.muted).lineLimit(1).minimumScaleFactor(0.7)
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text("\(shown)").font(.carbon(50, .bold, compressed: true))
                             .contentTransition(.numericText())
-                        Text(rec.headlineUnit).font(.footnote.bold())
+                        Text(rec.headlineUnit.uppercased()).font(.carbon(14, .semibold)).foregroundStyle(Theme.muted)
                     }
-                    Text(detail(rec, ran: ran)).font(.caption).foregroundStyle(Theme.muted).lineLimit(1)
+                    Text(detail(rec, ran: ran).uppercased()).font(.mono(10.5)).foregroundStyle(Theme.muted)
+                        .lineLimit(1).minimumScaleFactor(0.8)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(color.opacity(0.45)))
+                .padding(14)
+                .glassCard(20, glow: end == .fork ? color : nil)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -359,8 +354,8 @@ struct EndSummaryCard: View {
     }
 
     private func detail(_ rec: Recommendation, ran: RanSetup) -> String {
-        var parts = ["\(rec.sagPercent)% sag"]
-        if let t = ran.tokens ?? rec.tokens { parts.append("\(t) token\(t == 1 ? "" : "s")") }
+        var parts = ["Sag \(rec.sagPercent)%"]
+        if let t = ran.tokens ?? rec.tokens { parts.append("Tok \(t)") }
         if !rec.differences(from: ran).isEmpty { parts.append("custom") }
         return parts.joined(separator: " · ")
     }
@@ -374,24 +369,20 @@ struct RideStylePicker: View {
     private func icon(_ style: RidingStyle) -> String { style.icon }
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 0) {
             ForEach(RidingStyle.allCases) { style in
                 let on = style == selection
                 Button { withAnimation(.snappy) { onSelect(style) } } label: {
-                    VStack(spacing: 6) {
-                        Image(systemName: icon(style)).font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(on ? Theme.go : Theme.muted)
-                        Text(style.shortTitle).font(.system(size: 13, weight: on ? .heavy : .semibold))
-                            .lineLimit(1).minimumScaleFactor(0.8)
+                    VStack(spacing: 5) {
+                        Image(systemName: icon(style)).font(.system(size: 13, weight: .semibold))
+                        Text(style.shortTitle.uppercased()).font(.carbon(16, on ? .bold : .semibold)).tracking(0.8)
+                            .lineLimit(1).minimumScaleFactor(0.7)
+                        Capsule().fill(on ? Theme.accent : .clear).frame(height: 2)
+                            .shadow(color: Theme.accent.opacity(on ? 0.8 : 0), radius: 4)
                     }
+                    .foregroundStyle(on ? Theme.accent : Theme.muted)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 11)
-                    .background(
-                        LinearGradient(colors: [on ? Theme.go.opacity(0.25) : Theme.card, Theme.card],
-                                       startPoint: .topLeading, endPoint: .bottomTrailing),
-                        in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(on ? Theme.go : Theme.stroke, lineWidth: on ? 1.5 : 1))
+                    .padding(.top, 6)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -418,7 +409,7 @@ struct BikeRow: View {
                 .padding(.vertical, 2)
                 .background(Theme.card2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
-                Text(bike.name).font(.subheadline.weight(.bold))
+                Text(bike.name.uppercased()).font(.carbon(16, .bold)).tracking(0.6)
                 Text([model.map { "\($0.brand) \($0.name)" }, rec.map { "\(bike.ran(mainEnd).springValue ?? $0.springValue) \($0.headlineUnit)" }]
                         .compactMap { $0 }.joined(separator: " · "))
                     .font(.caption).foregroundStyle(Theme.muted)
@@ -427,8 +418,7 @@ struct BikeRow: View {
             Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(Theme.muted)
         }
         .padding(12)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+        .glassCard(16)
         .contentShape(Rectangle())
     }
 }
@@ -443,7 +433,7 @@ struct EmptyStateCard: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: icon).font(.system(size: 40, weight: .semibold)).foregroundStyle(Theme.accent)
-            Text(title).font(.title3.weight(.heavy))
+            Text(title.uppercased()).font(.carbon(24, .bold)).tracking(0.8)
             Text(message).font(.callout).foregroundStyle(Theme.muted).multilineTextAlignment(.center)
             if let button {
                 Button(action: action) {
@@ -457,8 +447,7 @@ struct EmptyStateCard: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 36).padding(.horizontal, 20)
-        .background(Theme.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).stroke(Theme.stroke))
+        .glassCard(24)
     }
 }
 

@@ -278,3 +278,61 @@ public enum PreRideChecklist {
         return out
     }
 }
+
+// MARK: - Step-by-step setup (plain-text instructions for riders who'd rather read than read charts)
+
+public struct SetupStep: Hashable, Identifiable {
+    public var id: String { title }
+    public let title: String
+    public let text: String
+}
+
+public enum SetupSteps {
+    /// Plain-language steps for one end, using what the rider has set (`ran`) over the recommendation.
+    public static func steps(_ rec: Recommendation, isFork: Bool, ran: RanSetup = RanSetup()) -> [SetupStep] {
+        var out: [SetupStep] = []
+        let spring = ran.springValue ?? rec.springValue
+        if rec.isAir {
+            out.append(SetupStep(title: "Air pressure",
+                text: "Screw a shock pump onto the \(isFork ? "air valve on top of the left fork leg" : "shock's air valve") and pump to \(spring) psi. Compress the \(isFork ? "fork" : "bike") 10–20 times to even out the chambers, then re-check and top up to \(spring) psi."))
+        } else {
+            out.append(SetupStep(title: "Spring",
+                text: "Fit a \(spring) lb/in coil spring. Wind the preload collar on until the spring just stops rattling, then add no more than 1–2 turns."))
+        }
+        if let tokens = ran.tokens ?? rec.tokens {
+            let fit = tokens == 0 ? "remove all volume spacers" : "fit \(tokens) volume spacer\(tokens == 1 ? "" : "s")"
+            out.append(SetupStep(title: "Volume spacers",
+                text: isFork
+                    ? "Let all the air out first. Unscrew the top cap on the left leg, \(fit) under the cap, screw it back in and re-pump to \(spring) psi."
+                    : "Let all the air out first. Remove the air can as your shock's manual shows, \(fit), refit it and re-pump to \(spring) psi."))
+        }
+        for click in rec.clicks {
+            let n = ran.clicks[click.key] ?? click.value
+            let start = click.fromClosed
+                ? "Turn it clockwise until it gently stops (fully closed), then count \(n) click\(n == 1 ? "" : "s") back out, anti-clockwise."
+                : "Turn it anti-clockwise until it stops (fully open), then count \(n) click\(n == 1 ? "" : "s") in, clockwise."
+            let range = click.rangeText.map { " The maker's range is \($0)." } ?? ""
+            out.append(SetupStep(title: "\(click.label) · \(n) \(click.direction)",
+                                 text: "\(adjusterLocation(click, isFork: isFork)) \(start)\(range)"))
+        }
+        out.append(SetupStep(title: "Check sag",
+            text: String(format: "Sit on the bike in your riding position. Sag should be about %.0f mm (%d%%). Too much? Add pressure. Too little? Let some out.", rec.sagMm, rec.sagPercent)))
+        return out
+    }
+
+    /// Where the adjuster usually is.
+    static func adjusterLocation(_ click: ClickSetting, isFork: Bool) -> String {
+        let ring: String
+        switch click.key {
+        case "hsr", "hsc": ring = " It's usually the outer, larger dial."
+        case "lsr", "lsc": ring = " It's usually the inner, smaller knob."
+        default: ring = ""
+        }
+        if click.isRebound {
+            return (isFork ? "Find the rebound adjuster (usually red) at the bottom of the right fork leg."
+                           : "Find the rebound adjuster (usually red) on the shock body or eyelet.") + ring
+        }
+        return (isFork ? "Find the compression adjuster (usually blue) on top of the right fork leg."
+                       : "Find the compression adjuster (usually blue) on the shock's body or reservoir.") + ring
+    }
+}

@@ -105,7 +105,7 @@ struct DisclaimerView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
-                Text("Disclaimer").font(.system(size: 32, weight: .heavy))
+                Text("DISCLAIMER").font(.carbon(40, .heavy, compressed: true))
                 Text("Please read before using Suspension Tuner's recommendations.")
                     .font(.callout).foregroundStyle(Theme.muted)
                 ForEach(sections, id: \.1) { icon, title, text in
@@ -122,8 +122,7 @@ struct DisclaimerView: View {
                     }
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+                    .glassCard(16)
                 }
                 Text("© \(AppInfo.year) \(AppInfo.company). All rights reserved.")
                     .font(.caption).foregroundStyle(Theme.muted)
@@ -134,7 +133,7 @@ struct DisclaimerView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
-        .background(Theme.background.ignoresSafeArea())
+        .background { CarbonBackground() }
         .navigationTitle("Disclaimer")
         .navigationBarTitleDisplayMode(.inline)
     }
