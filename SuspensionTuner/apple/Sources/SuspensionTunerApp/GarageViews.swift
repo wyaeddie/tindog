@@ -132,7 +132,7 @@ struct GarageHomeView: View {
                     Text(greeting).font(.subheadline.weight(.bold)).foregroundStyle(Theme.accent)
                     HStack(spacing: 4) {
                         Text("My Garage").font(.system(size: 32, weight: .heavy))
-                        HelpButton(title: "How to dial it in") { GarageHelp() }
+                        HelpButton(title: "How to dial it in", arrowEdge: .top) { GarageHelp() }
                     }
                 }
                 Spacer()

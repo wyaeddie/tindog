@@ -4,6 +4,9 @@ import SuspensionKit
 /// Small (?) button that opens a help popover (shown as a bubble on iPhone and iPad).
 struct HelpButton<Content: View>: View {
     let title: String
+    /// Where the popover's arrow sits: .bottom opens it above the button, .top opens it below
+    /// (use .top for buttons near the top of the screen, where there's no room above).
+    var arrowEdge: Edge = .bottom
     @ViewBuilder var content: Content
     @State private var shown = false
 
@@ -18,7 +21,7 @@ struct HelpButton<Content: View>: View {
         .buttonStyle(.plain)
         .help(title)
         .accessibilityLabel("Help: \(title)")
-        .popover(isPresented: $shown, arrowEdge: .bottom) {
+        .popover(isPresented: $shown, arrowEdge: arrowEdge) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     Text(title).font(.headline.weight(.heavy))
