@@ -93,15 +93,17 @@ public struct Recommendation {
 public enum SuspensionEngine {
     static let lbPerKg = 2.20462
     static let gearKg = 5.0
-    static let forkSag: [RidingStyle: Int] = [.trail: 20, .enduro: 22, .park: 23]
-    static let shockSag: [RidingStyle: Int] = [.trail: 28, .enduro: 30, .park: 31]
-    static let lscFraction: [RidingStyle: Double] = [.trail: 0.30, .enduro: 0.40, .park: 0.50]
-    static let hscFraction: [RidingStyle: Double] = [.trail: 0.25, .enduro: 0.40, .park: 0.55]
-    static let tokenBump: [RidingStyle: Int] = [.trail: 0, .enduro: 1, .park: 2]
+    static let forkSag: [RidingStyle: Int] = [.xc: 18, .trail: 20, .enduro: 22, .park: 23, .dh: 25]
+    static let shockSag: [RidingStyle: Int] = [.xc: 25, .trail: 28, .enduro: 30, .park: 31, .dh: 33]
+    static let lscFraction: [RidingStyle: Double] = [.xc: 0.45, .trail: 0.30, .enduro: 0.40, .park: 0.50, .dh: 0.45]
+    static let hscFraction: [RidingStyle: Double] = [.xc: 0.25, .trail: 0.25, .enduro: 0.40, .park: 0.55, .dh: 0.60]
+    static let tokenBump: [RidingStyle: Int] = [.xc: 0, .trail: 0, .enduro: 1, .park: 2, .dh: 2]
     static let eBikeExtraLb = 15.0      // extra sprung weight of an e-bike, used by the calculated estimates
     static let pumpTempF = 70.0         // assume the pump is used indoors
     static let categoryRank = ["xc": 0, "trail": 1, "enduro": 2, "dh": 3]
     static let styleTip: [RidingStyle: String] = [
+        .xc: "XC: run the firm end of the sag range and use the lockout on climbs.",
+        .dh: "Downhill: run the plush end of the sag range; add high-speed compression or a spacer if you bottom out.",
         .trail: "Trail: the firm end of the sag range pedals best.",
         .enduro: "Enduro: aim for the middle of the sag range.",
         .park: "Bike Park: run the plush end of the sag range and add a volume spacer if you bottom out.",
@@ -371,8 +373,15 @@ public enum SuspensionEngine {
         var tokenMax: Int? = nil
         let ebikeTokens = bk.eBike && mfg?.ebikeTokens != nil
         if bk.eBike && !ebikeTokens { tok.append(Nudge(reason: "e-bike", amount: 1)) }
+        if !isFork && m.spring == .air {
+            switch bk.frameProgression {
+            case .linear: tok.append(Nudge(reason: "linear frame", amount: 1))
+            case .progressive: tok.append(Nudge(reason: "progressive frame", amount: -1))
+            case .average: break
+            }
+        }
         let tokSum = tok.reduce(0) { $0 + $1.amount }
-        let tokText = tok.isEmpty ? "" : " +\(tokSum) for \(describe(tok))."
+        let tokText = tok.isEmpty ? "" : " \(tokSum >= 0 ? "+" : "")\(tokSum) for \(describe(tok))."
         if let rows = (ebikeTokens ? mfg?.ebikeTokens : mfg?.tokens), !rows.isEmpty {
             let row = rows.min { abs($0.travel - rider.travelMm) < abs($1.travel - rider.travelMm) }!
             let n = Int(clamp(Double(row.installed + tokSum), 0, Double(row.max)))
@@ -476,7 +485,7 @@ public enum SuspensionEngine {
         // ---- lockout / climb --------------------------------------------------
         if let climb = m.climb {
             let how: String
-            if style == .park {
+            if style.isGravity {
                 how = "Leave open for lift laps; use only on long fire-road climbs."
             } else if ride.priority == .climb {
                 how = "Climbing priority: use the firm / climb mode on every sustained climb."
@@ -537,11 +546,14 @@ public enum SuspensionEngine {
             warnings.append("At \(totalIn / 12)′\(totalIn % 12)″ (\(roundHalfUp(rider.heightCm)) cm) a size \(recSize.rawValue) frame is typical; you chose \(rider.frameSize.rawValue)."
                             + (pressureFromChart ? "" : " Weight balance was adjusted for this."))
         }
-        if categoryRank[m.category] == 0 && style != .trail {
+        if categoryRank[m.category] == 0 && style != .trail && style != .xc {
             warnings.append("The \(m.name) is an XC product — not intended for \(style.title.lowercased()) riding.")
         }
-        if style == .park && (categoryRank[m.category] ?? 0) < 2 {
-            warnings.append("Bike park riding usually calls for an enduro or DH-rated product.")
+        if style.isGravity && (categoryRank[m.category] ?? 0) < 2 {
+            warnings.append("\(style == .park ? "Bike park" : "Downhill") riding usually calls for an enduro or DH-rated product.")
+        }
+        if !isFork && m.spring == .coil && bk.frameProgression == .linear {
+            warnings.append("Linear frame with a coil shock: use a progressive spring or more bottom-out control (HBO / HSC) so you don't bottom out harshly.")
         }
         if ride.temperatureF <= 32 {
             warnings.append("Below freezing: fork and shock oil thickens, so everything feels slower and firmer until it warms up.")

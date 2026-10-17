@@ -157,11 +157,7 @@ struct SettingsView: View {
                         aboutShown = true
                     } label: {
                         SettingsRow(icon: "info.circle.fill", color: Theme.accent, title: "About \(AppInfo.name)",
-                                    subtitle: "Version, credits and website")
-                    }
-                    .buttonStyle(.plain)
-                    Link(destination: AppInfo.website) {
-                        SettingsRow(icon: "globe", color: Theme.go, title: AppInfo.company, subtitle: AppInfo.websiteLabel)
+                                    subtitle: "Version and credits")
                     }
                     .buttonStyle(.plain)
                 }

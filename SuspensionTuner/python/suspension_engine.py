@@ -22,15 +22,16 @@ LB_PER_KG = 2.20462
 GEAR_KG = 5.0  # helmet, pack, water, shoes
 
 FRAME_SIZES = ["S", "M", "L", "XL"]
-STYLES = ["trail", "enduro", "park"]
-STYLE_LABELS = {"trail": "Trail", "enduro": "Enduro", "park": "Bike Park"}
+STYLES = ["xc", "trail", "enduro", "park", "dh"]
+STYLE_LABELS = {"xc": "XC", "trail": "Trail", "enduro": "Enduro", "park": "Bike Park", "dh": "Downhill"}
+GRAVITY = ("park", "dh")
 
-FORK_SAG = {"trail": 20, "enduro": 22, "park": 23}
-SHOCK_SAG = {"trail": 28, "enduro": 30, "park": 31}
-LSC_FRACTION = {"trail": 0.30, "enduro": 0.40, "park": 0.50}
-HSC_FRACTION = {"trail": 0.25, "enduro": 0.40, "park": 0.55}
+FORK_SAG = {"xc": 18, "trail": 20, "enduro": 22, "park": 23, "dh": 25}
+SHOCK_SAG = {"xc": 25, "trail": 28, "enduro": 30, "park": 31, "dh": 33}
+LSC_FRACTION = {"xc": 0.45, "trail": 0.30, "enduro": 0.40, "park": 0.50, "dh": 0.45}
+HSC_FRACTION = {"xc": 0.25, "trail": 0.25, "enduro": 0.40, "park": 0.55, "dh": 0.60}
 CATEGORY_RANK = {"xc": 0, "trail": 1, "enduro": 2, "dh": 3}
-TOKEN_BUMP = {"trail": 0, "enduro": 1, "park": 2}
+TOKEN_BUMP = {"xc": 0, "trail": 0, "enduro": 1, "park": 2, "dh": 2}
 EBIKE_EXTRA_LB = 15.0   # extra sprung weight of an e-bike, used by the calculated estimates
 PUMP_TEMP_F = 70.0      # assume the pump is used indoors
 PACK_LB = {"none": 0.0, "hip": 5.0, "day": 12.0, "big": 20.0}
@@ -40,6 +41,8 @@ PRIORITY_TITLES = {"climb": "Climbing", "balanced": "Balanced", "descend": "Desc
 WHEEL_TITLES = {"29": "29″", "27.5": "27.5″", "mixed": "Mixed"}
 TIRE_WIDTH_TITLES = {"standard": "2.3–2.4″", "wide": "2.5–2.6″"}
 STYLE_TIP = {
+    "xc": "XC: run the firm end of the sag range and use the lockout on climbs.",
+    "dh": "Downhill: run the plush end of the sag range; add high-speed compression or a spacer if you bottom out.",
     "trail": "Trail: the firm end of the sag range pedals best.",
     "enduro": "Enduro: aim for the middle of the sag range.",
     "park": "Bike Park: run the plush end of the sag range and add a volume spacer if you bottom out.",
@@ -84,6 +87,7 @@ class RiderInput:
     tire_width: str = "standard"     # standard (2.3–2.4) / wide (2.5–2.6)
     inserts: bool = False
     frame_rear_sag: float | None = None
+    frame_progression: str = "average"   # linear / average / progressive
     service_hours: float = 0.0       # hours since this end was serviced
 
 
@@ -389,8 +393,13 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
     ebike_tokens = bool(rider.e_bike and mfg and mfg.get("ebikeTokens"))
     if rider.e_bike and not ebike_tokens:
         tok.append(("e-bike", 1))
+    if not is_fork and model["spring"] == "air":
+        if rider.frame_progression == "linear":
+            tok.append(("linear frame", 1))
+        elif rider.frame_progression == "progressive":
+            tok.append(("progressive frame", -1))
     tok_sum = sum(a for _, a in tok)
-    tok_text = f" +{tok_sum} for {_describe(tok)}." if tok else ""
+    tok_text = f" {tok_sum:+d} for {_describe(tok)}." if tok else ""
     rows = mfg and (mfg.get("ebikeTokens") if ebike_tokens else mfg.get("tokens"))
     if rows:
         row = min(rows, key=lambda r: abs(r["travel"] - rider.travel_mm))
@@ -490,7 +499,7 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
 
     # ---- lockout / climb --------------------------------------------------
     if model["climb"]:
-        if style == "park":
+        if style in GRAVITY:
             how = "Leave open for lift laps; use only on long fire-road climbs."
         elif rider.priority == "climb":
             how = "Climbing priority: use the firm / climb mode on every sustained climb."
@@ -554,11 +563,14 @@ def calculate(model: dict, rider: RiderInput) -> Recommendation:
         warnings.append(f"At {total_in // 12}′{total_in % 12}″ ({_round_half_up(rider.height_cm)} cm) a size {rec_size} "
                         f"frame is typical; you chose {rider.frame_size}."
                         + ("" if pressure_from_chart else " Weight balance was adjusted for this."))
-    if CATEGORY_RANK[model["category"]] == 0 and style != "trail":
+    if CATEGORY_RANK[model["category"]] == 0 and style not in ("trail", "xc"):
         warnings.append(f"The {model['name']} is an XC product — not intended for "
                         f"{STYLE_LABELS[style].lower()} riding.")
-    if style == "park" and CATEGORY_RANK[model["category"]] < 2:
-        warnings.append("Bike park riding usually calls for an enduro or DH-rated product.")
+    if style in GRAVITY and CATEGORY_RANK[model["category"]] < 2:
+        warnings.append(f"{'Bike park' if style == 'park' else 'Downhill'} riding usually calls for an enduro or DH-rated product.")
+    if not is_fork and model["spring"] == "coil" and rider.frame_progression == "linear":
+        warnings.append("Linear frame with a coil shock: use a progressive spring or more bottom-out control "
+                        "(HBO / HSC) so you don't bottom out harshly.")
     if rider.temperature_f <= 32:
         warnings.append("Below freezing: fork and shock oil thickens, so everything feels slower and firmer "
                         "until it warms up.")

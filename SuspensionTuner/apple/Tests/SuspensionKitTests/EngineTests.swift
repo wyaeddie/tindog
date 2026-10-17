@@ -159,6 +159,22 @@ final class EngineTests: XCTestCase {
         XCTAssertTrue(SuspensionEngine.calculate(model: model("rockshox-lyrik-ultimate"), rider: r).serviceDue)  // 50 h lowers
     }
 
+    func testXCAndDownhillStyles() {
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("dvo-onyx-sc-d1"), rider: rider(.dh, 170)).sagPercent, 25)
+        XCTAssertFalse(SuspensionEngine.calculate(model: model("rockshox-sid-sl-ultimate"), rider: rider(.xc, 100))
+            .warnings.contains { $0.contains("XC product") })
+        XCTAssertTrue(SuspensionEngine.calculate(model: model("rockshox-sid-sl-ultimate"), rider: rider(.dh, 100))
+            .warnings.contains { $0.contains("Downhill riding") })
+    }
+
+    func testFrameLeverageCurveMovesShockSpacers() {
+        var r = rider(.trail, 160, 62.5)
+        r.bike.frameProgression = .linear
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-float-x2-factory"), rider: r).value("Volume spacers"), "2 tokens")
+        r.bike.frameProgression = .progressive
+        XCTAssertEqual(SuspensionEngine.calculate(model: model("fox-float-x2-factory"), rider: r).value("Volume spacers"), "0 tokens")
+    }
+
     func testXCForkInParkWarns() {
         let r = SuspensionEngine.calculate(model: model("rockshox-sid-sl-ultimate"), rider: rider(.park, 100))
         XCTAssertTrue(r.warnings.contains { $0.contains("XC product") })

@@ -127,6 +127,18 @@ class EngineTests(unittest.TestCase):
         rec = calculate(MODELS["rockshox-lyrik-ultimate"], RiderInput(**RIDER, style="enduro", travel_mm=150, service_hours=60))
         self.assertTrue(rec.service_due)
 
+    def test_xc_and_downhill_styles(self):
+        self.assertEqual(calculate(MODELS["dvo-onyx-sc-d1"], RiderInput(**RIDER, style="dh", travel_mm=170)).sag_percent, 25)
+        sid = MODELS["rockshox-sid-sl-ultimate"]
+        self.assertFalse(any("XC product" in w for w in calculate(sid, RiderInput(**RIDER, style="xc", travel_mm=100)).warnings))
+        self.assertTrue(any("Downhill riding" in w for w in calculate(sid, RiderInput(**RIDER, style="dh", travel_mm=100)).warnings))
+
+    def test_frame_leverage_curve_moves_shock_spacers(self):
+        x2 = MODELS["fox-float-x2-factory"]
+        kw = dict(**RIDER, style="trail", travel_mm=160, stroke_mm=62.5)
+        self.assertEqual(values(calculate(x2, RiderInput(**kw, frame_progression="linear")))["Volume spacers"], "2 tokens")
+        self.assertEqual(values(calculate(x2, RiderInput(**kw, frame_progression="progressive")))["Volume spacers"], "0 tokens")
+
     def test_xc_fork_in_park_warns(self):
         rec = calculate(MODELS["rockshox-sid-sl-ultimate"], RiderInput(**RIDER, style="park", travel_mm=100))
         self.assertTrue(any("XC product" in w for w in rec.warnings))

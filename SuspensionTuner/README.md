@@ -7,7 +7,7 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 
 ## Features (iPhone app)
 - **Garage:** save bikes with their fork, shock and rider. The home screen shows the bike with front and rear
-  setups; a Trail / Enduro / Bike Park switch re-tunes both ends in one tap
+  setups; an XC / Trail / Enduro / Bike Park / Downhill switch re-tunes both ends in one tap
 - **Tune:** pressure / spring-rate dial with ± nudges (hold to repeat), O-ring sag check, damping sliders and
   token blocks to record what you actually ran, (?) help for sag and damping, Share / Print / Save to History
 - **History:** saved setups with date, differences from the recommendation and your notes

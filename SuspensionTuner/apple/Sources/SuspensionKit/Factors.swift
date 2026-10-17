@@ -92,6 +92,13 @@ public enum TireWidth: String, Codable, CaseIterable, Identifiable {
     public var title: String { self == .standard ? "2.3–2.4″" : "2.5–2.6″" }
 }
 
+/// How the frame's leverage ratio changes through the travel (from reviews or the frame maker's chart).
+public enum FrameProgression: String, Codable, CaseIterable, Identifiable {
+    case linear, average, progressive
+    public var id: String { rawValue }
+    public var title: String { rawValue.capitalized }
+}
+
 /// Today's ride — changes often, set on the Garage screen.
 public struct RideConditions: Codable, Hashable {
     public var terrain: Terrain
@@ -128,14 +135,17 @@ public struct BikeSetup: Codable, Hashable {
     public var inserts: Bool
     /// The frame maker's recommended rear sag, % (nil = use the shock maker's)
     public var frameRearSag: Double?
+    public var frameProgression: FrameProgression
     /// Hours ridden since the last service
     public var forkHours: Double
     public var shockHours: Double
 
     public init(eBike: Bool = false, wheel: WheelSize = .w29, tireWidth: TireWidth = .standard, inserts: Bool = false,
-                frameRearSag: Double? = nil, forkHours: Double = 0, shockHours: Double = 0) {
+                frameRearSag: Double? = nil, frameProgression: FrameProgression = .average,
+                forkHours: Double = 0, shockHours: Double = 0) {
         self.eBike = eBike; self.wheel = wheel; self.tireWidth = tireWidth; self.inserts = inserts
-        self.frameRearSag = frameRearSag; self.forkHours = forkHours; self.shockHours = shockHours
+        self.frameRearSag = frameRearSag; self.frameProgression = frameProgression
+        self.forkHours = forkHours; self.shockHours = shockHours
     }
 
     public init(from decoder: Decoder) throws {
@@ -146,6 +156,7 @@ public struct BikeSetup: Codable, Hashable {
         tireWidth = try c.decodeIfPresent(TireWidth.self, forKey: .tireWidth) ?? d.tireWidth
         inserts = try c.decodeIfPresent(Bool.self, forKey: .inserts) ?? d.inserts
         frameRearSag = try c.decodeIfPresent(Double.self, forKey: .frameRearSag)
+        frameProgression = try c.decodeIfPresent(FrameProgression.self, forKey: .frameProgression) ?? d.frameProgression
         forkHours = try c.decodeIfPresent(Double.self, forKey: .forkHours) ?? d.forkHours
         shockHours = try c.decodeIfPresent(Double.self, forKey: .shockHours) ?? d.shockHours
     }

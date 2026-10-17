@@ -9,15 +9,27 @@ public enum ComponentKind: String, Codable, CaseIterable, Identifiable {
 public enum SpringType: String, Codable { case air, coil }
 
 public enum RidingStyle: String, Codable, CaseIterable, Identifiable {
-    case trail, enduro, park
+    case xc, trail, enduro, park, dh
     public var id: String { rawValue }
     public var title: String {
         switch self {
+        case .xc: return "XC"
         case .trail: return "Trail"
         case .enduro: return "Enduro"
         case .park: return "Bike Park"
+        case .dh: return "Downhill"
         }
     }
+    /// For tight chip rows
+    public var shortTitle: String {
+        switch self {
+        case .park: return "Park"
+        case .dh: return "DH"
+        default: return title
+        }
+    }
+    /// Lift-assisted gravity riding
+    public var isGravity: Bool { self == .park || self == .dh }
 }
 
 public enum FrameSize: String, Codable, CaseIterable, Identifiable {

@@ -113,7 +113,7 @@ struct BikeEditorView: View {
                             SectionLabel(text: "Frame size", color: Theme.amber)
                             SegmentedRow(options: FrameSize.allCases, selection: $frame, title: \.rawValue)
                             SectionLabel(text: "Riding style", color: Theme.go)
-                            SegmentedRow(options: RidingStyle.allCases, selection: $style, title: \.title)
+                            SegmentedRow(options: RidingStyle.allCases, selection: $style, title: \.shortTitle)
                             RiderHabitsEditor(skill: $skill, position: $position)
                         }
                     }
@@ -126,7 +126,12 @@ struct BikeEditorView: View {
                     PartEditor(title: "Front · Fork", kind: .fork, draft: $fork, catalog: store.catalog, color: Theme.accent)
                     PartEditor(title: "Rear · Shock", kind: .shock, draft: $shock, catalog: store.catalog, color: Theme.gold)
                     if shock.enabled {
-                        Panel { FrameSagEditor(frameRearSag: $setup.frameRearSag) }
+                        Panel {
+                            VStack(alignment: .leading, spacing: 14) {
+                                FrameSagEditor(frameRearSag: $setup.frameRearSag)
+                                FrameProgressionEditor(progression: $setup.frameProgression)
+                            }
+                        }
                     }
                     if fork.enabled || shock.enabled {
                         Panel {

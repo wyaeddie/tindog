@@ -135,7 +135,7 @@ struct InputPanel: View {
                     SegmentedRow(options: FrameSize.allCases, selection: $tuner.frameSize, title: \.rawValue)
 
                     SectionLabel(text: "Riding style", color: Theme.go)
-                    SegmentedRow(options: RidingStyle.allCases, selection: $tuner.style, title: \.title)
+                    SegmentedRow(options: RidingStyle.allCases, selection: $tuner.style, title: \.shortTitle)
 
                     if let m = tuner.model {
                         SliderRow(title: m.kind == .fork ? "Fork travel" : "Rear wheel travel",
@@ -155,6 +155,7 @@ struct InputPanel: View {
                             BikeSetupEditor(setup: $tuner.setup)
                             if tuner.kind == .shock {
                                 FrameSagEditor(frameRearSag: $tuner.setup.frameRearSag)
+                                FrameProgressionEditor(progression: $tuner.setup.frameProgression)
                             }
                         }
                         .padding(.top, 10)

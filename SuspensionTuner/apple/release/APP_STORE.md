@@ -49,7 +49,7 @@ Fork & shock setup for MTB
 
 **Promotional text** (can change any time without review)
 ```
-Save your bikes, pick Trail, Enduro or Bike Park, and get air pressure, sag, rebound and compression for your fork and shock in one tap.
+Save your bikes, pick XC, Trail, Enduro, Bike Park or Downhill, and get air pressure, sag, rebound and compression for your fork and shock in one tap.
 ```
 
 **Description**
@@ -63,7 +63,7 @@ SAVE YOUR BIKES
 Add each bike once with its fork, shock, your weight, height and frame size. Your garage shows both ends of every bike at a glance.
 
 ONE TAP FOR TODAY'S RIDING
-Switch between Trail, Enduro and Bike Park and both ends re-tune instantly.
+Switch between XC, Trail, Enduro, Bike Park and Downhill and both ends re-tune instantly.
 
 EVERYTHING YOU NEED AT THE BIKE
 • Air pressure or coil spring rate, with the max pressure for your model

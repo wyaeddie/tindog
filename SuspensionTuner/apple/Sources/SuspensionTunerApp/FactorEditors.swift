@@ -137,6 +137,21 @@ struct FrameSagEditor: View {
     }
 }
 
+/// How progressive the frame's leverage curve is (rear shock only).
+struct FrameProgressionEditor: View {
+    @Binding var progression: FrameProgression
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            FactorRow(title: "Frame leverage curve", options: FrameProgression.allCases,
+                      selection: $progression, label: \.title)
+            Text("From reviews or the frame maker's leverage chart. Linear frames need more volume spacers, progressive frames fewer. Not sure? Leave Average.")
+                .font(.caption).foregroundStyle(Theme.muted)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
 /// Hours ridden since the last service, as a number field.
 struct ServiceHoursField: View {
     let title: String

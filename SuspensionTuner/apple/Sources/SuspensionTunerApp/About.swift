@@ -6,12 +6,10 @@ enum AppInfo {
     static let name = "Suspension Tuner"
     static let author = "Eddie Sisomsun"
     static let company = "Whole Stack Solutions"
-    static let websiteLabel = "www.wholestack.solutions"
-    static let website = URL(string: "https://www.wholestack.solutions")!
     static let year = "2026"
-    static let summary = "Suspension Tuner helps mountain bikers dial in their fork and rear shock. "
-        + "Pick your suspension, enter your weight, height, frame size and riding style, and get a "
-        + "starting setup: air pressure or spring rate, sag, volume spacers, rebound, compression and lockout."
+    static let summary = "Suspension Tuner dials in your fork and rear shock from each manufacturer's own setup charts "
+        + "and specifications: air pressure or spring rate, sag, volume spacers, rebound, compression and lockout — "
+        + "then fine-tunes them for your riding style and today's conditions."
     static var version: String {
         let info = Bundle.main.infoDictionary
         let short = info?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -60,13 +58,7 @@ struct AboutView: View {
             }
             .padding(14)
             .background(Theme.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            Link(destination: AppInfo.website) {
-                Label(AppInfo.websiteLabel, systemImage: "globe")
-                    .font(.callout.weight(.semibold))
-                    .foregroundStyle(Theme.go)
-            }
-            .help("Visit \(AppInfo.company)")
-            Text("Settings are starting points. Always check the manufacturer's setup guide. "
+            Text("Never exceed the max pressure printed on your fork or shock. "
                  + "Not affiliated with any suspension brand.")
                 .font(.caption).foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
