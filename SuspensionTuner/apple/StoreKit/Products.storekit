@@ -1,0 +1,27 @@
+{
+  "identifier": "6F3B2A1C",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "7.99",
+      "familyShareable": true,
+      "internalID": "6739000001",
+      "localizations": [
+        {
+          "description": "Unlimited bikes, today's conditions, troubleshooter, ride log, share & print and the widget.",
+          "displayName": "Suspension Tuner Pro",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "solutions.wholestack.suspensiontuner.pro",
+      "referenceName": "Suspension Tuner Pro",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {},
+  "subscriptionGroups": [],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

@@ -128,11 +128,32 @@ struct SettingsView: View {
     @Bindable var store: GarageStore
     @State private var confirmErase = false
     @State private var aboutShown = false
+    @State private var showPaywall = false
+    @Environment(ProStore.self) private var pro
 
     var body: some View {
         NavigationStack {
             Page {
                 Text("Settings").font(.system(size: 32, weight: .heavy))
+
+                SettingsGroup(title: "Suspension Tuner Pro") {
+                    if pro.isPro {
+                        SettingsRow(icon: "checkmark.seal.fill", color: Theme.go, title: "Pro unlocked",
+                                    subtitle: "Thanks for supporting the app. Send it.")
+                    } else {
+                        Button { showPaywall = true } label: {
+                            SettingsRow(icon: "bolt.fill", color: Theme.accent, title: "Unlock Pro",
+                                        subtitle: "Unlimited bikes, conditions, troubleshooter, log, widget")
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    Button { Task { await pro.restore() } } label: {
+                        SettingsRow(icon: "arrow.clockwise", color: Theme.sky, title: "Restore purchase",
+                                    subtitle: pro.message ?? "Bought Pro on another device? Restore it here.")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(pro.busy)
+                }
 
                 SettingsGroup(title: "Units") {
                     Toggle(isOn: Binding(get: { store.useKilograms }, set: { store.useKilograms = $0 })) {
@@ -172,6 +193,7 @@ struct SettingsView: View {
             }
             .toolbar(.hidden, for: .navigationBar)
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
         .confirmationDialog("Erase all bikes and history?", isPresented: $confirmErase, titleVisibility: .visible) {
             Button("Erase everything", role: .destructive) { store.eraseAll() }
         }

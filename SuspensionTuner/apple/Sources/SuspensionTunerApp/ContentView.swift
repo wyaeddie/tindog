@@ -38,6 +38,8 @@ struct ContentView: View {
 struct InputPanel: View {
     @Bindable var tuner: TunerModel
     @State private var aboutShown = false
+    @State private var paywallFeature: String?
+    @Environment(ProStore.self) private var pro
 
     /// Clicking the logo or the app name opens the About sheet.
     private func showAbout() {
@@ -145,6 +147,18 @@ struct InputPanel: View {
                         }
                     }
 
+                    if !pro.isPro {
+                        Button { paywallFeature = "More factors" } label: {
+                            HStack(spacing: 8) {
+                                SectionLabel(text: "5 · More factors", color: Theme.teal)
+                                ProTag()
+                                Spacer()
+                                Image(systemName: "lock.fill").font(.footnote).foregroundStyle(Theme.muted)
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                    } else {
                     DisclosureGroup {
                         VStack(alignment: .leading, spacing: 14) {
                             SectionLabel(text: "Today's ride", color: Theme.sky)
@@ -163,11 +177,13 @@ struct InputPanel: View {
                         SectionLabel(text: "5 · More factors (optional)", color: Theme.teal)
                     }
                     .tint(Theme.muted)
+                    }
                 }
                 .disabled(!tuner.riderEnabled)
                 .opacity(tuner.riderEnabled ? 1 : 0.4)
             }
         }
+        .paywall($paywallFeature)
         .sheet(isPresented: $aboutShown) {
             ScrollView { AboutView().frame(maxWidth: .infinity) }
                 .background(Theme.panel)
@@ -324,8 +340,29 @@ struct ExportButtons: View {
     let report: ReportView
     let title: String
     let text: String
+    @Environment(ProStore.self) private var pro
+    @State private var paywallFeature: String?
 
     var body: some View {
+        if pro.isPro {
+            buttons
+        } else {
+            Button { paywallFeature = "Share & print" } label: {
+                HStack(spacing: 6) {
+                    Label("Share / Print", systemImage: "square.and.arrow.up")
+                    ProTag()
+                }
+            }
+            .buttonStyle(.bordered)
+            .tint(Theme.go)
+            .font(.system(size: 13, weight: .semibold))
+            .lineLimit(1)
+            .fixedSize()
+            .paywall($paywallFeature)
+        }
+    }
+
+    private var buttons: some View {
         HStack(spacing: 8) {
             Menu {
                 if let image = Exporter.image(of: report) {

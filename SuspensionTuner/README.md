@@ -56,6 +56,13 @@ cd apple && swift test
 cd python && python3 -m unittest test_engine.py
 ```
 
+## Free and Pro
+Free: one bike, the manufacturer setup, sag check, pre-ride check and quick calculator.
+**Suspension Tuner Pro** (one-time in-app purchase `solutions.wholestack.suspensiontuner.pro`, StoreKit 2 in
+`ProStore.swift`) unlocks unlimited bikes, today's conditions, the troubleshooter, Save to History, share & print
+and the widget. Xcode runs use `apple/StoreKit/Products.storekit` so you can test the purchase for free; set up
+the real product as described in `apple/release/APP_STORE.md`.
+
 ## Trailside tools
 - **Feels off? (symptom troubleshooter)** — pick what the fork or shock is doing (harsh, bottoming, diving, kicking, packing down, bobbing…) and get fixes worked out against *your* current clicks, best first; apply them to the dials or log them to History.
 - **Sag check** — guided O-ring routine with a hold-still countdown, then type the mm you measured to get your sag % and the pressure (or spring) to try next.

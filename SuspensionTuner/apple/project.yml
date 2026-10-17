@@ -14,7 +14,10 @@ targets:
   SuspensionTuner:
     type: application
     platform: iOS                         # iPhone (also runs on iPad)
-    scheme: {}                            # shared scheme so release.sh / xcodebuild can find it
+    scheme:                               # shared scheme so release.sh / xcodebuild can find it
+      # Simulator / Xcode runs use this local file for the Pro purchase (no real payment).
+      # Release builds ignore it and use the product set up in App Store Connect.
+      storeKitConfiguration: StoreKit/Products.storekit
     sources:
       - Sources/SuspensionTunerApp
       - AppResources                # Assets.xcassets (AppIcon, optional logo-<brand> images), privacy manifest

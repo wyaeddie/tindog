@@ -9,7 +9,7 @@ An iPhone app (it also runs on iPad).
 | Seller / copyright | © 2026 Whole Stack Solutions |
 | Category | Sports (secondary: Utilities) |
 | Age rating | 4+ (no objectionable content) |
-| Price | your choice (Free suggested for v1.0) |
+| Price | Free, with the **Suspension Tuner Pro** in-app purchase (one-time, non-consumable) |
 | App Privacy | **Data Not Collected** — no accounts, no analytics, everything stays on the device |
 | Encryption | No (already set in Info.plist, so no export question) |
 
@@ -39,6 +39,32 @@ An iPhone app (it also runs on iPad).
    and run through the app once.
 6. **Listing** — fill in the text below, add screenshots, pick the build for each platform.
 7. **Submit for Review** — usually 1–3 days.
+
+## In-app purchase: Suspension Tuner Pro
+
+1. App Store Connect → your app → **Monetization → In-App Purchases → +**
+   - Type: **Non-Consumable**
+   - Reference name: `Suspension Tuner Pro`
+   - Product ID: `solutions.wholestack.suspensiontuner.pro` (must match exactly — it's in `ProStore.swift`)
+2. Price: pick a tier (suggested **$7.99**). Turn on **Family Sharing**.
+3. Localization: display name `Suspension Tuner Pro`, description
+   `Unlimited bikes, today's conditions, troubleshooter, ride log, share & print and the widget.`
+4. Review information: a screenshot of the paywall (Garage → + with one bike saved) and the note
+   `Tap + on the Garage with one bike saved, or Today's conditions, to see the purchase.`
+5. When you submit the app version, tick the in-app purchase under **In-App Purchases and Subscriptions**
+   so both are reviewed together.
+6. Agreements, Tax and Banking must be complete (the Paid Apps agreement) before purchases work.
+
+**Testing without paying:** running from Xcode uses `apple/StoreKit/Products.storekit`, so the purchase
+sheet works in the Simulator with no real money. In Xcode, **Debug → StoreKit → Manage Transactions** lets
+you refund or delete the test purchase to see the free version again. TestFlight builds use Apple's
+sandbox (also free).
+
+**Free vs Pro**
+
+| Free | Pro |
+|---|---|
+| One bike, manufacturer-chart setup, sag check, pre-ride check, quick calculator | Unlimited bikes, today's conditions, symptom troubleshooter, Save to History, share & print, home-screen widget |
 
 ## Listing text
 
@@ -82,6 +108,9 @@ Popular models from 12 suspension brands. Tap any model to open the maker's spec
 
 SHARE AND PRINT
 Send a setup card to a friend or print it for the workshop.
+
+FREE AND PRO
+Your first bike, the manufacturer setup, sag check and pre-ride check are free. Suspension Tuner Pro is a one-time unlock — no subscription — for unlimited bikes, today's conditions, the symptom troubleshooter, the ride log, share & print and the home-screen widget.
 
 Works on iPhone and iPad. No account, no ads, no tracking — your data stays on your device.
 

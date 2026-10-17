@@ -20,12 +20,15 @@ struct TuneEntry: TimelineEntry {
     let conditions: String
     let rear: EndSummary?
     let front: EndSummary?
+    /// The widget is a Pro feature
+    var locked = false
 
     static let placeholder = TuneEntry(
         date: .now, bikeName: "Enduro Rig", style: "Enduro", conditions: "Rocky / rooty · 50°F",
         rear: EndSummary(label: "Rear", model: "Float X2", value: "198", unit: "psi", detail: "28% sag · 2 tokens"),
         front: EndSummary(label: "Front", model: "36 Factory", value: "98", unit: "psi", detail: "18% sag · 2 tokens"))
     static let empty = TuneEntry(date: .now, bikeName: nil, style: "", conditions: "", rear: nil, front: nil)
+    static let lockedEntry = TuneEntry(date: .now, bikeName: nil, style: "", conditions: "", rear: nil, front: nil, locked: true)
 }
 
 struct Provider: TimelineProvider {
@@ -41,6 +44,8 @@ struct Provider: TimelineProvider {
     }
 
     private func current() -> TuneEntry {
+        // Written by the app's ProStore into the shared App Group.
+        guard UserDefaults(suiteName: SharedGarage.appGroup)?.bool(forKey: "isPro") == true else { return .lockedEntry }
         guard let data = SharedGarage.load(), let bike = data.selectedBike else { return .empty }
         let catalog = Catalog.bundled
         func summary(_ end: ComponentKind) -> EndSummary? {
@@ -97,7 +102,13 @@ struct TuneWidgetView: View {
 
     var body: some View {
         Group {
-            if entry.bikeName == nil {
+            if entry.locked {
+                VStack(alignment: .leading, spacing: 6) {
+                    Image(systemName: "lock.fill").font(.title3).foregroundStyle(W.orange)
+                    Text("Unlock Pro in Suspension Tuner to see today's numbers here.")
+                        .font(.caption.weight(.semibold))
+                }
+            } else if entry.bikeName == nil {
                 VStack(alignment: .leading, spacing: 6) {
                     Image(systemName: "bicycle").font(.title2).foregroundStyle(W.orange)
                     Text("Add a bike in Suspension Tuner").font(.caption.weight(.semibold))

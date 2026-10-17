@@ -56,10 +56,38 @@ func rideSummary(_ ride: RideConditions) -> String {
 /// Garage card: collapsible editor for today's ride on the selected bike.
 struct RideConditionsCard: View {
     let ride: RideConditions
+    var locked = false
+    var onLocked: () -> Void = {}
     let onChange: (RideConditions) -> Void
     @State private var expanded = false
 
     var body: some View {
+        if locked {
+            Button(action: onLocked) {
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "cloud.sun.fill").foregroundStyle(Theme.sky)
+                            Text("Today's conditions").font(.subheadline.weight(.bold))
+                            ProTag()
+                        }
+                        Text("Terrain, weather, temperature, pack and feel").font(.caption).foregroundStyle(Theme.muted)
+                    }
+                    Spacer(minLength: 0)
+                    Image(systemName: "lock.fill").font(.footnote).foregroundStyle(Theme.muted)
+                }
+                .padding(14)
+                .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.stroke))
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        } else {
+            unlocked
+        }
+    }
+
+    private var unlocked: some View {
         DisclosureGroup(isExpanded: $expanded.animation(.snappy)) {
             RideConditionsEditor(ride: Binding(get: { ride }, set: { onChange($0) }))
                 .padding(.top, 10)

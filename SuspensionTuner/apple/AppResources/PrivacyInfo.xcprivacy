@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!-- Privacy manifest: Suspension Tuner collects no data and does no tracking. Bikes and history
      are stored only on the device. UserDefaults holds the pre-ride checklist ticks (reason CA92.1:
-     read/written only by this app). -->
+     read/written only by this app) and the Pro flag shared with the widget (1C8F.1: same App Group). -->
 <plist version="1.0">
 <dict>
 	<key>NSPrivacyTracking</key>
@@ -19,6 +19,7 @@
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
 				<string>CA92.1</string>
+				<string>1C8F.1</string>
 			</array>
 		</dict>
 	</array>

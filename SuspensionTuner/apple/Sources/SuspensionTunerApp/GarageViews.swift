@@ -114,6 +114,13 @@ struct GarageHomeView: View {
     @State private var editing: Bike?
     @State private var confirmDelete: Bike?
     @State private var checklistBike: Bike?
+    @State private var paywallFeature: String?
+    @Environment(ProStore.self) private var pro
+
+    /// The first bike is free; more bikes are Pro.
+    private func addBike() {
+        if pro.isPro || store.bikes.isEmpty { editing = .blank() } else { paywallFeature = "Unlimited bikes" }
+    }
 
     /// Time-of-day hype line.
     private var greeting: String {
@@ -137,7 +144,7 @@ struct GarageHomeView: View {
                     }
                 }
                 Spacer()
-                Button { editing = .blank() } label: {
+                Button { addBike() } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle(.black)
@@ -154,7 +161,8 @@ struct GarageHomeView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     StepHeader(number: 1, title: "Today's ride", subtitle: "Riding style and conditions")
                     RideStylePicker(selection: bike.style) { store.setStyle($0, for: bike.id) }
-                    RideConditionsCard(ride: bike.ride) { store.setRide($0, for: bike.id) }
+                    RideConditionsCard(ride: bike.ride, locked: !pro.isPro,
+                                       onLocked: { paywallFeature = "Today's conditions" }) { store.setRide($0, for: bike.id) }
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -195,6 +203,7 @@ struct GarageHomeView: View {
         .sheet(item: $checklistBike) { bike in
             ChecklistView(store: store, bike: bike)
         }
+        .paywall($paywallFeature)
         .confirmationDialog("Delete \(confirmDelete?.name ?? "bike")?",
                             isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),
                             titleVisibility: .visible) {

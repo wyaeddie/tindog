@@ -82,6 +82,8 @@ struct TuneEndView: View {
     @State private var showNotes = false
     @State private var showTroubleshooter = false
     @State private var showSagHelper = false
+    @State private var paywallFeature: String?
+    @Environment(ProStore.self) private var pro
 
     private var ran: RanSetup { bike.ran(end) }
     private var color: Color { end == .fork ? Theme.accent : Theme.gold }
@@ -130,8 +132,9 @@ struct TuneEndView: View {
                 ToolButton(title: "Check my sag", subtitle: "Guided + calculator", icon: "ruler.fill", color: Theme.go) {
                     showSagHelper = true
                 }
-                ToolButton(title: "Feels off?", subtitle: "Fix by symptom", icon: "stethoscope", color: Theme.accent) {
-                    showTroubleshooter = true
+                ToolButton(title: "Feels off?", subtitle: pro.isPro ? "Fix by symptom" : "Fix by symptom · Pro",
+                           icon: "stethoscope", color: Theme.accent) {
+                    if pro.isPro { showTroubleshooter = true } else { paywallFeature = "The symptom troubleshooter" }
                 }
             }
 
@@ -209,6 +212,7 @@ struct TuneEndView: View {
                               text: shareText(differences))
                 Spacer(minLength: 0)
                 Button {
+                    guard pro.isPro else { paywallFeature = "Saving to History"; return }
                     note = ""
                     askingNote = true
                 } label: {
@@ -223,6 +227,7 @@ struct TuneEndView: View {
                 .sensoryFeedback(.success, trigger: savedFlash)
             }
         }
+        .paywall($paywallFeature)
         .sheet(isPresented: $showTroubleshooter) {
             TroubleshooterView(store: store, bikeID: bike.id, end: end, model: model, rec: rec)
         }
