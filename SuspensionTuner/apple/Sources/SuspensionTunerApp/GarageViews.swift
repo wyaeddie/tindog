@@ -269,7 +269,8 @@ struct BikeHeroCard: View {
             }
 
             InteractiveBike(hasFork: bike.fork != nil, hasShock: bike.shock != nil, variant: store.variant(for: bike),
-                            hardtail: bike.isHardtail, paint: bike.color, styleTrigger: bike.style) { end in
+                            hardtail: bike.isHardtail, paint: bike.color,
+                            shockSpring: store.model(bike, .shock)?.spring, styleTrigger: bike.style) { end in
                 store.tuneEnd = end
                 store.tab = .tune
             }
@@ -425,7 +426,7 @@ struct BikeRow: View {
         HStack(spacing: 12) {
             BikeIllustration(hasFork: bike.fork != nil, hasShock: bike.shock != nil,
                              variant: store.variant(for: bike), hardtail: bike.isHardtail, paint: bike.color,
-                             showBadges: false)
+                             shockSpring: store.model(bike, .shock)?.spring, showBadges: false)
                 .frame(width: 84, height: 44)
                 .padding(.vertical, 2)
                 .background(Theme.card2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))

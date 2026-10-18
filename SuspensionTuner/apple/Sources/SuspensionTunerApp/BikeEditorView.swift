@@ -131,7 +131,9 @@ struct BikeEditorView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             SectionLabel(text: "Bike details", color: Theme.teal)
                             BikeIllustration(hasFork: fork.enabled, hasShock: !hardtail, variant: variant,
-                                             hardtail: hardtail, paint: paint, showBadges: false)
+                                             hardtail: hardtail, paint: paint,
+                                             shockSpring: shock.modelID.flatMap { store.catalog.model(id: $0)?.spring },
+                                             showBadges: false)
                                 .frame(maxWidth: 320)
                                 .frame(maxWidth: .infinity)
                                 .animation(.snappy, value: paint)

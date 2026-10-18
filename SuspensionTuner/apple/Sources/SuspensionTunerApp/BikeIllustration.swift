@@ -17,6 +17,8 @@ struct BikeIllustration: View, Animatable {
     var hardtail = false
     /// Frame colour chosen by the rider (nil = the look's own colour)
     var paint: BikeColor? = nil
+    /// The rear shock's spring, so the drawing shows an air can or a coil to match (nil = the look's own)
+    var shockSpring: SpringType? = nil
     /// Hide the F / R badges (small thumbnails)
     var showBadges = true
     /// 0 = at rest, 1 = deep in the travel
@@ -44,7 +46,7 @@ struct BikeIllustration: View, Animatable {
         .aspectRatio(Self.designSize.width / Self.designSize.height, contentMode: .fit)
         .accessibilityElement()
         .accessibilityLabel(hardtail ? "\(paint.map { $0.title + " " } ?? "")hardtail mountain bike with the fork highlighted"
-                                     : "\(paint.map { $0.title + " " } ?? "")\(Self.geometry(variant).name) mountain bike with the fork and rear shock highlighted")
+                                     : "\(paint.map { $0.title + " " } ?? "")\(Self.geometry(variant).name) mountain bike with the fork and \(shockSpring.map { $0 == .coil ? "coil " : "air " } ?? "")rear shock highlighted")
     }
 
     /// Where the F and R badges sit, in design coordinates (for tap targets laid over the drawing).
@@ -375,9 +377,19 @@ struct BikeIllustration: View, Animatable {
         }
     }
 
+    /// Air can or coil, following the chosen shock; coil looks keep their piggyback reservoir.
+    private func shockStyle(_ g: Geometry) -> ShockStyle {
+        switch shockSpring {
+        case .air: return .air
+        case .coil: return g.shockStyle == .air ? .coil : g.shockStyle
+        case nil: return g.shockStyle
+        }
+    }
+
     /// Rear shock: body + spring (coil or air can), optional piggyback reservoir, eyelets.
     private func drawShock(_ ctx: inout GraphicsContext, _ g: Geometry, _ f: (Pt) -> Pt, _ alpha: Double) {
         guard hasShock, !hardtail else { return }
+        let style = shockStyle(g)
         var s = ctx
         s.opacity = alpha
         let a = f(g.shock.0)
@@ -393,7 +405,7 @@ struct BikeIllustration: View, Animatable {
         // Shaft and body
         stroke(&s, path([at(0.05), at(0.95)]), c(0x3A404B), 9)
         stroke(&s, path([at(0.55), at(0.95)]), c(0xD6DBE2), 3.2)                 // shaft
-        switch g.shockStyle {
+        switch style {
         case .air:
             stroke(&s, path([at(0.08), at(0.58)]), c(0x1F242C), 10)              // air can
             stroke(&s, path([at(0.1), at(0.56)]), c(goldHex), 7.4)
@@ -407,7 +419,7 @@ struct BikeIllustration: View, Animatable {
             }
             stroke(&s, path(coil), c(goldHex), 2.6)
             stroke(&s, path([at(0.12, -5.5), at(0.12, 5.5)]), c(0x8A929E), 2.2)  // preload collar
-            if g.shockStyle == .piggybackCoil {
+            if style == .piggybackCoil {
                 let r1 = at(0.12, -9), r2 = at(0.42, -9)                          // reservoir
                 stroke(&s, path([r1, r2]), c(0x1F242C), 6.5)
                 stroke(&s, path([r1, r2]), c(0x8A929E), 4)
@@ -429,6 +441,7 @@ struct InteractiveBike: View {
     let variant: Int
     var hardtail = false
     var paint: BikeColor? = nil
+    var shockSpring: SpringType? = nil
     /// Bounces the bike whenever the riding style changes, so the re-tune is visible
     var styleTrigger: RidingStyle? = nil
     let onSelectEnd: (ComponentKind) -> Void
@@ -439,7 +452,7 @@ struct InteractiveBike: View {
 
     var body: some View {
         BikeIllustration(hasFork: hasFork, hasShock: hasShock, variant: variant, hardtail: hardtail, paint: paint,
-                         compression: compression, spin: spin)
+                         shockSpring: shockSpring, compression: compression, spin: spin)
             .contentShape(Rectangle())
             .onTapGesture { bounce() }
             .overlay {
