@@ -1,6 +1,7 @@
 # Publishing Suspension Tuner (iPhone)
 
-An iPhone app (it also runs on iPad).
+An iPhone and iPad app. The iPad version is aimed at bike techs and shops as well as riders, so test it and
+supply iPad screenshots too.
 
 | | |
 |---|---|
@@ -11,6 +12,7 @@ An iPhone app (it also runs on iPad).
 | Age rating | 4+ (no objectionable content) |
 | Price | Free, with the **Suspension Tuner Pro** in-app purchase (one-time, non-consumable) |
 | App Privacy | **Data Not Collected** — no accounts, no analytics, everything stays on the device |
+| Support email | eddie@wholestack.solutions |
 | Encryption | No (already set in Info.plist, so no export question) |
 
 ## Steps
@@ -49,8 +51,8 @@ An iPhone app (it also runs on iPad).
 2. Price: pick a tier (suggested **$7.99**). Turn on **Family Sharing**.
 3. Localization: display name `Suspension Tuner Pro`, description
    `Riding conditions, sag check, troubleshooter, unlimited bikes, ride log, share & print and the widget.`
-4. Review information: a screenshot of the paywall (Garage → + with one bike saved) and the note
-   `Tap + on the Garage with one bike saved, or Riding conditions, to see the purchase.`
+4. Review information: a screenshot of the paywall (Rack tab → + with one bike saved) and the note
+   `On the Rack tab, tap + with one bike saved, or tap Riding conditions, to see the purchase.`
 5. When you submit the app version, tick the in-app purchase under **In-App Purchases and Subscriptions**
    so both are reviewed together.
 6. Agreements, Tax and Banking must be complete (the Paid Apps agreement) before purchases work.
@@ -75,44 +77,50 @@ Fork & shock setup for MTB
 
 **Promotional text** (can change any time without review)
 ```
-Save your bikes, pick XC, Trail, Enduro, Bike Park or Downhill, and get air pressure, sag, rebound and compression for your fork and shock in one tap.
+Pressure, sag, spacers and every damping click for your fork and shock, from the maker's own chart. Now with step-by-step instructions, hardtails and frame colours.
 ```
 
 **Description**
 ```
-Suspension Tuner gives you a solid starting setup for your mountain bike fork and rear shock — in seconds.
+Suspension Tuner gives you a solid starting setup for your mountain bike fork and rear shock, in seconds.
 
-FOR FOX, ROCKSHOX, MARZOCCHI AND ÖHLINS: THE MAKER'S NUMBERS
-Air pressure, rebound and compression clicks, volume spacers and sag are read from the manufacturer's own setup charts for your weight — with a link to the guide. Other models get a calculated estimate, clearly labelled.
+THE MAKER'S NUMBERS, CLEARLY LABELLED
+Air pressure, sag, volume spacers, and rebound and compression clicks are read from the manufacturer's own setup charts for your weight wherever the maker publishes one, with a link to the guide. Every result carries a badge: Manufacturer chart, Partly manufacturer (some values estimated) or Estimate (no published chart), so you always know where a number came from.
 
-SAVE YOUR BIKES
-Add each bike once with its fork, shock, your weight, height and frame size. Your garage shows both ends of every bike at a glance.
+YOUR BIKE RACK
+Add each bike once: fork, shock, your weight, height and frame size, full suspension or hardtail, and the frame colour. Every bike gets its own drawing in its real colour, with an air or coil shock to match. Tap F or R on the bike to jump straight to that end.
 
 ONE TAP FOR TODAY'S RIDING
-Switch between XC, Trail, Enduro, Bike Park and Downhill and both ends re-tune instantly.
+Switch between XC, Trail, Enduro, Bike Park and Downhill and both ends re-tune instantly. Trail is the maker's baseline; the other styles adjust it and tell you what changed.
+
+EVERY CLICK, SPELLED OUT
+Drag the precision sliders to match your fork or shock, or follow Step by step: the same setup in plain words. Pump to this pressure, fit this many spacers, turn the red knob in until it stops, then count the clicks back out.
 
 EVERYTHING YOU NEED AT THE BIKE
 • Air pressure or coil spring rate, with the max pressure for your model
+• Pressure to pump indoors vs. at a cold trailhead
 • Sag in % and mm, with an O-ring check guide
 • Rebound and compression clicks for every adjuster your fork or shock has
-• Volume spacer (token) count and lockout / climb switch advice
-• Fit check if your height and frame size don't match
-• Adjusts for e-bikes, your pack, temperature, wet or rocky trails, riding style and your frame's recommended sag
+• Volume spacer count and lockout / climb advice
 • Tire pressure starting point and service reminders
+• Pre-ride check: pressures, sag, bolts, brakes in 60 seconds
 
 RECORD WHAT YOU ACTUALLY RAN
-Nudge the pressure dial and drag the damping sliders to what you set on the trail. Save it to History with a note like "harsh on roots — 1 click less LSC" and compare later.
+Nudge the dial and drag the sliders to what you set on the trail. Save it to History with a note like "harsh on roots, 1 click less LSC" and compare later.
 
-65 FORKS AND SHOCKS
-Popular models from 12 suspension brands. Tap any model to open the maker's spec page.
+65 FORKS AND SHOCKS FROM 12 BRANDS
+Popular models with the maker's setup data where it's published. Tap any model to open the maker's spec page.
 
-SHARE AND PRINT
-Send a setup card to a friend or print it for the workshop.
+FOR RIDERS AND BIKE TECHS
+Works on iPhone and iPad. Keep a rack of bikes, and with Pro share or print a setup card for the workshop or a customer.
+
+DARK OR LIGHT
+A carbon-black dark theme and a titanium light theme, or let it follow your phone.
 
 FREE AND PRO
-Your first bike, the manufacturer setup and the pre-ride check are free. Suspension Tuner Pro is a one-time unlock — no subscription — that dials it in deeper: riding conditions (terrain, weather, temperature, pack and feel), the guided sag-check helper and the symptom troubleshooter, plus unlimited bikes, the ride log, share & print and the home-screen widget.
+Your first bike, the manufacturer setup, step-by-step instructions and the pre-ride check are free. Suspension Tuner Pro is a one-time unlock, no subscription, that dials it in deeper: riding conditions (terrain, weather, temperature, pack and feel), the guided sag-check helper and the symptom troubleshooter, plus unlimited bikes, the ride log, share & print and the home-screen widget.
 
-Works on iPhone and iPad. No account, no ads, no tracking — your data stays on your device.
+No account, no ads, no tracking. Your data stays on your device.
 
 Settings are starting points. Always check your manufacturer's setup guide and never exceed the maximum pressure printed on your fork or shock. Brand and model names are trademarks of their owners; Suspension Tuner is not affiliated with or endorsed by them.
 ```
@@ -122,23 +130,27 @@ Settings are starting points. Always check your manufacturer's setup guide and n
 mtb,suspension,fork,shock,sag,psi,air pressure,rebound,compression,mountain bike,enduro,trail,coil
 ```
 
-**Support URL**: `https://www.wholestack.solutions`
+**Support URL**: `https://www.wholestack.solutions` (support email: eddie@wholestack.solutions)
 **Marketing URL** (optional): your Suspension Tuner page on wholestack.solutions
 **Privacy Policy URL** (required): host `SuspensionTuner/website/privacy.html` on your site, e.g.
 `https://www.wholestack.solutions/suspension-tuner/privacy.html`, and paste that link.
 
 **App Review notes**
 ```
-No login or account is needed. To test: Garage tab → + → enter a name, weight (e.g. 185 lb), height (5 ft 11 in), pick a fork (e.g. Fox → 36 Factory) and shock (e.g. Fox → Float X2 Factory) → Save. Change Trail/Enduro/Bike Park on the Garage tab; open the Tune tab for the dial, sag check and damping sliders (? buttons explain them). Settings → Quick calculator is a single-screen version. All data is stored locally on the device.
+No login or account is needed. To test: Rack tab → + → enter a name, weight (e.g. 185 lb), height (5 ft 11 in), choose Full suspension, pick a fork (e.g. Fox → 36 Factory) and a rear shock (e.g. Fox → Float X2 Factory) → Save. Switch XC / Trail / Enduro / Bike Park / DH on the Rack tab; tap F or R on the bike, or the Tune tab, for the pressure dial, sag check, damping sliders and step-by-step instructions (? buttons explain them). Settings → Quick calculator is a single-screen version; Settings → Legal → Disclaimer explains the data sources. To see the in-app purchase, tap + again with one bike saved, or tap Riding conditions. All data is stored locally on the device.
 ```
 
 ## Screenshots needed
 
-Take them in the Simulator with **⌘S** (saved to the Desktop) — 3 to 5 per device type:
+Apple expects real captures of the app (mockups and marketing images can't replace them). 3 to 10 per device:
 
 | Device | Simulator to use | Size |
 |---|---|---|
-| iPhone 6.9″ (required) | iPhone 16 Pro Max / 17 Pro Max | 1320 × 2868 |
-| iPad 13″ (required, the app runs on iPad) | iPad Pro 13-inch (M4) | 2064 × 2752 |
+| iPhone 6.9″ (required) | iPhone 17 Pro Max / 18 Pro Max | 1320 × 2868 |
+| iPad 13″ (required, the app runs on iPad) | iPad Pro 13-inch | 2064 × 2752 |
 
-Suggested shots: Garage home · Tune (fork) with sliders · Tune (shock) · Add bike sheet · History.
+On Xcode 27 simulators open in Device Hub (Window → Devices and Simulators); take a screenshot there, or run
+`xcrun simctl io booted screenshot ~/Desktop/shot.png`.
+
+Suggested shots: My Bike Rack · Tune (dial + sag) · damping sliders + Step by step · Add bike (hardtail + colour) ·
+Light theme · History.

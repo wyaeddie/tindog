@@ -20,7 +20,7 @@ targets:
       storeKitConfiguration: StoreKit/Products.storekit
     sources:
       - Sources/SuspensionTunerApp
-      - AppResources                # Assets.xcassets (AppIcon, optional logo-<brand> images), privacy manifest
+      - AppResources                # Assets.xcassets (AppIcon, AppLogo), privacy manifest
     dependencies:
       - package: SuspensionTuner
         product: SuspensionKit

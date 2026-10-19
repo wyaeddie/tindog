@@ -1,21 +1,27 @@
 # Suspension Tuner
 
-Pick a fork or rear shock, choose the brand and model, then enter your weight, height, frame size and riding style. The app returns a starting setup: air pressure or coil spring rate, sag, volume spacers, rebound, low- and high-speed compression and rebound, lockout use, fit warnings and setup notes.
+An iPhone and iPad app by Whole Stack Solutions. Save your bikes (fork, shock, rider), pick your riding style and today's conditions, and get a starting setup for both ends: air pressure or coil spring rate, sag, volume spacers, rebound and compression clicks, lockout use, tire pressure and service reminders. The numbers come from each maker's own setup chart wherever one is published.
 
-![Fork](docs/screenshot-fork.png)
-![Shock](docs/screenshot-shock.png)
-
-## Features (iPhone app)
-- **Garage:** save bikes with their fork, shock and rider. The home screen shows the bike with front and rear
-  setups; an XC / Trail / Enduro / Bike Park / Downhill switch re-tunes both ends in one tap
-- **Tune:** pressure / spring-rate dial with ± nudges (hold to repeat), O-ring sag check, damping sliders and
-  token blocks to record what you actually ran, (?) help for sag and damping, Share / Print / Save to History
+## Features (iPhone and iPad app)
+- **Design:** "Carbon": black carbon weave with glass cards and condensed racing type in dark mode, brushed
+  titanium in light mode. Light / Dark / Automatic in Settings → Appearance
+- **My Bike Rack** (Rack tab): save bikes with their fork, shock and rider. Each bike has a drawing in the frame
+  colour you pick (12 paints), a hardtail drawing for hardtails, and a rear shock drawn as an air can or a coil to
+  match the model. XC / Trail / Enduro / Bike Park / Downhill tabs re-tune both ends in one tap; tap the bike to
+  bounce it, tap F or R to open that end in Tune
+- **Add / Edit bike:** rider weight, height, frame size, riding habits; Full suspension or Hardtail (hardtails lock
+  the rear-shock setup); frame colour with a live preview; e-bike, wheels, tires, inserts; fork and shock models
+  and travel; frame maker's sag and leverage curve; hours since service
+- **Tune:** tick-ring pressure dial with ± nudges (hold to repeat), source badge (Manufacturer chart / Partly
+  manufacturer / Estimate), indoor vs trailside pressure, O-ring sag check, precision sliders for every damping
+  adjuster and the spacer count, **Step by step** plain-word instructions, tire and service cards, Share / Print /
+  Save to History
 - **History:** saved setups with date, differences from the recommendation and your notes
-- **Settings:** kg / lb, quick calculator (single-screen version), About, erase data
+- **Settings:** Pro unlock / restore, Appearance, kg / lb, quick calculator, Disclaimer, About, erase data
 - Tap the brand badge or model name to open the model's spec page on the maker's website
   (`url` in catalog.json; models without a verified page fall back to a search of the brand's site)
-- Real brand logos: add images named `logo-<brand>` (`logo-fox`, `logo-rockshox`, `logo-cane-creek`, …) to the
-  Assets catalog and they replace the coloured monogram badges
+- Brand badges are neutral text monograms (no brand colours or logos), and the app states that it isn't affiliated
+  with any manufacturer
 
 ## Layout
 
@@ -24,21 +30,36 @@ Pick a fork or rear shock, choose the brand and model, then enter your weight, h
 | `apple/Sources/SuspensionKit/Resources/catalog.json` | **Single source of truth**: 65 forks and shocks from 12 brands |
 | `apple/Sources/SuspensionKit/` | Swift catalog, calculation engine, saved-bike data model |
 | `apple/Sources/SuspensionTunerApp/` | SwiftUI iPhone app |
-| `apple/AppResources/` | App icon, `logo-<brand>` images, privacy manifest |
+| `apple/AppResources/` | App icon, app logo, privacy manifest |
 | `apple/project.yml` | XcodeGen spec for the iOS Xcode project |
+| `apple/run.sh` | Build, install and launch in the simulator in one command |
 | `apple/release.sh`, `apple/release/` | App Store archive/upload script and listing text |
 | `python/suspension_engine.py` | Python port of the engine (kept 1:1 with `Engine.swift`, used for parity tests) |
 | `python/app.py` | Optional PySide6 desktop calculator |
 | `tools/` | Website image helpers |
 
-## Run the iPhone app
+## Run the app
 
+Quickest (checks Xcode and XcodeGen, picks a simulator, builds, installs and launches):
+```sh
+cd apple
+bash run.sh
+```
+
+Or in Xcode:
 ```sh
 cd apple
 brew install xcodegen && xcodegen generate
-open SuspensionTuner.xcodeproj      # pick an iPhone simulator (or your iPhone) and press ⌘R
+open SuspensionTuner.xcodeproj
 ```
-Open `SuspensionTuner.xcodeproj`, not `Package.swift`: the package only holds the calculation library.
+- Pick the **SuspensionTuner** scheme (not SuspensionKit or SuspensionTunerWidget, which build but install nothing),
+  choose a simulator or your iPhone, and press ⌘R.
+- Open `SuspensionTuner.xcodeproj`, not `Package.swift`: the package only holds the calculation library.
+- **Xcode 27** no longer has a separate Simulator app. Simulators open in **Device Hub**
+  (Window → Devices and Simulators); `run.sh` opens it for you.
+- On your own iPhone: set your Team under Signing & Capabilities for both targets, turn on
+  Settings → Privacy & Security → Developer Mode, and trust the developer under Settings → General →
+  VPN & Device Management.
 
 ## Publishing
 See `apple/release/APP_STORE.md` — listing text, privacy answers, screenshot sizes and the one-command
@@ -64,7 +85,7 @@ share & print and the widget. Xcode runs use `apple/StoreKit/Products.storekit` 
 the real product as described in `apple/release/APP_STORE.md`.
 
 ## Trailside tools
-- **Hardtail or full suspension + frame colour** — set in Add/Edit bike. Hardtails lock out the rear-shock setup and get their own hardtail drawing; the colour you pick (12 factory-style paints) is the colour of your bike everywhere in the app.
+- **Hardtail or full suspension + frame colour** — set in Add/Edit bike. Hardtails lock out the rear-shock setup and get their own hardtail drawing; the colour you pick (12 factory-style paints) is the colour of your bike everywhere in the app. The rear shock is drawn as an air can or a coil spring to match the chosen model.
 - **Step by step** — under the damping sliders on Tune, the same setup written out in plain words (pump to X psi, fit N spacers, turn the red knob fully clockwise then count N clicks out…) for riders who would rather read than read charts. Uses what you have set on the sliders.
 - **Feels off? (symptom troubleshooter)** — pick what the fork or shock is doing (harsh, bottoming, diving, kicking, packing down, bobbing…) and get fixes worked out against *your* current clicks, best first; apply them to the dials or log them to History.
 - **Sag check** — guided O-ring routine with a hold-still countdown, then type the mm you measured to get your sag % and the pressure (or spring) to try next.
@@ -109,7 +130,7 @@ Anything a maker doesn't publish is calculated and labelled **Estimate** in the 
   A firm or plush feel in Riding conditions overrides the style's sag position. Estimated models already include style in their formula.
 
 ### Other factors
-Set per bike (bike editor) or per ride (Garage → Riding conditions). With everything at its default the numbers are exactly the maker's chart.
+Set per bike (bike editor) or per ride (Bike Rack → Riding conditions). With everything at its default the numbers are exactly the maker's chart.
 
 | Factor | What it changes |
 |---|---|
@@ -128,4 +149,5 @@ Set per bike (bike editor) or per ride (Garage → Riding conditions). With ever
 
 Every adjusted click says why, e.g. "Adjusted 1 click faster from 6 for rocky terrain".
 
-Always check the max-pressure label on the product.
+Always check the max-pressure label on the product. The in-app Disclaimer (Settings → Legal) explains the
+Manufacturer chart / Partly manufacturer / Estimate labels and the rider's own responsibility.

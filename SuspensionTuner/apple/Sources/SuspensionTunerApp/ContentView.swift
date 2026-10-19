@@ -96,8 +96,7 @@ struct InputPanel: View {
                 SectionLabel(text: "2 · Brand", color: Theme.gold)
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
                     ForEach(tuner.brands, id: \.self) { brand in
-                        ChipButton(title: brand, selected: tuner.brand == brand, compact: true,
-                                   dot: BrandStyle.of(brand).color) {
+                        ChipButton(title: brand, selected: tuner.brand == brand, compact: true) {
                             tuner.select(brand: brand)
                         }
                     }
@@ -247,7 +246,7 @@ struct ResultsView: View {
                     .help(specsHelp)
                     VStack(alignment: .leading, spacing: 6) {
                         Button { if let specs { openURL(specs) } } label: {
-                            let brand = Text(model.brand).foregroundStyle(BrandStyle.of(model.brand).color)
+                            let brand = Text(model.brand).foregroundStyle(Theme.muted)
                             let name = Text(model.name).foregroundStyle(Theme.text)
                             let link = Text(Image(systemName: "arrow.up.right.square"))
                                 .font(.system(size: isCompact ? 15 : 16, weight: .semibold))

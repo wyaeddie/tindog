@@ -79,41 +79,16 @@ extension Color {
 
 // MARK: - Brand badges
 
-/// Brand colour + monogram. To show a real logo instead, add an image named
-/// `logo-<brand-slug>` (e.g. `logo-fox`, `logo-rockshox`, `logo-cane-creek`) to the
-/// app's Assets catalog — BrandBadge picks it up automatically.
-struct BrandStyle {
-    let monogram: String
-    let color: Color
-    let text: Color
-
-    static let all: [String: BrandStyle] = [
-        "Fox": .init(monogram: "FOX", color: Color(hex: 0xE8541E), text: .white),
-        "RockShox": .init(monogram: "RS", color: Color(hex: 0xD71920), text: .white),
-        "Öhlins": .init(monogram: "Ö", color: Color(hex: 0xFFD100), text: .black),
-        "Marzocchi": .init(monogram: "MZ", color: Color(hex: 0xC8102E), text: .white),
-        "Cane Creek": .init(monogram: "CC", color: Color(hex: 0x0072CE), text: .white),
-        "DVO": .init(monogram: "DVO", color: Color(hex: 0x78BE20), text: .black),
-        "Formula": .init(monogram: "F", color: Color(hex: 0xF2F2F2), text: .black),
-        "Manitou": .init(monogram: "M", color: Color(hex: 0x1D4ED8), text: .white),
-        "EXT": .init(monogram: "EXT", color: Color(hex: 0x4B5563), text: .white),
-        "PUSH Industries": .init(monogram: "PUSH", color: Color(hex: 0x9333EA), text: .white),
-        "SR Suntour": .init(monogram: "SR", color: Color(hex: 0x0EA5E9), text: .white),
-        "X-Fusion": .init(monogram: "XF", color: Color(hex: 0x14B8A6), text: .white),
+/// Plain text monogram for a suspension brand. Deliberately neutral: no brand colours and no
+/// logos, so nothing in the app imitates a manufacturer's trade dress.
+enum BrandStyle {
+    static let monograms: [String: String] = [
+        "Fox": "FOX", "RockShox": "RS", "Öhlins": "Ö", "Marzocchi": "MZ", "Cane Creek": "CC", "DVO": "DVO",
+        "Formula": "F", "Manitou": "M", "EXT": "EXT", "PUSH Industries": "PUSH", "SR Suntour": "SR", "X-Fusion": "XF",
     ]
 
-    static func of(_ brand: String) -> BrandStyle {
-        all[brand] ?? .init(monogram: String(brand.prefix(2)).uppercased(), color: Theme.muted, text: .white)
-    }
-
-    static func slug(_ brand: String) -> String {
-        brand.lowercased().replacingOccurrences(of: "ö", with: "o").replacingOccurrences(of: " ", with: "-")
-    }
-
-    static func logo(for brand: String) -> Image? {
-        let name = "logo-" + slug(brand)
-        guard let image = UIImage(named: name) else { return nil }
-        return Image(uiImage: image)
+    static func monogram(_ brand: String) -> String {
+        monograms[brand] ?? String(brand.prefix(2)).uppercased()
     }
 }
 
@@ -122,22 +97,15 @@ struct BrandBadge: View {
     var size: CGFloat = 52
 
     var body: some View {
-        let style = BrandStyle.of(brand)
-        let logo = BrandStyle.logo(for: brand)
-        ZStack {
-            if let logo {
-                logo.resizable().scaledToFit().padding(size * 0.12)
-            } else {
-                Text(style.monogram)
-                    .font(.system(size: size * (style.monogram.count > 2 ? 0.26 : 0.38), weight: .black, design: .rounded))
-                    .foregroundStyle(style.text)
-                    .minimumScaleFactor(0.5)
-            }
-        }
-        .frame(width: size, height: size)
-        .background(logo == nil ? style.color : .white,
-                    in: RoundedRectangle(cornerRadius: size * 0.26, style: .continuous))
-        .shadow(color: style.color.opacity(0.45), radius: 10, y: 4)
+        let mono = BrandStyle.monogram(brand)
+        Text(mono)
+            .font(.system(size: size * (mono.count > 2 ? 0.26 : 0.38), weight: .black, design: .rounded))
+            .foregroundStyle(Theme.text)
+            .minimumScaleFactor(0.5)
+            .frame(width: size, height: size)
+            .background(Theme.card2, in: RoundedRectangle(cornerRadius: size * 0.26, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: size * 0.26, style: .continuous).stroke(Theme.stroke))
+            .accessibilityLabel(brand)
     }
 }
 

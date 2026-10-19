@@ -260,8 +260,7 @@ struct PartEditor: View {
                 if draft.enabled || !canSwitchOff {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
                         ForEach(catalog.brands(for: kind), id: \.self) { brand in
-                            ChipButton(title: brand, selected: draft.brand == brand, compact: true,
-                                       dot: BrandStyle.of(brand).color) {
+                            ChipButton(title: brand, selected: draft.brand == brand, compact: true) {
                                 if draft.brand != brand {
                                     draft.brand = brand
                                     draft.modelID = nil

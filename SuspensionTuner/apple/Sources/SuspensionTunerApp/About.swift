@@ -90,6 +90,8 @@ struct DisclaimerView: View {
     private let sections: [(String, String, String)] = [
         ("exclamationmark.shield.fill", "Starting points, not guarantees",
          "Suspension Tuner's recommendations come from manufacturers' published setup charts and specifications where available, and from calculated estimates where they aren't (clearly marked in the app). They are starting points for setting up your suspension. They are not a substitute for your product's owner's manual, the manufacturer's instructions, or a qualified bicycle mechanic."),
+        ("function", "Estimates are labelled",
+         "Every setup shows a badge saying where its numbers come from. \"Manufacturer chart\" means the values come from the maker's published guide. \"Partly manufacturer\" means some values come from the maker's guide and the rest are calculated estimates. \"Estimate\" means the maker publishes no setup chart for that model, so every value is calculated from your weight, travel and riding style. Treat estimates with extra care and confirm them against your product's manual and your own sag check."),
         ("gauge.with.dots.needle.67percent", "Never exceed the product's limits",
          "Always follow the maximum air pressure, maximum volume spacer count, spring rate and preload limits printed on your fork or shock or in its manual. If anything in the app differs from your product's own documentation, follow the documentation."),
         ("ruler.fill", "Check before you ride",
