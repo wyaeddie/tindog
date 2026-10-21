@@ -133,7 +133,7 @@ mtb,suspension,fork,shock,sag,psi,air pressure,rebound,compression,mountain bike
 **Support URL**: `https://www.wholestack.solutions` (support email: eddie@wholestack.solutions)
 **Marketing URL** (optional): your Suspension Tuner page on wholestack.solutions
 **Privacy Policy URL** (required): host `SuspensionTuner/website/privacy.html` on your site, e.g.
-`https://www.wholestack.solutions/suspension-tuner/privacy.html`, and paste that link.
+`https://suspensiontuner.wholestack.solutions/privacy.html`, and paste that link.
 
 **App Review notes**
 ```

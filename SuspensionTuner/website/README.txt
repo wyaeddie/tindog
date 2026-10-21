@@ -17,9 +17,9 @@ Links for App Store Connect:
 launch.html is the one-page launch site (release November 2, 2026). It is self-contained: the
 screenshots are built in, so it only needs privacy.html beside it.
 
-privacy.html is the Suspension Tuner privacy policy (same carbon look as launch.html). Host both in
-their own folder, e.g. wholestack.solutions/suspension-tuner/, so they don't clash with your main
-site's privacy page. Use https://www.wholestack.solutions/suspension-tuner/privacy.html as the
-Privacy Policy URL in App Store Connect. After launch, point its
+privacy.html is the Suspension Tuner privacy policy (same carbon look as launch.html). They live at
+https://suspensiontuner.wholestack.solutions/ (launch.html served as the home page) and
+https://suspensiontuner.wholestack.solutions/privacy.html. The privacy page's logo, "Back to the app"
+and footer links point to the home page. Use the privacy URL as the Privacy Policy URL in App Store Connect. After launch, point its
 "Coming to the App Store" buttons (href="#download") at the App Store link; the countdown switches
 to "Out now" by itself on November 2.
