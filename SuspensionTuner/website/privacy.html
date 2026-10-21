@@ -1,67 +1,191 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy Policy · Suspension Tuner</title>
-  <meta name="description" content="Suspension Tuner does not collect, store or share any personal data.">
-  <meta name="theme-color" content="#0D0F13">
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suspension Tuner Privacy</title>
+<meta name="description" content="Privacy policy for the Suspension Tuner app for iPhone and iPad. Suspension Tuner does not collect any personal data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: the launch page's carbon shell; one readable column of policy sections under a summary card. */
+:root{
+  --bg:#060607; --bg2:#0D0D0F; --card:#141416; --line:#232427;
+  --fg:#F2F2F0; --muted:#A9ADB4; --faint:#6E7279;
+  --accent:#FF7A1A; --accent-ink:#0A0A0B; --go:#22C55E;
+  --weave:rgba(255,255,255,.022);
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#ECEDEF; --bg2:#E3E4E7; --card:#FFFFFF; --line:#D6D8DC;
+  --fg:#111214; --muted:#55595F; --faint:#8A8E95;
+  --accent:#E8650C; --accent-ink:#FFFFFF; --go:#16A34A;
+  --weave:rgba(0,0,0,.035); color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#ECEDEF; --bg2:#E3E4E7; --card:#FFFFFF; --line:#D6D8DC;
+  --fg:#111214; --muted:#55595F; --faint:#8A8E95;
+  --accent:#E8650C; --accent-ink:#FFFFFF; --go:#16A34A;
+  --weave:rgba(0,0,0,.035); color-scheme:light}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.6 var(--body);
+  background-image:repeating-linear-gradient(45deg,var(--weave) 0 2px,transparent 2px 6px),repeating-linear-gradient(-45deg,var(--weave) 0 2px,transparent 2px 6px);
+  -webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2{font-family:var(--display);text-transform:uppercase;font-weight:800;line-height:.95;margin:0;text-wrap:balance;letter-spacing:.01em}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent)}
+
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--fg)}
+.brand img{width:36px;height:36px;border-radius:9px}
+.brand b{font-family:var(--display);font-size:20px;letter-spacing:.14em;text-transform:uppercase}
+.back{margin-left:auto;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--fg)}
+
+.doc{display:grid;grid-template-columns:240px minmax(0,1fr);gap:56px;padding-block:56px 72px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);align-self:start;display:flex;flex-direction:column;gap:8px}
+.toc a{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.toc a:hover{color:var(--fg)}
+main{display:flex;flex-direction:column;gap:40px;min-width:0;max-width:44em}
+.head{display:flex;flex-direction:column;gap:14px}
+.head h1{font-size:clamp(52px,7vw,88px)}
+.date{font-family:var(--mono);font-size:13px;color:var(--faint)}
+.intro{color:var(--muted);font-size:19px;margin:0}
+
+.summary{background:var(--card);border:1px solid color-mix(in srgb,var(--go) 45%,var(--line));border-radius:22px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+.summary .badge{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.08em;text-transform:uppercase}
+.summary .badge::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--go);box-shadow:0 0 10px var(--go)}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 22px;margin:0;padding:0;list-style:none}
+.facts li{display:flex;gap:10px;color:var(--muted)}
+.facts li::before{content:"✓";color:var(--go);font-weight:700}
+
+section{display:flex;flex-direction:column;gap:10px;scroll-margin-top:96px}
+section h2{font-size:clamp(28px,3.4vw,38px)}
+section p{margin:0;color:var(--muted)}
+section ul{margin:0;padding-left:20px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+section b{color:var(--fg);font-weight:600}
+.path{font-family:var(--mono);font-size:14px;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1px 7px;white-space:nowrap}
+.email{font-family:var(--mono);color:var(--fg);user-select:all}
+.hair{height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.7}
+
+footer .wrap{padding-block:28px;display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;color:var(--faint);font-size:14px;border-top:1px solid var(--line)}
+footer a{color:var(--muted)}
+
+@media (max-width:520px){ .long{display:none} .brand b{font-size:18px} }
+@media (max-width:860px){
+  .doc{grid-template-columns:1fr;gap:28px;padding-block:36px 56px}
+  .toc{position:static;flex-direction:row;flex-wrap:wrap;gap:8px 16px}
+  .facts{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="index.html" aria-label="Suspension Tuner home">
-        <img src="assets/logo.png" alt="" width="40" height="40">
-        <span class="brand-name"><span class="o">Suspension</span> <span class="g">Tuner</span></span>
-      </a>
-      <a class="btn btn-sm" href="index.html#download" style="margin-left:auto">Download</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="launch.html"><img src="data:image/webp;base64,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" alt=""><b>Suspension Tuner</b></a>
+    <a class="back" href="launch.html">← <span class="long">Back to the </span>app</a>
+  </div>
+</header>
+
+<div class="wrap doc">
+  <nav class="toc" aria-label="On this page">
+    <a href="#on-device">Your bikes and setups</a>
+    <a href="#purchase">Pro purchase</a>
+    <a href="#sharing">Sharing and Photos</a>
+    <a href="#links">Links</a>
+    <a href="#delete">Deleting your data</a>
+    <a href="#children">Children</a>
+    <a href="#rights">Your rights</a>
+    <a href="#changes">Changes</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <main>
+    <div class="head">
+      <div class="eyebrow">Suspension Tuner for iPhone and iPad</div>
+      <h1>Privacy policy</h1>
+      <div class="date">Last updated October 21, 2026</div>
+      <p class="intro">Suspension Tuner is made by Whole Stack Solutions. This policy explains what happens to the information you use in the app.</p>
     </div>
-  </header>
 
-  <main class="doc">
-    <div class="wrap narrow">
-      <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: October 2026</p>
+    <div class="summary" role="note" aria-label="Summary">
+      <div class="badge">Data not collected</div>
+      <ul class="facts">
+        <li>No account or sign-in</li>
+        <li>No analytics or tracking</li>
+        <li>No ads or third-party SDKs</li>
+        <li>Everything stays on your device</li>
+      </ul>
+    </div>
 
-      <p>Suspension Tuner is made by Eddie Sisomsun. This policy explains what happens to your information when you use the Suspension Tuner app on iPhone or iPad.</p>
+    <section id="on-device">
+      <h2>Your bikes and setups</h2>
+      <p>To calculate a setup, the app uses what you enter: your weight and height, frame size, riding style and riding conditions, your fork and shock models and travel, bike details such as wheel size, frame type and colour, hours since service, and the settings and notes you save to History.</p>
+      <p>All of it is calculated and stored <b>on your device only</b>. We never receive it and the app does not send it anywhere.</p>
+      <ul>
+        <li>The app keeps your bikes in a storage area shared with its own <b>home-screen widget</b>, so the widget can show your pump numbers. That storage stays on your device.</li>
+        <li>Your device's own backups (iCloud Backup or a computer backup, if you use them) may include the app's data, as with any app. Those backups are managed by Apple under your settings.</li>
+      </ul>
+    </section>
 
-      <h2>The short version</h2>
-      <p>Suspension Tuner does not collect, store or share any personal data. There are no accounts, no analytics, no advertising and no tracking.</p>
+    <section id="purchase">
+      <h2>Suspension Tuner Pro</h2>
+      <p>Suspension Tuner Pro is a one-time in-app purchase handled entirely by Apple through the App Store. We do not receive your name, Apple ID, email or payment details. The app only asks the App Store on your device whether Pro has been purchased, so it can unlock Pro features and restore them on your other devices. Apple's handling of purchases is covered by Apple's privacy policy.</p>
+    </section>
 
-      <h2>Information you enter</h2>
-      <p>The weight, height, frame size, riding style and suspension model you enter are used only to calculate your setup. The calculation happens entirely on your device. This information is never sent to us or to anyone else.</p>
+    <section id="sharing">
+      <h2>Sharing, printing and Photos</h2>
+      <p>If you choose to share a setup, print it or save it as an image, the app uses your device's built-in share sheet and printing. Where it goes is up to you. If you save an image to Photos, iOS asks for permission to add it, and the app only adds the image you chose to save. The app never reads your photo library.</p>
+    </section>
 
-      <h2>Sharing, printing and saving</h2>
-      <p>If you choose to share your setup, print it or save it as an image, the app uses your device's built-in share sheet and printing. Where it goes is up to you. If you save an image to Photos, the app asks for permission to add it, and it only adds the image you chose to save.</p>
-
+    <section id="links">
       <h2>Links to other websites</h2>
-      <p>Tapping a model name opens that manufacturer's website in your browser. Those websites have their own privacy policies, which we don't control.</p>
+      <p>Tapping a model name or a source badge opens the maker's website or setup guide in your browser. Those websites have their own privacy policies, which we don't control.</p>
+    </section>
 
+    <section id="delete">
+      <h2>Deleting your data</h2>
+      <p>To remove everything, go to <span class="path">Settings → Erase all bikes and history</span> in the app, or delete the app from your device. Because we hold no copy, there is nothing else to delete. A Pro purchase stays with your Apple ID and can be restored at any time.</p>
+    </section>
+
+    <section id="children">
       <h2>Children</h2>
       <p>The app does not collect information from anyone, including children under 13.</p>
+    </section>
 
+    <section id="rights">
+      <h2>Your rights</h2>
+      <p>Privacy laws such as the GDPR and CCPA give you the right to access, correct or delete personal data a company holds about you. Suspension Tuner doesn't collect or hold personal data, so there is nothing for us to provide or delete, but you're welcome to contact us with any question.</p>
+    </section>
+
+    <section id="changes">
       <h2>Changes</h2>
-      <p>If this policy changes, the new version will be posted on this page with a new date.</p>
+      <p>If this policy changes, the new version will be posted on this page with a new date. If a future version of the app ever collects data, this policy will say so before that version is released.</p>
+    </section>
 
+    <div class="hair"></div>
+
+    <section id="contact">
       <h2>Contact</h2>
-      <p>Questions? Email <a href="mailto:eddie@wholestack.solutions">eddie@wholestack.solutions</a>.</p>
-    </div>
+      <p>Questions about privacy? Email <span class="email">eddie@wholestack.solutions</span>.</p>
+      <p>Whole Stack Solutions</p>
+    </section>
   </main>
+</div>
 
-  <footer class="footer">
-    <div class="wrap footer-inner">
-      <p>© 2026 Eddie Sisomsun. All rights reserved.</p>
-      <nav aria-label="Footer">
-        <a href="index.html">Home</a>
-        <a href="mailto:eddie@wholestack.solutions">Support</a>
-      </nav>
-    </div>
-  </footer>
+<footer>
+  <div class="wrap">
+    <span>© 2026 Whole Stack Solutions</span>
+    <span><a href="launch.html">Suspension Tuner</a> · <a href="mailto:eddie@wholestack.solutions">Support</a></span>
+  </div>
+</footer>
 </body>
 </html>
