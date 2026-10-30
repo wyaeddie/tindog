@@ -1,0 +1,23 @@
+# Suspension Tuner web app — Apache settings for Hostinger shared hosting.
+# Serve the web app manifest and service worker with the right types.
+AddType application/manifest+json .webmanifest
+AddType application/javascript .js
+
+# Always send people to https (needed for offline mode and "Add to Home Screen").
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Let browsers check for new versions of the app shell, but cache icons for a week.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|css|json|webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(png)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

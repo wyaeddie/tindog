@@ -1,0 +1,17 @@
+{
+  "name": "Suspension Tuner",
+  "short_name": "Tuner",
+  "description": "Fork and shock setup from the maker's own chart: air pressure, sag, volume spacers and every damping click.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#060607",
+  "theme_color": "#060607",
+  "categories": ["sports", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

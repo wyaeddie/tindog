@@ -36,7 +36,16 @@ An iPhone and iPad app by Whole Stack Solutions. Save your bikes (fork, shock, r
 | `apple/release.sh`, `apple/release/` | App Store archive/upload script and listing text |
 | `python/suspension_engine.py` | Python port of the engine (kept 1:1 with `Engine.swift`, used for parity tests) |
 | `python/app.py` | Optional PySide6 desktop calculator |
-| `tools/` | Website image helpers |
+| `web/` | Browser version (static files for any web host) |
+| `tools/` | Website image helpers, web engine parity check |
+
+## Web app
+
+`web/` is a browser version of the app with every feature free (for friends). It is plain HTML, CSS and
+JavaScript with no server code, so it runs on any web host, including Hostinger shared hosting, and installs
+to a phone's home screen with offline support. Upload steps are in `web/README.txt`.
+`web/js/engine.js` mirrors the Swift and Python engines line for line; `python3 tools/web_parity.py` checks
+it against the Python engine on every model (65 × 40 scenarios).
 
 ## Run the app
 
